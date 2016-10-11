@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Basic Forward")
-@Disabled
+//@Disabled
 public class BasicOpMode extends OpMode {
     HardwarePushbot robot       = new HardwarePushbot();
     public void init(){
