@@ -49,13 +49,13 @@ public class TestInfiniteLoopLinear extends LinearOpMode {
 
         // Do nothing, forever
         for (int count = 0; ; count++) {
-            try {
+            //try {
                 telemetry.addData("count", count);
                 updateTelemetry(telemetry);
                 idle();
-            } catch (InterruptedException e) {
+            //} catch (InterruptedException e) {
                 // ignore: we're trying to do an infinite loop!
-            }
+            //}
         }
     }
 }
