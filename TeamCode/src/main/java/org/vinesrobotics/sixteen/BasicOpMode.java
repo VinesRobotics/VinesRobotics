@@ -15,6 +15,7 @@ public class BasicOpMode extends OpMode {
     public void init(){
         telemetry.addLine("Basic Op mode initialized");
         robot.init(hardwareMap);
+        telemetry.update();
     }
     public void loop(){
 
