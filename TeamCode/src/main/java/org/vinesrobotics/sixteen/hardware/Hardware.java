@@ -7,6 +7,7 @@ import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,12 +37,12 @@ import java.util.Map;
  */
 
 public class Hardware {
-    public ArrayList<HardwareDevice> devices = new ArrayList<>();
-    protected ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
+    private ArrayList<HardwareDevice> devices = new ArrayList<>();
+    private ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
 
     boolean inited = false;
-    protected Map<String,ArrayList<Integer>> keyMaps = new HashMap<>();
-    protected ArrayList<String> keys = new ArrayList<>();
+    private Map<String,ArrayList<Integer>> keyMaps = new HashMap<>();
+    private ArrayList<String> keys = new ArrayList<>();
     { // Add some default keys that might be useful.
         keys.add("left");
         keys.add("right");
@@ -98,6 +99,9 @@ public class Hardware {
      */
     public void initHardware(HardwareMap hwm, String splitRegex){
 
+        // SANITY CHECK
+        if (inited) throw new UnsupportedOperationException("Hardware already initialized!");
+
         // Init keyMaps with all names in keys
         for (String s : keys) {
             keyMaps.put(s,new ArrayList<Integer>());
@@ -134,5 +138,20 @@ public class Hardware {
         }
 
         inited = true;
+    }
+
+    /**
+     * Gets list of IDs associated with a particular registered search key
+     *
+     * @param key Key to search for
+     * @return {@link List<Integer>} of device IDs with that mapping
+     */
+    public List<Integer> searchByRegisteredKey(String key) {
+
+        // SANITY CHECK
+        if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
+
+        // Get and return list associated with key (null if nonexistant)
+        return keyMaps.get(key);
     }
 }
