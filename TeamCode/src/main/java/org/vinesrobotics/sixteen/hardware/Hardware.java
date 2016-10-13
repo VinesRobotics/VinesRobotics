@@ -36,7 +36,7 @@ import java.util.Map;
  */
 
 public class Hardware {
-    protected ArrayList<HardwareDevice> devices = new ArrayList<>();
+    public ArrayList<HardwareDevice> devices = new ArrayList<>();
     protected ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
 
     boolean inited = false;
