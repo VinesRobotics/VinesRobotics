@@ -3,6 +3,8 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.vinesrobotics.sixteen.Utils;
+
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,5 +155,45 @@ public class Hardware {
 
         // Get and return list associated with key (null if nonexistant)
         return keyMaps.get(key);
+
+    }
+
+    /**
+     * Checks if device has particular key attached. Note that this can check for any key, not just
+     * registered ones. A key is defined by the delimiters passed into the init function.
+     *
+     * @param id ID of device to check
+     * @param key Key to check
+     * @return Has key associated.
+     */
+
+    public boolean hasKey(int id, String key) {
+
+        // SANITY CHECK
+        if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
+
+        // It's a simple check, so doesn't really need explaining
+        return keyMatch.get(id).contains(key);
+
+    }
+
+    public List<Integer> getDevicesWithKeys(String... keys){
+
+        // SANITY CHECK
+        if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
+
+        // Convert varargs to List
+        List<String> kys = Arrays.asList(keys);
+
+        List<String> prim = Utils.getListSimilarity(kys,this.keys);
+
+        List<Integer> out = new ArrayList<>();
+
+        for ( String s : prim ) {
+
+        }
+
+        return null;
+
     }
 }
