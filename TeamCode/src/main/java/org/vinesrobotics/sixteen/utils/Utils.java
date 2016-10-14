@@ -1,4 +1,4 @@
-package org.vinesrobotics.sixteen;
+package org.vinesrobotics.sixteen.utils;
 
 import java.util.List;
 
@@ -47,10 +47,34 @@ public class Utils {
                 out.remove(e);
         }
 
-        return la;
+        return out;
+
     }
+
+    /**
+     * Gets the differences of lists.
+     *
+     * @param la List 1
+     * @param lb List 2
+     * @param <T> Type in list
+     * @return List difference
+     */
     public static <T> List<T> getListDifference(List<T> la, List<T> lb) {
-        return null;
+
+        List<T> out = la.subList(0,la.size());
+
+        for ( T e : la ) {
+            if ( lb.contains(e) )
+                out.remove(e);
+        }
+
+        for ( T e : lb ) {
+            if ( !la.contains(e) )
+                out.add(e);
+        }
+
+        return out;
+
     }
 
 }

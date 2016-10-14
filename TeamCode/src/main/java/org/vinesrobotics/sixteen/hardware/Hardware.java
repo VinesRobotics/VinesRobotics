@@ -3,7 +3,7 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.vinesrobotics.sixteen.Utils;
+import org.vinesrobotics.sixteen.utils.Utils;
 
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
