@@ -37,7 +37,7 @@ public class Controller {
      *
      */
     public void calibrate() {
-        calibrate(CalibrationType.COMPLEX);
+        calibrate(CalibrationType.SIMPLE);
     }
 
     /**

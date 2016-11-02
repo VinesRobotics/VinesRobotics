@@ -31,4 +31,13 @@ public class Controllers {
         return gpb;
     }
 
+    public void calibrate() {
+        calibrate(Controller.CalibrationType.SIMPLE);
+    }
+
+    public void calibrate(Controller.CalibrationType caltyp) {
+        a().calibrate(caltyp);
+        b().calibrate(caltyp);
+    }
+
 }
