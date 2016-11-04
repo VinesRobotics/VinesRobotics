@@ -3,23 +3,20 @@ package org.vinesrobotics.sixteen.hardware.controllers;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.vuforia.Vec2F;
 
+import org.vinesrobotics.sixteen.hardware.controllers.enums.CalibrationMode;
+import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.sixteen.utils.Logging;
+import org.vinesrobotics.sixteen.utils.Vec2D;
 
 /**
  * Created by Vines HS Robotics on 10/14/2016.
  */
 
 public class Controller {
-
-    public enum CalibrationType {
-        SIMPLE,
-        COMPLEX
-    }
-
     private Gamepad gamepad;
     private String name = "";
 
-    private CalibrationType ctype = CalibrationType.SIMPLE;
+    private CalibrationMode ctype = CalibrationMode.SIMPLE;
 
     // COMPLEX mode ignore values
     private float lzx = 0.0f;
@@ -30,6 +27,7 @@ public class Controller {
     protected Controller (Gamepad gp, String name) {
         gamepad = gp;
         this.name = name;
+        gamepad.setJoystickDeadzone(0.0f);
     }
 
     /**
@@ -37,7 +35,7 @@ public class Controller {
      *
      */
     public void calibrate() {
-        calibrate(CalibrationType.SIMPLE);
+        calibrate(CalibrationMode.SIMPLE);
     }
 
     /**
@@ -45,20 +43,12 @@ public class Controller {
      *
      * @param type Mode
      */
-    public void calibrate(CalibrationType type) {
+    public void calibrate(CalibrationMode type) {
 
         // SIMPLE calibration mode
-        if (type == CalibrationType.SIMPLE) {
+        if (type == CalibrationMode.SIMPLE) {
 
             Logging.log("Please leave the joysticks on gamepad " + name + " in the neutral position.");
-
-            try {
-                Thread.sleep(5000L);
-            } catch (InterruptedException e) {
-                return;
-            }
-
-            Logging.log("Calibrating...");
 
             float ma = Math.max(gamepad.left_stick_x,gamepad.left_stick_y);
             float mb = Math.max(gamepad.right_stick_x,gamepad.right_stick_y);
@@ -70,7 +60,7 @@ public class Controller {
         }
 
         // COMPLEX calibration mode
-        if (type == CalibrationType.COMPLEX) {
+        if (type == CalibrationMode.COMPLEX) {
 
             Logging.log("Please leave the joysticks on gamepad " + name + " in the neutral position.");
 
@@ -100,12 +90,12 @@ public class Controller {
 
     }
 
-    public enum Joystick {
-        RIGHT,
-        LEFT
-    }
-
-    public Vec2F getJoystick(Joystick stick) {
+    /**
+     * Gets value of specified joystick
+     * @param stick Joystick to get the value of
+     * @return value
+     */
+    public Vec2D<Float> getJoystick(Joystick stick) {
 
         float x = 0.0f;
         float y = 0.0f;
@@ -120,7 +110,7 @@ public class Controller {
             y = gamepad.left_stick_y;
         }
 
-        if (ctype == CalibrationType.COMPLEX) {
+        if (ctype == CalibrationMode.COMPLEX) {
 
             if (stick == Joystick.RIGHT) {
                 x = (x==rzx)?0:x;
@@ -134,8 +124,10 @@ public class Controller {
 
         }
 
-        return new Vec2F(x,y);
+        return new Vec2D<>(x,y);
 
     }
+
+
 
 }

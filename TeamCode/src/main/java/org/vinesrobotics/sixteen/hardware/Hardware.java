@@ -93,6 +93,10 @@ public class Hardware {
 
     }
 
+    public HardwareDevice getDevice(int id){
+        return devices.get(id);
+    }
+
     /**
      * Initializes hardware settings and indexes the keys.
      *
@@ -177,23 +181,44 @@ public class Hardware {
 
     }
 
-    public List<Integer> getDevicesWithKeys(String... keys){
+    /**
+     * Get all devices that have all specified keys
+     * @param keys Keys to use as a filter
+     * @return A list of hardware indices that match the criteria
+     */
+    public List<Integer> getDevicesWithAllKeys(String... keys){
 
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
+        if (keys.length < 1) throw new IllegalArgumentException("Needs at least one key to check for");
 
         // Convert varargs to List
         List<String> kys = Arrays.asList(keys);
 
+        // Get similarity between loaded keys and args
+        // (Get filtered key list)
         List<String> prim = Utils.getListSimilarity(kys,this.keys);
+        if (prim.size() < 1) throw new IllegalArgumentException("Needs at least one listed key to check for");
 
         List<Integer> out = new ArrayList<>();
 
-        for ( String s : prim ) {
+        // Initialize out with full list of compatible keys
+        out.addAll(keyMaps.get(prim.get(0)));
 
+        // Remove first
+        prim.remove(0);
+
+        // Filter out elements that don't have all keys
+        for (Integer k : out) {
+            for (String s : prim) {
+                if (!hasKey(k,s)) {
+                    out.remove(k);
+                    break;
+                }
+            }
         }
 
-        return null;
+        return out;
 
     }
 }

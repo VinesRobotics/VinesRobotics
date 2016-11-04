@@ -3,12 +3,19 @@ package org.vinesrobotics.sixteen.hardware.controllers;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.vinesrobotics.sixteen.hardware.controllers.enums.CalibrationMode;
+
 /**
  * Created by Vines HS Robotics on 10/14/2016.
  */
 
 public class Controllers {
 
+    /**
+     * Generates new Controllers object linked to an OpMode.
+     * @param omode OpMode to link to
+     * @return the generated Controllers object
+     */
     public static Controllers getControllerObjects(OpMode omode) {
         return new Controllers(omode.gamepad1, omode.gamepad2);
     }
@@ -23,19 +30,34 @@ public class Controllers {
             gpb = new Controller(two,"2");
     }
 
+    /**
+     * Gets a reference to Controller "A"
+     * @return a reference to Controller "A"
+     */
     public Controller a(){
         return gpa;
     }
 
+    /**
+     * Gets a reference to Controller "B"
+     * @return a reference to Controller "B"
+     */
     public Controller b(){
         return gpb;
     }
 
+    /**
+     * Calibrates both controllers with {link @CalibrationMode.SIMPLE}
+     */
     public void calibrate() {
-        calibrate(Controller.CalibrationType.SIMPLE);
+        calibrate(CalibrationMode.SIMPLE);
     }
 
-    public void calibrate(Controller.CalibrationType caltyp) {
+    /**
+     * Calibrates both controllers with the same CalibrationType
+     * @param caltyp The CalibrationType to use
+     */
+    public void calibrate(CalibrationMode caltyp) {
         a().calibrate(caltyp);
         b().calibrate(caltyp);
     }
