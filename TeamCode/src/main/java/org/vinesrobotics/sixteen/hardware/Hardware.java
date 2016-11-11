@@ -43,7 +43,7 @@ public class Hardware {
     private ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
 
     boolean inited = false;
-    private Map<String,ArrayList<Integer>> keyMaps = new HashMap<>();
+    private Map<String,ArrayList<HardwareElement>> keyMaps = new HashMap<>();
     private ArrayList<String> keys = new ArrayList<>();
     { // Add some default keys that might be useful.
         keys.add("left");
@@ -110,7 +110,7 @@ public class Hardware {
 
         // Init keyMaps with all names in keys
         for (String s : keys) {
-            keyMaps.put(s,new ArrayList<Integer>());
+            keyMaps.put(s,new ArrayList<HardwareElement>());
         }
 
         // Iterate over all hardware devices
@@ -131,10 +131,10 @@ public class Hardware {
             keyMatch.get(id).addAll(Arrays.asList(nsplit));
 
             // Put index into appropriate keyMaps element
-            for (Map.Entry<String, ArrayList<Integer>> s : keyMaps.entrySet()) {
+            for (Map.Entry<String, ArrayList<HardwareElement>> s : keyMaps.entrySet()) {
                 // If key in the index list, then add it to the appropriate list.
                 if (keyMatch.get(id).contains(s.getKey())) {
-                    s.getValue().add(id);
+                    s.getValue().add(new HardwareElement(this,id));
                 }
             }
 
@@ -152,7 +152,7 @@ public class Hardware {
      * @param key Key to search for
      * @return {@link List<Integer>} of device IDs with that mapping
      */
-    public List<Integer> searchByRegisteredKey(String key) {
+    public List<HardwareElement> searchByRegisteredKey(String key) {
 
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
@@ -171,13 +171,13 @@ public class Hardware {
      * @return Has key associated.
      */
 
-    public boolean hasKey(int id, String key) {
+    public boolean hasKey(HardwareElement id, String key) {
 
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
 
         // It's a simple check, so doesn't really need explaining
-        return keyMatch.get(id).contains(key);
+        return keyMatch.get(id.id()).contains(key);
 
     }
 
@@ -186,7 +186,7 @@ public class Hardware {
      * @param keys Keys to use as a filter
      * @return A list of hardware indices that match the criteria
      */
-    public List<Integer> getDevicesWithAllKeys(String... keys){
+    public List<HardwareElement> getDevicesWithAllKeys(String... keys){
 
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
@@ -200,7 +200,7 @@ public class Hardware {
         List<String> prim = Utils.getListSimilarity(kys,this.keys);
         if (prim.size() < 1) throw new IllegalArgumentException("Needs at least one listed key to check for");
 
-        List<Integer> out = new ArrayList<>();
+        List<HardwareElement> out = new ArrayList<>();
 
         // Initialize out with full list of compatible keys
         out.addAll(keyMaps.get(prim.get(0)));
@@ -209,7 +209,7 @@ public class Hardware {
         prim.remove(0);
 
         // Filter out elements that don't have all keys
-        for (Integer k : out) {
+        for (HardwareElement k : out) {
             for (String s : prim) {
                 if (!hasKey(k,s)) {
                     out.remove(k);
