@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.vinesrobotics.sixteen.hardware.Hardware;
 
+import java.security.InvalidKeyException;
+
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -65,6 +67,8 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
 
+    boolean died = false;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -73,6 +77,12 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
+        try {
+            robot.registerHardwareKeyName("intake");
+        } catch (InvalidKeyException e) {
+            died = true;
+            return;
+        }
         robot.initHardware(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
@@ -89,14 +99,17 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
 
     DcMotor lmot;
     DcMotor rmot;
+    DcMotor itk;
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
     public void start() {
+        if (died) return;
         lmot = (DcMotor) robot.getDevicesWithAllKeys("left","motor").get(0).get();
         rmot = (DcMotor) robot.getDevicesWithAllKeys("right","motor").get(0).get();
+        itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
     }
 
     /*
@@ -104,6 +117,8 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
+        if (died) return;
+
         double left;
         double right;
 
@@ -113,14 +128,6 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         lmot.setPower(left);
         rmot.setPower(right);
 
-        // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
-
-
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         updateTelemetry(telemetry);

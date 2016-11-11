@@ -3,7 +3,7 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 /**
- *
+ * Copyright
  */
 
 public class HardwareElement {
