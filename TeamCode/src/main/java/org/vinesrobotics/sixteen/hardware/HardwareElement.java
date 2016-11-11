@@ -3,7 +3,7 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 /**
- * Created by Vines HS Robotics on 11/11/2016.
+ *
  */
 
 public class HardwareElement {
