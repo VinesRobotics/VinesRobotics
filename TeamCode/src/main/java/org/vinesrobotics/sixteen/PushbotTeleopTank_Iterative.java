@@ -38,6 +38,11 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.vinesrobotics.sixteen.hardware.Hardware;
+import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
+import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
+import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
+import org.vinesrobotics.sixteen.utils.Logging;
+import org.vinesrobotics.sixteen.utils.Vec2D;
 
 import java.security.InvalidKeyException;
 
@@ -69,6 +74,12 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
 
     boolean died = false;
 
+    Controllers c;
+
+    DcMotor lmot;
+    DcMotor rmot;
+    DcMotor itk;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -77,6 +88,9 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
+
+        Logging.setTelemetry(telemetry);
+
         try {
             robot.registerHardwareKeyName("intake");
         } catch (InvalidKeyException e) {
@@ -85,9 +99,18 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         }
         robot.initHardware(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("ddd", robot.keyMaps);
         updateTelemetry(telemetry);
+
+        ///lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
+        ///rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
+        ///itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
+
+        c = Controllers.getControllerObjects(this);
+
+        // Send telemetry message to signify robot waiting;
+       // telemetry.addData("Say", "Hello Driver");    //
+        //updateTelemetry(telemetry);
     }
 
     /*
@@ -97,19 +120,12 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
     public void init_loop() {
     }
 
-    DcMotor lmot;
-    DcMotor rmot;
-    DcMotor itk;
-
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
     public void start() {
         if (died) return;
-        lmot = (DcMotor) robot.getDevicesWithAllKeys("left","motor").get(0).get();
-        rmot = (DcMotor) robot.getDevicesWithAllKeys("right","motor").get(0).get();
-        itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
     }
 
     /*
@@ -119,17 +135,21 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
     public void loop() {
         if (died) return;
 
-        double left;
-        double right;
+        Vec2D<Float> left;
+        Vec2D<Float> right;
+
+        left = c.a().getJoystick(Joystick.LEFT);
+        right = c.a().getJoystick(Joystick.RIGHT);
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = gamepad1.left_stick_y;
-        right = gamepad1.right_stick_y;
-        lmot.setPower(left);
-        rmot.setPower(right);
+        lmot.setPower(left.b());
+        rmot.setPower(right.b());
+
+        itk.setPower(left.a()*(right.a()+0.01));
 
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("btA", c.a().getButton(Button.A).value);
         updateTelemetry(telemetry);
     }
 

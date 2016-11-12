@@ -43,7 +43,7 @@ public class Hardware {
     private ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
 
     boolean inited = false;
-    private Map<String,ArrayList<HardwareElement>> keyMaps = new HashMap<>();
+    public Map<String,ArrayList<HardwareElement>> keyMaps = new HashMap<>();
     private ArrayList<String> keys = new ArrayList<>();
     { // Add some default keys that might be useful.
         keys.add("left");
@@ -51,6 +51,7 @@ public class Hardware {
         keys.add("drive");
         keys.add("servo");
         keys.add("sensor");
+        keys.add("motor");
     }
 
     /**
@@ -75,9 +76,9 @@ public class Hardware {
                 keys.add(key);
             else
                 throw new InvalidKeyException("Don't double add keys!");
-
-        // Gotta do something when someone does what you don't do.
-        throw new UnsupportedOperationException("Keys cannot be added after hardware init");
+        else
+            // Gotta do something when someone does what you don't do.
+            throw new UnsupportedOperationException("Keys cannot be added after hardware init");
     }
 
     /**
@@ -197,7 +198,7 @@ public class Hardware {
 
         // Get similarity between loaded keys and args
         // (Get filtered key list)
-        List<String> prim = Utils.getListSimilarity(kys,this.keys);
+        ArrayList<String> prim = Utils.getListSimilarity(new ArrayList<>(kys),this.keys);
         if (prim.size() < 1) throw new IllegalArgumentException("Needs at least one listed key to check for");
 
         List<HardwareElement> out = new ArrayList<>();

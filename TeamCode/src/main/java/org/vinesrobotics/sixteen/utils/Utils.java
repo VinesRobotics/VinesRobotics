@@ -1,5 +1,6 @@
 package org.vinesrobotics.sixteen.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,9 +39,9 @@ public class Utils {
      * @param <T> List type
      * @return List similarity
      */
-    public static <T> List<T> getListSimilarity(List<T> la, List<T> lb) {
+    public static <T> ArrayList<T> getListSimilarity(ArrayList<T> la, ArrayList<T> lb) {
 
-        List<T> out = la.subList(0,la.size());
+        ArrayList<T> out = new ArrayList<>(la.subList(0,la.size()));
 
         for ( T e : la ) {
             if ( !lb.contains(e) )

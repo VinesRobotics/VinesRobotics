@@ -3,9 +3,11 @@ package org.vinesrobotics.sixteen.hardware.controllers;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.vuforia.Vec2F;
 
+import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.CalibrationMode;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.sixteen.utils.Logging;
+import org.vinesrobotics.sixteen.utils.Reflection;
 import org.vinesrobotics.sixteen.utils.Vec2D;
 
 /**
@@ -148,6 +150,11 @@ public class Controller {
 
     }
 
+    public Button getButton(Button b) {
 
+        b.value = (float) Reflection.getFieldValue(b.f.value,gamepad);
+
+        return b;
+    }
 
 }
