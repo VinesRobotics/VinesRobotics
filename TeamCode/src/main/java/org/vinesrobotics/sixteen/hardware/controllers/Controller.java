@@ -1,7 +1,6 @@
 package org.vinesrobotics.sixteen.hardware.controllers;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.vuforia.Vec2F;
 
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.CalibrationMode;
@@ -63,6 +62,8 @@ public class Controller {
     /**
      * Calibrates controller using one of 2 modes
      *
+     * Probably should be left unused
+     *
      * @param type Mode
      */
     public void calibrate(CalibrationMode type) {
@@ -122,16 +123,19 @@ public class Controller {
         float x = 0.0f;
         float y = 0.0f;
 
+        // Get the data for the right joystick
         if (stick == Joystick.RIGHT) {
             x = gamepad.right_stick_x;
             y = gamepad.right_stick_y;
         }
 
+        // Get the data for the left joystick
         if (stick == Joystick.LEFT) {
             x = gamepad.left_stick_x;
             y = gamepad.left_stick_y;
         }
 
+        // Apply complex calibration
         if (ctype == CalibrationMode.COMPLEX) {
 
             if (stick == Joystick.RIGHT) {
@@ -146,13 +150,25 @@ public class Controller {
 
         }
 
+        // Return the vector
         return new Vec2D<>(x,y);
 
     }
 
+    /**
+     * Gets a button value; if a boolean, true is 1, false is 0; if Float, then the float.
+     *
+     * @param b Button to check, value property modified
+     * @return Same object as passed in, but with value property modified
+     */
     public Button getButton(Button b) {
 
-        b.value = (float) Reflection.getFieldValue(b.f.value,gamepad);
+        // Check if button is analog, look at ButtonType for what is and isn't
+        if (!b.type().isAnalog()) {
+            b.value = Reflection.<Boolean>getFieldValue(b.f.value,gamepad) ? 1 : 0 ;
+        } else {
+            b.value = Reflection.<Float>getFieldValue(b.f.value,gamepad);
+        }
 
         return b;
     }

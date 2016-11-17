@@ -34,9 +34,9 @@ public class Reflection {
         }
     }
 
-    public static Object getFieldValue(Field field, Object src) {
+    public static <T> T getFieldValue(Field field, Object src) {
         try {
-            return field.get(src);
+            return (T) field.get(src);
         } catch (IllegalAccessException e) {
             return null;
         }

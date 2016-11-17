@@ -23,9 +23,20 @@
 package org.vinesrobotics.sixteen.hardware.controllers.enums;
 
 public enum ButtonType {
-    DPAD,
-    BUMPER,
-    TRIGGER,
-    STICK,
-    BUTTON
+    DPAD(false),
+    BUMPER(false),
+    TRIGGER(true),
+    STICK(true),
+    BUTTON(false);
+
+    boolean analog = false;
+
+    public boolean isAnalog() {
+        return analog;
+    }
+
+    ButtonType(boolean analog) {
+        this.analog = analog;
+    }
+
 }

@@ -66,10 +66,7 @@ import java.security.InvalidKeyException;
 public class  PushbotTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
-    Hardware robot       = new Hardware(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    Hardware robot       = new Hardware();
 
 
     boolean died = false;
@@ -94,8 +91,6 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         try {
             robot.registerHardwareKeyName("intake");
         } catch (InvalidKeyException e) {
-            died = true;
-            return;
         }
         robot.initHardware(hardwareMap);
 
