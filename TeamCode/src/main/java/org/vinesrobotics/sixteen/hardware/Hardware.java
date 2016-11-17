@@ -3,8 +3,13 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.StringBufferInputStream;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,33 +120,49 @@ public class Hardware {
         }
 
         // Iterate over all hardware devices
-        for (HardwareDevice dkv : hwm.getAll(HardwareDevice.class)){
+        for (Object odkv : hwm.getAll(Object.class)){
 
-            // Add device to local ID list
-            int id = devices.size();
-            devices.add(dkv);
+            try {
+                HardwareDevice dkv = (HardwareDevice) odkv;
 
-            // Add corresponding keyMatch element
-            keyMatch.add(new ArrayList<String>());
+                // Add device to local ID list
+                int id = devices.size();
+                devices.add(dkv);
 
-            // Get device keys
-            String name = dkv.getDeviceName();
-            String[] nsplit = name.split(splitRegex);
+                // Add corresponding keyMatch element
+                keyMatch.add(new ArrayList<String>());
 
-            // Put keys into keyMatch
-            keyMatch.get(id).addAll(Arrays.asList(nsplit));
+                hwm.getNamesOf(dkv);
+                Logging.hardwareAccess.value.addData("",hwm.getNamesOf(dkv));
 
-            // Put index into appropriate keyMaps element
-            for (Map.Entry<String, ArrayList<HardwareElement>> s : keyMaps.entrySet()) {
-                // If key in the index list, then add it to the appropriate list.
-                if (keyMatch.get(id).contains(s.getKey())) {
-                    s.getValue().add(new HardwareElement(this,id));
+                // Get device keys
+                String name = hwm.getNamesOf(dkv).iterator().next();
+                //Logging.log(name);
+                String[] nsplit = name.split(splitRegex);
+
+                // Put keys into keyMatch
+                keyMatch.get(id).addAll(Arrays.asList(nsplit));
+
+                // Put index into appropriate keyMaps element
+                for (Map.Entry<String, ArrayList<HardwareElement>> s : keyMaps.entrySet()) {
+                    // If key in the index list, then add it to the appropriate list.
+                    if (keyMatch.get(id).contains(s.getKey())) {
+                        s.getValue().add(new HardwareElement(this, id));
+                    }
                 }
+
+                /*/-----------------------------------------------------------------------\*\
+                    KEEP IN MIND THAT ID IS THE INDEX IN devices. THIS IS VERY IMPORTANT.
+                \*\-----------------------------------------------------------------------/*/
+            } catch (Exception e) {
+                OutputStream os = new ByteArrayOutputStream();
+                PrintStream ps = new PrintStream(os);
+
+                e.printStackTrace(ps);
+
+                Logging.log("ERROR: " + ps.toString());
             }
 
-            /*/-----------------------------------------------------------------------\*\
-                KEEP IN MIND THAT ID IS THE INDEX IN devices. THIS IS VERY IMPORTANT.
-            \*\-----------------------------------------------------------------------/*/
         }
 
         inited = true;
@@ -201,22 +222,28 @@ public class Hardware {
         ArrayList<String> prim = Utils.getListSimilarity(new ArrayList<>(kys),this.keys);
         if (prim.size() < 1) throw new IllegalArgumentException("Needs at least one listed key to check for");
 
+        List<HardwareElement> outa = new ArrayList<>();
         List<HardwareElement> out = new ArrayList<>();
 
         // Initialize out with full list of compatible keys
+        outa.addAll(keyMaps.get(prim.get(0)));
         out.addAll(keyMaps.get(prim.get(0)));
 
         // Remove first
         prim.remove(0);
 
         // Filter out elements that don't have all keys
-        for (HardwareElement k : out) {
+        for (HardwareElement k : outa) {
             for (String s : prim) {
                 if (!hasKey(k,s)) {
                     out.remove(k);
                     break;
                 }
             }
+        }
+
+        if(out.size() == 0) {
+            throw new IndexOutOfBoundsException("No devices containing all of the following keys: " + keys.toString());
         }
 
         return out;

@@ -1,6 +1,7 @@
 package org.vinesrobotics.sixteen.utils;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.vinesrobotics.sixteen.hardware.LocalControl;
 
 /**
  * Created by Vines HS Robotics on 10/14/2016.
@@ -8,7 +9,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Logging {
 
-    private static Telemetry telemetry = null;
+    protected static Telemetry telemetry = null;
+    public static LocalControl<Telemetry> hardwareAccess = null;
 
     /**
      * Sets logging telemetry object.
@@ -16,6 +18,7 @@ public class Logging {
      */
     public static void setTelemetry(Telemetry tel) {
         telemetry = tel;
+        hardwareAccess = new LocalControl<>(tel);
     }
 
     /**

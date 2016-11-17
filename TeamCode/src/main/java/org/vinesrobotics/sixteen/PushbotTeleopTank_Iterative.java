@@ -99,12 +99,13 @@ public class  PushbotTeleopTank_Iterative extends OpMode{
         }
         robot.initHardware(hardwareMap);
 
-        telemetry.addData("ddd", robot.keyMaps);
-        updateTelemetry(telemetry);
+        //telemetry.addData("ddd", robot.keyMaps);
+        //telemetry.addData("eee", hardwareMap.getAll(Object.class));
+        //updateTelemetry(telemetry);
 
-        ///lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
-        ///rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
-        ///itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
+        lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
+        rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
+        itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
 
         c = Controllers.getControllerObjects(this);
 
