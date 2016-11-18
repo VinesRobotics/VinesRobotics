@@ -112,23 +112,14 @@ public class VibotControlled extends OpMode{
 
         try {
             robot.registerHardwareKeyName("intake");
-        } catch (InvalidKeyException e) {
-        }
+        } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
-
-        //telemetry.addData("ddd", robot.keyMaps);
-        //telemetry.addData("eee", hardwareMap.getAll(Object.class));
-        //updateTelemetry(telemetry);
 
         lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
         rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
         itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
 
         c = Controllers.getControllerObjects(this);
-
-        // Send telemetry message to signify robot waiting;
-       // telemetry.addData("Say", "Hello Driver");    //
-        //updateTelemetry(telemetry);
     }
 
     /*
@@ -156,18 +147,17 @@ public class VibotControlled extends OpMode{
         Vec2D<Float> left;
         Vec2D<Float> right;
 
-        left = c.a().getJoystick(Joystick.LEFT);
-        right = c.a().getJoystick(Joystick.RIGHT);
+        right = c.a().getJoystick(Joystick.LEFT);
+        left = c.a().getJoystick(Joystick.RIGHT);
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        lmot.setPower(left.b());
-        rmot.setPower(right.b());
+        lmot.setPower(-left.b());
+        rmot.setPower(-right.b());
 
         itk.setPower(left.a()*(right.a()+0.01));
 
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("btA", c.a().getButton(Button.A).value);
         updateTelemetry(telemetry);
     }
 
