@@ -56,8 +56,8 @@ public class VibotAutonomous extends OpMode {
     }
 
     public void start(){
-        lmot.setPower(1);
-        rmot.setPower(-1);
+        lmot.setPower(-1);
+        rmot.setPower(1);
         itk.setPower(1);
     }
 
