@@ -64,6 +64,7 @@ public class VibotAutonomous extends OpMode {
 
     @Override
     public void loop() {
-        Logging.log(String.valueOf(Utils.getDeltaTime(this.getRuntime())));
+        double delta = Utils.getDeltaTime(this.getRuntime());
+        Logging.log(String.valueOf(delta));
     }
 }
