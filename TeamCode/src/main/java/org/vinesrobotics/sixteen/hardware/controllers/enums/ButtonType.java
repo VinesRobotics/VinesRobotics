@@ -26,7 +26,7 @@ public enum ButtonType {
     DPAD(false),
     BUMPER(false),
     TRIGGER(true),
-    STICK(true),
+    STICK(false),
     BUTTON(false);
 
     boolean analog = false;

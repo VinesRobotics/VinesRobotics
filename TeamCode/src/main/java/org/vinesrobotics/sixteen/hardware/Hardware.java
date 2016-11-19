@@ -1,5 +1,7 @@
 package org.vinesrobotics.sixteen.hardware;
 
+import android.support.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -13,8 +15,11 @@ import java.io.StringBufferInputStream;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -243,7 +248,7 @@ public class Hardware {
         }
 
         if(out.size() == 0) {
-            throw new IndexOutOfBoundsException("No devices containing all of the following keys: " + keys.toString());
+            return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericMotorDevice())));
         }
 
         return out;

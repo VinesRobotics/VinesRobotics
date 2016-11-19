@@ -27,8 +27,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.vinesrobotics.sixteen.hardware.Hardware;
-import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
 import org.vinesrobotics.sixteen.utils.Logging;
+import org.vinesrobotics.sixteen.utils.Utils;
 
 import java.security.InvalidKeyException;
 
@@ -59,10 +59,11 @@ public class VibotAutonomous extends OpMode {
         lmot.setPower(-1);
         rmot.setPower(1);
         itk.setPower(1);
+        Utils.getDeltaTime(this.getRuntime());
     }
 
     @Override
     public void loop() {
-
+        Logging.log(String.valueOf(Utils.getDeltaTime(this.getRuntime())));
     }
 }

@@ -78,4 +78,11 @@ public class Utils {
 
     }
 
+    private static double ltime = 0.0;
+    public static double getDeltaTime(double time) {
+        double lltime = ltime;
+        ltime = time;
+        return time - lltime;
+    }
+
 }

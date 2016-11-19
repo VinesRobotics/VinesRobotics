@@ -167,7 +167,7 @@ public class Controller {
         if (!b.type().isAnalog()) {
             b.value = Reflection.<Boolean>getFieldValue(b.f.value,gamepad) ? 1 : 0 ;
         } else {
-            b.value = Reflection.<Float>getFieldValue(b.f.value,gamepad);
+            b.value = Reflection.<Float>getFieldValue(b.f.value, gamepad);
         }
 
         return b;
