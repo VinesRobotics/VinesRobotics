@@ -24,6 +24,8 @@ package org.vinesrobotics.sixteen.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
+import org.vinesrobotics.sixteen.hardware.controllers.Controller;
+import org.vinesrobotics.sixteen.hardware.controllers.ControllerState;
 import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.CalibrationMode;
@@ -67,43 +69,17 @@ public class ControllerDebug extends OpMode {
         ctrls.calibrate(CalibrationMode.SIMPLE);
     }
     public void loop(){
-        telemetry.addData("Right one",ctrls.a().getJoystick(Joystick.RIGHT));
-        telemetry.addData("Left one",ctrls.a().getJoystick(Joystick.LEFT));
-        telemetry.addData("A one",ctrls.a().getButton(Button.A).value);
-        telemetry.addData("B one",ctrls.a().getButton(Button.B).value);
-        telemetry.addData("X one",ctrls.a().getButton(Button.X).value);
-        telemetry.addData("Y one",ctrls.a().getButton(Button.Y).value);
-        telemetry.addData("LB one",ctrls.a().getButton(Button.LB).value);
-        telemetry.addData("RB one",ctrls.a().getButton(Button.RB).value);
-        telemetry.addData("LT one",ctrls.a().getButton(Button.LT).value);
-        telemetry.addData("RT one",ctrls.a().getButton(Button.RT).value);
-        telemetry.addData("LS one",ctrls.a().getButton(Button.LS).value);
-        telemetry.addData("RS one",ctrls.a().getButton(Button.RS).value);
-        telemetry.addData("UP one",ctrls.a().getButton(Button.UP).value);
-        telemetry.addData("DOWN one",ctrls.a().getButton(Button.DOWN).value);
-        telemetry.addData("LEFT one",ctrls.a().getButton(Button.LEFT).value);
-        telemetry.addData("RIGHT one",ctrls.a().getButton(Button.RIGHT).value);
-        telemetry.addData("START one",ctrls.a().getButton(Button.START).value);
-        telemetry.addData("BACK one",ctrls.a().getButton(Button.BACK).value);
-
-        telemetry.addData("Right two",ctrls.b().getJoystick(Joystick.RIGHT));
-        telemetry.addData("Left two",ctrls.b().getJoystick(Joystick.LEFT));
-        telemetry.addData("A two",ctrls.b().getButton(Button.A).value);
-        telemetry.addData("B two",ctrls.b().getButton(Button.B).value);
-        telemetry.addData("X two",ctrls.b().getButton(Button.X).value);
-        telemetry.addData("Y two",ctrls.b().getButton(Button.Y).value);
-        telemetry.addData("LB two",ctrls.b().getButton(Button.LB).value);
-        telemetry.addData("RB two",ctrls.b().getButton(Button.RB).value);
-        telemetry.addData("LT two",ctrls.b().getButton(Button.LT).value);
-        telemetry.addData("RT two",ctrls.b().getButton(Button.RT).value);
-        telemetry.addData("LS two",ctrls.b().getButton(Button.LS).value);
-        telemetry.addData("RS two",ctrls.b().getButton(Button.RS).value);
-        telemetry.addData("UP two",ctrls.b().getButton(Button.UP).value);
-        telemetry.addData("DOWN two",ctrls.b().getButton(Button.DOWN).value);
-        telemetry.addData("LEFT two",ctrls.b().getButton(Button.LEFT).value);
-        telemetry.addData("RIGHT two",ctrls.b().getButton(Button.RIGHT).value);
-        telemetry.addData("START two",ctrls.b().getButton(Button.START).value);
-        telemetry.addData("BACK two",ctrls.b().getButton(Button.BACK).value);
+        int i = 0;
+        for ( Controller c : ctrls.getControllers() ) {
+            ControllerState cs = c.getControllerState();
+            for ( Joystick j : Joystick.values() ) {
+                telemetry.addData(i + "." + j.name(),cs.joystick(j));
+            }
+            for ( Button b : Button.values() ) {
+                telemetry.addData(i + "." + b.name(), b.type().isAnalog()? cs.btnVal(b) : cs.isPressed(b) );
+            }
+            i++;
+        }
 
         telemetry.update();
     }

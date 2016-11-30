@@ -254,4 +254,16 @@ public class Hardware {
         return out;
 
     }
+
+    /**
+     * Gets the first found device with all input keys
+     * @see Hardware#getDevicesWithAllKeys(String...)
+     *
+     * @param keys The keys to
+     * @param <T> The type to cast to (HardwareElement for default). It may fail, this function errors in that case.
+     * @return the device
+     */
+    public <T> T getDeviceWithKeys(String... keys) {
+        return (T) getDevicesWithAllKeys(keys).get(0).get();
+    }
 }

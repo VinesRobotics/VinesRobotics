@@ -60,6 +60,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.vinesrobotics.sixteen.hardware.Hardware;
+import org.vinesrobotics.sixteen.hardware.controllers.ControllerState;
 import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
@@ -115,9 +116,9 @@ public class VibotControlled extends OpMode{
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
-        lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
-        rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
-        itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
+        lmot = robot.getDeviceWithKeys("left","drive");
+        rmot = robot.getDeviceWithKeys("right","drive");
+        itk = robot.getDeviceWithKeys("intake","motor");
 
         c = Controllers.getControllerObjects(this);
     }

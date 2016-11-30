@@ -2,6 +2,8 @@ package org.vinesrobotics.sixteen.utils;
 
 /**
  * Created by Vines HS Robotics on 11/4/2016.
+ *
+ * Copyright
  */
 
 public class Vec2D<T> {
@@ -55,6 +57,19 @@ public class Vec2D<T> {
      */
     public void b(T newv) {
         v2 = newv;
+    }
+
+    /**
+     * Gets value for a given Axis, where Axis#X is a() and Axis#Y is b()
+     *
+     * @param ax Axis to retrieve
+     * @return Axis value
+     */
+    public T getAxis(Axis ax) {
+        if (ax.equals(Axis.X))
+            return a();
+        else
+            return b();
     }
 
     /**

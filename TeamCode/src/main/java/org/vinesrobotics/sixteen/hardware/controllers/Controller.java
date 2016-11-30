@@ -173,4 +173,19 @@ public class Controller {
         return b;
     }
 
+    /**
+     * Gets the state of the controller at the moment
+     *
+     * @return the controller's current state
+     */
+    private ControllerState controlState;
+    public ControllerState getControllerState() {
+
+        if (controlState == null) controlState = new ControllerState(this);
+
+        controlState.update();
+
+        return controlState;
+    }
+
 }

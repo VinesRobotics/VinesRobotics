@@ -47,6 +47,15 @@ public class Controllers {
     }
 
     /**
+     * Gets an array containing both controllers
+     *
+     * @return Array with both controllers
+     */
+    public Controller[] getControllers() {
+        return new Controller[]{gpa,gpb};
+    }
+
+    /**
      * Calibrates both controllers with {link @CalibrationMode.SIMPLE}
      */
     public void calibrate() {
