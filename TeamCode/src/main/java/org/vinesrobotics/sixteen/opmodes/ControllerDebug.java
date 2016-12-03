@@ -57,9 +57,7 @@ import org.vinesrobotics.sixteen.utils.Logging;
  */
 
 @TeleOp(name="ControllerDebug",group="Vines")
-//@Disabled
 public class ControllerDebug extends OpMode {
-    //HardwarePushbot robot       = new HardwarePushbot();
     private Controllers ctrls;
 
     public void init(){
@@ -73,7 +71,7 @@ public class ControllerDebug extends OpMode {
         for ( Controller c : ctrls.getControllers() ) {
             ControllerState cs = c.getControllerState();
             for ( Joystick j : Joystick.values() ) {
-                telemetry.addData(i + "." + j.name(),cs.joystick(j));
+                telemetry.addData(i + "." + j.name(),cs.joy(j));
             }
             for ( Button b : Button.values() ) {
                 telemetry.addData(i + "." + b.name(), b.type().isAnalog()? cs.btnVal(b) : cs.isPressed(b) );

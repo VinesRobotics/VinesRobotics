@@ -2,16 +2,21 @@ package org.vinesrobotics.sixteen.hardware;
 
 import android.support.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.vinesrobotics.sixteen.utils.Logging;
+import org.vinesrobotics.sixteen.utils.Reflection;
 import org.vinesrobotics.sixteen.utils.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringBufferInputStream;
+import java.lang.reflect.Type;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -248,7 +253,7 @@ public class Hardware {
         }
 
         if(out.size() == 0) {
-            return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericMotorDevice())));
+            return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericHardwareDevice())));
         }
 
         return out;
@@ -260,10 +265,39 @@ public class Hardware {
      * @see Hardware#getDevicesWithAllKeys(String...)
      *
      * @param keys The keys to
-     * @param <T> The type to cast to (HardwareElement for default). It may fail, this function errors in that case.
+     * @param <T> The type to cast to. It may fail, this function errors in that case.
      * @return the device
      */
-    public <T> T getDeviceWithKeys(String... keys) {
-        return (T) getDevicesWithAllKeys(keys).get(0).get();
+    public <T extends HardwareDevice> T getDeviceWithKeys(String... keys) {
+        List<HardwareElement> hes = getDevicesWithAllKeys(keys);
+
+        if (hes.get(0).get() instanceof GenericHardwareDevice) {
+            do {
+                try {
+                    Class<?> pty = Reflection.getClass(
+                            getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
+                    );
+
+
+
+                    if (pty.isAssignableFrom(DcMotorSimple.class)) {
+                        return (T) new GenericMotorDevice();
+                    }
+
+                    if (pty.isAssignableFrom(DcMotorSimple.class)) {
+                        return (T) new GenericServoDevice();
+                    }
+
+                    break;
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            } while (false);
+        }
+
+        return (T) hes.get(0).get();
     }
 }

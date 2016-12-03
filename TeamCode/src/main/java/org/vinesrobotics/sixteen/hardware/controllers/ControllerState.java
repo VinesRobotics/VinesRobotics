@@ -48,7 +48,7 @@ public class ControllerState {
         return joys.get(joystick.name()+ax.name());
     }
 
-    public Vec2D<Double> joystick(Joystick j) {
+    public Vec2D<Double> joy(Joystick j) {
         return new Vec2D<>( joyVal(j,Axis.X), joyVal(j,Axis.Y) );
     }
 

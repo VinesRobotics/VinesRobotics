@@ -23,6 +23,7 @@
 package org.vinesrobotics.sixteen.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 
 public class Reflection {
 
@@ -40,6 +41,30 @@ public class Reflection {
         } catch (IllegalAccessException e) {
             return null;
         }
+    }
+
+    private static final String[] TYPE_NAME_PREFIX = {"class ","interface "};
+
+    public static String getClassName(Type type) {
+        if (type==null) {
+            return "";
+        }
+        String className = type.toString();
+        for (String prefix : TYPE_NAME_PREFIX) {
+            if (className.startsWith(prefix)) {
+                className = className.substring(prefix.length());
+            }
+        }
+        return className;
+    }
+
+    public static Class<?> getClass(Type type)
+            throws ClassNotFoundException {
+        String className = getClassName(type);
+        if (className==null || className.isEmpty()) {
+            return null;
+        }
+        return Class.forName(className);
     }
 
 }

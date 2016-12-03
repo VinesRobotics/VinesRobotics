@@ -60,6 +60,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.vinesrobotics.sixteen.hardware.Hardware;
+import org.vinesrobotics.sixteen.hardware.controllers.Controller;
 import org.vinesrobotics.sixteen.hardware.controllers.ControllerState;
 import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
@@ -95,6 +96,8 @@ public class VibotControlled extends OpMode{
     boolean died = false;
 
     Controllers c;
+    Controller main;
+    Controller turret;
 
     DcMotor lmot;
     DcMotor rmot;
@@ -121,6 +124,8 @@ public class VibotControlled extends OpMode{
         itk = robot.getDeviceWithKeys("intake","motor");
 
         c = Controllers.getControllerObjects(this);
+        main = c.a();
+        turret = c.b();
     }
 
     /*
@@ -145,20 +150,28 @@ public class VibotControlled extends OpMode{
     public void loop() {
         if (died) return;
 
-        Vec2D<Float> left;
-        Vec2D<Float> right;
+        ControllerState main = this.main.getControllerState();
+        main.update();
+        ControllerState turret = this.turret.getControllerState();
+        turret.update();
 
-        right = c.a().getJoystick(Joystick.LEFT);
-        left = c.a().getJoystick(Joystick.RIGHT);
+        Vec2D<Double> left;
+        Vec2D<Double> right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        left = main.joy(Joystick.LEFT);
+        right = main.joy(Joystick.RIGHT);
+
         lmot.setPower(-left.b());
         rmot.setPower(-right.b());
 
-        itk.setPower(left.a()*(right.a()+0.01));
+        double itkpw = main.btnVal(Button.RT) - main.btnVal(Button.LT);
 
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        itk.setPower( itkpw );
+
+        telemetry.addLine( "Values in range of -1 to +1" );
+        telemetry.addData( "Speed", (-left.b()-right.b())/2 );
+        telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
+        telemetry.addData( "Intake Speed", main.btnVal(Button.RT) );
         updateTelemetry(telemetry);
     }
 

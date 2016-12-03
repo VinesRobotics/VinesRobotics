@@ -24,7 +24,6 @@ package org.vinesrobotics.sixteen.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor {
     /**
@@ -164,7 +163,7 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
      */
     @Override
     public void setTargetPosition(int position) {
-
+        System.out.println("Target position changed to " + position + "; not doing anything");
     }
 
     /**
@@ -212,7 +211,7 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
      */
     @Override
     public void setMode(RunMode mode) {
-
+        System.out.println("RunMode changed to " + mode.toString() + "; not doing anything");
     }
 
     /**
@@ -235,7 +234,7 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
      */
     @Override
     public void setDirection(Direction direction) {
-
+        System.out.println("Direction changed to " + direction.toString() + "; not doing anything");
     }
 
     /**
@@ -263,7 +262,7 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
      */
     @Override
     public void setPower(double power) {
-
+        System.out.println("Power changed to " + power + "; not doing anything");
     }
 
     /**
