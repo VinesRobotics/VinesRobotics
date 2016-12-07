@@ -57,7 +57,7 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
      */
     @Override
     public void setDirection(Direction direction) {
-        System.out.println("Direction changed to " + direction.toString() + "; not doing anything");
+        //.out.println("Direction changed to " + direction.toString() + "; not doing anything");
     }
 
     /**
@@ -82,7 +82,7 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
      */
     @Override
     public void setPosition(double position) {
-        System.out.println("Position changed to " + position + "; not doing anything");
+        //System.out.println("Position changed to " + position + "; not doing anything");
     }
 
     /**

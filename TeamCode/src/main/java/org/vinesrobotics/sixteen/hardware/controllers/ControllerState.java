@@ -25,13 +25,15 @@ package org.vinesrobotics.sixteen.hardware.controllers;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.sixteen.utils.Axis;
+import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Vec2D;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class ControllerState {
     private HashMap<String, Float> joys = new HashMap<>();
-    private HashMap<Button,Button> buttons = new HashMap<>();
+    private HashMap<String,Button> buttons = new HashMap<>();
     private Controller control;
 
     protected ControllerState(Controller cntr) {
@@ -39,10 +41,10 @@ public class ControllerState {
     }
 
     public boolean isPressed(Button btn) {
-        return buttons.get(btn).value > 0;
+        return btnVal(btn) > 0;
     }
 
-    public double btnVal(Button btn) { return buttons.get(btn).value; }
+    public double btnVal(Button btn) { return buttons.get(btn.name()).value; }
 
     public double joyVal(Joystick joystick, Axis ax) {
         return joys.get(joystick.name()+ax.name());
@@ -54,16 +56,17 @@ public class ControllerState {
 
     @Deprecated
     public void update() {
-        joys.clear();
-        buttons.clear();
+        //joys.clear();
+        //buttons.clear();
         for (Button btn : Button.values()) {
-            buttons.put( Button.valueOf( btn.name() ), control.getButton(btn) );
+            buttons.put( btn.name(), control.getButton(btn) );
         }
         for (Joystick joy : Joystick.values()) {
             for (Axis ax : Axis.values()) {
                 joys.put(joy.name() + ax.name(), control.getJoystick(joy).getAxis(ax) );
             }
         }
+        //Logging.log(buttons.toString());
     }
 
 }

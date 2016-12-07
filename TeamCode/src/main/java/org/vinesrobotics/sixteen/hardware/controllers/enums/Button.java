@@ -78,5 +78,10 @@ public enum Button {
         t = type;
         f = new LocalControl<>(field);
     }
+
+    public String toString(){
+        return super.toString() + "(" + value + ")";
+    }
+
 }
 

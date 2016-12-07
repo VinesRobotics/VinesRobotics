@@ -152,8 +152,8 @@ public class VibotControlled extends OpMode{
 
         ControllerState main = this.main.getControllerState();
         main.update();
-        ControllerState turret = this.turret.getControllerState();
-        turret.update();
+        //ControllerState turret = this.turret.getControllerState();
+        //turret.update();
 
         Vec2D<Double> left;
         Vec2D<Double> right;
@@ -171,8 +171,8 @@ public class VibotControlled extends OpMode{
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
         telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
-        telemetry.addData( "Intake Speed", main.btnVal(Button.RT) );
-        updateTelemetry(telemetry);
+        telemetry.addData( "Intake Speed", itkpw );
+        //updateTelemetry(telemetry);
     }
 
     /*
