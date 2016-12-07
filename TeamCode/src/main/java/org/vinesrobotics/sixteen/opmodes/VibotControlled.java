@@ -172,7 +172,7 @@ public class VibotControlled extends OpMode{
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
         telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
         telemetry.addData( "Intake Speed", itkpw );
-        //updateTelemetry(telemetry);
+        updateTelemetry(telemetry);
     }
 
     /*
