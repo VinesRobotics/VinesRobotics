@@ -158,11 +158,12 @@ public class VibotControlled extends OpMode{
         Vec2D<Double> left;
         Vec2D<Double> right;
 
+
         left = main.joy(Joystick.LEFT);
         right = main.joy(Joystick.RIGHT);
 
         lmot.setPower(-left.b());
-        rmot.setPower(-right.b());
+        rmot.setPower(right.b());
 
         double itkpw = main.btnVal(Button.RT) - main.btnVal(Button.LT);
 
@@ -172,7 +173,7 @@ public class VibotControlled extends OpMode{
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
         telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
         telemetry.addData( "Intake Speed", itkpw );
-        updateTelemetry(telemetry);
+         updateTelemetry(telemetry);
     }
 
     /*

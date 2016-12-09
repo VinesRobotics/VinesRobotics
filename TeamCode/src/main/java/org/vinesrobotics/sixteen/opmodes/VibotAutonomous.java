@@ -26,6 +26,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import net.sf.tweety.logics.commons.syntax.NumberTerm;
+import net.sf.tweety.logics.commons.syntax.Predicate;
+import net.sf.tweety.logics.pl.sat.*;
+import net.sf.tweety.logics.pl.syntax.Proposition;
+import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
+
 import org.vinesrobotics.sixteen.hardware.Hardware;
 import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Utils;
@@ -50,9 +56,10 @@ public class VibotAutonomous extends OpMode {
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
-        lmot = (DcMotor) robot.getDevicesWithAllKeys("left","drive").get(0).get();
-        rmot = (DcMotor) robot.getDevicesWithAllKeys("right","drive").get(0).get();
-        itk = (DcMotor) robot.getDevicesWithAllKeys("intake","motor").get(0).get();
+        lmot = robot.getDeviceWithKeys("left","drive");
+        rmot = robot.getDeviceWithKeys("right","drive");
+        itk = robot.getDeviceWithKeys("intake","motor");
+
     }
 
     public void start(){
@@ -66,5 +73,12 @@ public class VibotAutonomous extends OpMode {
     public void loop() {
         double delta = Utils.getDeltaTime(this.getRuntime());
         Logging.log(String.valueOf(delta));
+
+        SatSolver ss = new Sat4jSolver();
+        Proposition ps = new Proposition();
+        ps.addArgument(new NumberTerm(1));
+        ps.setPredicate(new Predicate());
+        System.out.println(ss.isConsistent(ps));
+
     }
 }
