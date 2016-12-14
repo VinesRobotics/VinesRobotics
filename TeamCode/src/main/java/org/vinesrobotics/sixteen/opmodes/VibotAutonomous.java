@@ -33,18 +33,21 @@ import net.sf.tweety.logics.pl.syntax.Proposition;
 import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
 
 import org.vinesrobotics.sixteen.hardware.Hardware;
+import org.vinesrobotics.sixteen.hardware.HardwareElement;
+import org.vinesrobotics.sixteen.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Utils;
 
 import java.security.InvalidKeyException;
+import java.util.List;
 
 @Autonomous(name="Autonomous",group="Vines")
 public class VibotAutonomous extends OpMode {
 
     Hardware robot  = new Hardware();
 
-    DcMotor lmot;
-    DcMotor rmot;
+    MotorDeviceGroup lmot;
+    MotorDeviceGroup rmot;
     DcMotor itk;
 
     @Override
@@ -56,8 +59,17 @@ public class VibotAutonomous extends OpMode {
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
-        lmot = robot.getDeviceWithKeys("left","drive");
-        rmot = robot.getDeviceWithKeys("right","drive");
+        List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
+        lmot = new MotorDeviceGroup();
+        for (HardwareElement he : lefts) {
+            lmot.addDevice((DcMotor)he.get());
+        }
+
+        List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
+        rmot = new MotorDeviceGroup();
+        for (HardwareElement he : right) {
+            rmot.addDevice((DcMotor)he.get());
+        };
         itk = robot.getDeviceWithKeys("intake","motor");
 
     }

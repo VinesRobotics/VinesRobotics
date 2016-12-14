@@ -60,15 +60,19 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.vinesrobotics.sixteen.hardware.Hardware;
+import org.vinesrobotics.sixteen.hardware.HardwareElement;
 import org.vinesrobotics.sixteen.hardware.controllers.Controller;
 import org.vinesrobotics.sixteen.hardware.controllers.ControllerState;
 import org.vinesrobotics.sixteen.hardware.controllers.Controllers;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Button;
 import org.vinesrobotics.sixteen.hardware.controllers.enums.Joystick;
+import org.vinesrobotics.sixteen.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Vec2D;
 
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -99,8 +103,8 @@ public class VibotControlled extends OpMode{
     Controller main;
     Controller turret;
 
-    DcMotor lmot;
-    DcMotor rmot;
+    MotorDeviceGroup lmot;
+    MotorDeviceGroup rmot;
     DcMotor itk;
 
     /*
@@ -119,8 +123,19 @@ public class VibotControlled extends OpMode{
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
-        lmot = robot.getDeviceWithKeys("left","drive");
-        rmot = robot.getDeviceWithKeys("right","drive");
+
+        List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
+        lmot = new MotorDeviceGroup();
+        for (HardwareElement he : lefts) {
+            lmot.addDevice((DcMotor)he.get());
+        }
+
+        List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
+        rmot = new MotorDeviceGroup();
+        for (HardwareElement he : right) {
+            rmot.addDevice((DcMotor)he.get());
+        }
+
         itk = robot.getDeviceWithKeys("intake","motor");
 
         c = Controllers.getControllerObjects(this);
@@ -173,7 +188,7 @@ public class VibotControlled extends OpMode{
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
         telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
         telemetry.addData( "Intake Speed", itkpw );
-         updateTelemetry(telemetry);
+        updateTelemetry(telemetry);
     }
 
     /*
