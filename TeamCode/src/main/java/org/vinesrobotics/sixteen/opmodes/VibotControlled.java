@@ -64,7 +64,7 @@ public class VibotControlled extends OpMode {
     @Override
     public void init() {
         /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
+         * The init() j   method of the hardware class does all the work here
          */
 
         Logging.setTelemetry(telemetry);

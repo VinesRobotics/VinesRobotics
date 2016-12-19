@@ -31,6 +31,3 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-dependencies {
-    compile project(':net.sf.tweety.tweety-full-1.7-with-dependencies')
-}

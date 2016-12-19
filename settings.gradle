@@ -20,5 +20,5 @@
  *                            SOFTWARE.
  */
 
-include ':FtcRobotController', ':net.sf.tweety.tweety-full-1.7-with-dependencies'
+include ':FtcRobotController'
 include ':TeamCode'

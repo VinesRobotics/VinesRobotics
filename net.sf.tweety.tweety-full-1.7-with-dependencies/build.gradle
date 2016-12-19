@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('net.sf.tweety.tweety-full-1.7-with-dependencies.jar'))
