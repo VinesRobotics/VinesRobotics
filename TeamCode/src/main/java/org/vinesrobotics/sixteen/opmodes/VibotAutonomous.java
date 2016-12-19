@@ -18,7 +18,8 @@
  *                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *                            SOFTWARE.
- */
+*/
+
 
 package org.vinesrobotics.sixteen.opmodes;
 
@@ -91,6 +92,6 @@ public class VibotAutonomous extends OpMode {
         ps.addArgument(new NumberTerm(1));
         ps.setPredicate(new Predicate());
         System.out.println(ss.isConsistent(ps));
-
     }
+
 }
