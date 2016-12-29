@@ -27,12 +27,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import net.sf.tweety.logics.commons.syntax.NumberTerm;
-import net.sf.tweety.logics.commons.syntax.Predicate;
-import net.sf.tweety.logics.pl.sat.*;
-import net.sf.tweety.logics.pl.syntax.Proposition;
-import net.sf.tweety.logics.pl.syntax.PropositionalFormula;
-
 import org.vinesrobotics.sixteen.hardware.Hardware;
 import org.vinesrobotics.sixteen.hardware.HardwareElement;
 import org.vinesrobotics.sixteen.hardware.groups.MotorDeviceGroup;
@@ -70,7 +64,7 @@ public class VibotAutonomous extends OpMode {
         rmot = new MotorDeviceGroup();
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
-        };
+        }
         itk = robot.getDeviceWithKeys("intake","motor");
 
     }
@@ -87,11 +81,7 @@ public class VibotAutonomous extends OpMode {
         double delta = Utils.getDeltaTime(this.getRuntime());
         Logging.log(String.valueOf(delta));
 
-        SatSolver ss = new Sat4jSolver();
-        Proposition ps = new Proposition();
-        ps.addArgument(new NumberTerm(1));
-        ps.setPredicate(new Predicate());
-        System.out.println(ss.isConsistent(ps));
+
     }
 
 }

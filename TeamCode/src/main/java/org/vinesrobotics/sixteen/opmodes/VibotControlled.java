@@ -63,17 +63,12 @@ public class VibotControlled extends OpMode {
      */
     @Override
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() j   method of the hardware class does all the work here
-         */
-
         Logging.setTelemetry(telemetry);
 
         try {
             robot.registerHardwareKeyName("intake");
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
-
 
         List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
         lmot = new MotorDeviceGroup();
@@ -82,17 +77,15 @@ public class VibotControlled extends OpMode {
         }
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
-        Logging.logData("dlog", right);
         rmot = new MotorDeviceGroup();
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
         }
-
         itk = robot.getDeviceWithKeys("intake","motor");
 
-        c = Controllers.getControllerObjects(this);
-        main = c.a();
-        turret = c.b();
+        Controllers ctrls = Controllers.getControllerObjects(this);
+        this.main = ctrls.a();
+        this.turret = ctrls.b();
     }
 
     /*
@@ -119,8 +112,8 @@ public class VibotControlled extends OpMode {
 
         ControllerState main = this.main.getControllerState();
         main.update();
-        //ControllerState turret = this.turret.getControllerState();
-        //turret.update();
+        ControllerState turret = this.turret.getControllerState();
+        turret.update();
 
         Vec2D<Double> left;
         Vec2D<Double> right;
