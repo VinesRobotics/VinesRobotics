@@ -20,70 +20,25 @@
  *                            SOFTWARE.
  */
 
-package org.vinesrobotics.sixteen.utils;
+package org.vinesrobotics.sixteen;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Application;
+import android.content.Context;
 
-public class Utils {
+/**
+ * Created by aaron on 12/29/2016.
+ */
 
-    /**
-     * Gets the similar elements of two lists
-     *
-     * @param la First list
-     * @param lb Second list
-     * @param <T> List type
-     * @return List similarity
-     */
-    public static <T> ArrayList<T> getListSimilarity(ArrayList<T> la, ArrayList<T> lb) {
+public class App extends Application {
+    public static Context context;
 
-        ArrayList<T> out = new ArrayList<>(la.subList(0,la.size()));
-
-        for ( T e : la ) {
-            if ( !lb.contains(e) )
-                out.remove(e);
-        }
-
-        return out;
-
+    public void onCreate() {
+        super.onCreate();
+        App.context = getApplicationContext();
     }
 
-    /**
-     * Gets the differences of lists.
-     *
-     * @param la List 1
-     * @param lb List 2
-     * @param <T> Type in list
-     * @return List difference
-     */
-    public static <T> List<T> getListDifference(List<T> la, List<T> lb) {
-
-        List<T> out = la.subList(0,la.size());
-
-        for ( T e : la ) {
-            if ( lb.contains(e) )
-                out.remove(e);
-        }
-
-        for ( T e : lb ) {
-            if ( !la.contains(e) )
-                out.add(e);
-        }
-
-        return out;
-
-    }
-
-    private static double ltime = 0.0;
-
-    /**
-     * Gets the delta between the time passed in and the time passed in the last time it was called.
-     * @param time The time to get the delta for
-     * @return The delta
-     */
-    public static double getDeltaTime(double time) {
-        double lltime = ltime;
-        ltime = time;
-        return time - lltime;
+    public static Context getAppContext() {
+        return App.context;
     }
 }
+
