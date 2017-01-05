@@ -26,6 +26,7 @@ package org.vinesrobotics.sixteen.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.vinesrobotics.sixteen.hardware.Hardware;
 import org.vinesrobotics.sixteen.hardware.HardwareElement;
@@ -59,14 +60,16 @@ public class VibotAutonomous extends OpMode {
         for (HardwareElement he : lefts) {
             lmot.addDevice((DcMotor)he.get());
         }
+        lmot.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
         rmot = new MotorDeviceGroup();
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
         }
-        itk = robot.getDeviceWithKeys("intake","motor");
+        rmot.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        itk = robot.getDeviceWithKeys("intake","motor");
     }
 
     public void start(){

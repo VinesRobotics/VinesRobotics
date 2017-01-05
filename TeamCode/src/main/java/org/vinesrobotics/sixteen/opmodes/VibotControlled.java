@@ -25,6 +25,8 @@ package org.vinesrobotics.sixteen.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.vinesrobotics.sixteen.hardware.Hardware;
 import org.vinesrobotics.sixteen.hardware.HardwareElement;
 import org.vinesrobotics.sixteen.hardware.controllers.Controller;
@@ -75,12 +77,15 @@ public class VibotControlled extends OpMode {
         for (HardwareElement he : lefts) {
             lmot.addDevice((DcMotor)he.get());
         }
+        lmot.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
         rmot = new MotorDeviceGroup();
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
         }
+        rmot.setDirection(DcMotorSimple.Direction.FORWARD);
+
         itk = robot.getDeviceWithKeys("intake","motor");
 
         Controllers ctrls = Controllers.getControllerObjects(this);
@@ -118,11 +123,10 @@ public class VibotControlled extends OpMode {
         Vec2D<Double> left;
         Vec2D<Double> right;
 
-
         left = main.joy(Joystick.LEFT);
         right = main.joy(Joystick.RIGHT);
 
-        lmot.setPower(-left.b());
+        lmot.setPower(left.b());
         rmot.setPower(right.b());
 
         double itkpw = main.btnVal(Button.RT) - main.btnVal(Button.LT);

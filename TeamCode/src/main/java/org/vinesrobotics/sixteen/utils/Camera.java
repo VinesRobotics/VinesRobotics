@@ -23,10 +23,19 @@
 package org.vinesrobotics.sixteen.utils;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.ImageFormat;
 import android.hardware.camera2.*;
+import android.media.Image;
+import android.media.ImageReader;
 import android.os.Build;
+import android.os.Handler;
+import android.view.Surface;
 
 import org.vinesrobotics.sixteen.App;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by aaron on 12/29/2016.
@@ -35,22 +44,89 @@ import org.vinesrobotics.sixteen.App;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Camera {
 
-    private CameraManager manager;
+    public class CameraException extends Exception {}
 
-    private Camera cam_inst;
+    private CameraManager manager;
+    public CameraManager manager() {
+        return manager;
+    }
+
+
+    private CameraDevice cam_inst;
+    private Handler handle;
+    private ImageReader imageReader;
+
+    public Image image;
 
     private Camera(CameraManager cm) throws CameraAccessException {
+        handle = new Handler();
+
+        imageReader = ImageReader.newInstance(1024, 1024, ImageFormat.JPEG, 2);
+        imageReader.setOnImageAvailableListener(onImageAvailableListener, handle);
+
         manager = cm;
-        String[] lst = manager.getCameraIdList();
-        setCameraID(lst[0]);
+        for (String cameraId : manager.getCameraIdList()) {
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+
+            if (characteristics.get(CameraCharacteristics.LENS_FACING) != CameraCharacteristics.LENS_FACING_BACK) {
+                continue;
+            }
+
+            setCameraID(cameraId);
+        }
     }
 
     public void setCameraID(String s){
         //cam_inst = manager.
     }
 
+    private CameraCaptureSession session;
+    private final CameraDevice.StateCallback cameraStateCB = new CameraDevice.StateCallback() {
+        @Override
+        public void onOpened(CameraDevice device) {
+            cam_inst = device;
+
+            List<Surface> outputSurfaces = new LinkedList<>();
+            outputSurfaces.add(imageReader.getSurface());
+
+            try {
+
+                cam_inst.createCaptureSession(outputSurfaces, sessionStateCallback, null);
+
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onDisconnected(CameraDevice cameraDevice) {}
+
+        @Override
+        public void onError(CameraDevice cameraDevice, int error) {}
+    };
+
+    private CameraCaptureSession.StateCallback sessionStateCallback = new CameraCaptureSession.StateCallback() {
+        @Override
+        public void onConfigured(CameraCaptureSession sess) {
+            session = sess;
+        }
+
+        @Override
+        public void onConfigureFailed(CameraCaptureSession session) {}
+    };
+
+    private ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
+        @Override
+        public void onImageAvailable(ImageReader reader){
+            if (image != null) image.close();
+            Image img = reader.acquireLatestImage();
+            image = img;
+        }
+    };
+
     public static Camera getCamera() throws CameraAccessException {
-        return new Camera((CameraManager) App.context.getSystemService(App.context.CAMERA_SERVICE));
+        Context.CAMERA_SERVICE
+        return new Camera((CameraManager) App.context.getSystemService(Context.CAMERA_SERVICE));
     }
 
 }
