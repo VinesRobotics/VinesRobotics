@@ -22,6 +22,10 @@
 
 package org.vinesrobotics.sixteen.utils;
 
+import android.app.Application;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,4 +90,13 @@ public class Utils {
         ltime = time;
         return time - lltime;
     }
+
+    public static Application getApp() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        final Class<?> activityThreadClass =
+                Class.forName("android.app.ActivityThread");
+        final Method method = activityThreadClass.getMethod("currentApplication");
+        return (Application) method.invoke(null, (Object[]) null);
+    }
 }
+
+
