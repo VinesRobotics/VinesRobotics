@@ -49,6 +49,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Camera {
 
+    private Object devnull = new Object();
+
     public class CameraException extends Exception {}
 
     private CameraManager manager;
@@ -99,12 +101,28 @@ public class Camera {
         public void onConfigureFailed(CameraCaptureSession session) {}
     };
 
+    public boolean isImageAvaliable(){
+            return image != null;
+    }
+
+    public void killImage(){
+        if (isImageAvaliable())
+            synchronized (image) {
+                image.close();
+                image = null;
+            }
+    }
+
     private ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader){
-            if (image != null) image.close();
+            //killImage();
             Image img = reader.acquireLatestImage();
-            image = img;
+
+            if (isImageAvaliable())
+            synchronized (image) {
+                image = img;
+            }
         }
     };
 
@@ -113,7 +131,7 @@ public class Camera {
     private Handler handle;
     private ImageReader imageReader;
 
-    public Image image;
+    public Image image = null;
 
     class HandlThread extends Thread {
         @Override
@@ -126,7 +144,9 @@ public class Camera {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            this.notifyAll();
+            synchronized (this) {
+                this.notifyAll();
+            }
             Looper.loop();
         }
     }
@@ -176,24 +196,29 @@ public class Camera {
         return cam_inst != null;
     }
 
+    private CaptureRequest capreq;
     public void queueCapture() throws CameraAccessException {
         if (cam_inst == null) return;
         Log.i("Camera","Camera capturing");
-        CaptureRequest.Builder requestBuilder = cam_inst.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-        requestBuilder.addTarget(imageReader.getSurface());
+        if (capreq == null) {
+            CaptureRequest.Builder requestBuilder = cam_inst.createCaptureRequest(CameraDevice.TEMPLATE_ZERO_SHUTTER_LAG);
+            requestBuilder.addTarget(imageReader.getSurface());
 
-        // Focus
-        requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            // Focus
+            requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 
-        // Orientation
-        requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, 0);
+            // Orientation
+            requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, 0);
 
-        session.capture(requestBuilder.build(), new CameraCaptureSession.CaptureCallback() {
+            capreq = requestBuilder.build();
+        }
+
+        session.capture(capreq, new CameraCaptureSession.CaptureCallback() {
             @Override
             public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                 super.onCaptureCompleted(session, request, result);
             }
-        }, null);
+        }, handle);
     }
 
     public static Camera getCamera() throws CameraAccessException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {

@@ -30,6 +30,7 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.vinesrobotics.sixteen.hardware.Hardware;
@@ -69,7 +70,10 @@ public class VibotControlled extends OpMode {
     MotorDeviceGroup lmot;
     MotorDeviceGroup rmot;
     DcMotor itk;
-    Camera cmr = null;
+    DcMotorImpl catapult;
+
+
+    final double catapult_pos = 1.0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -103,14 +107,8 @@ public class VibotControlled extends OpMode {
 
         itk = robot.getDeviceWithKeys("intake","motor");
 
-        try {
-            cmr = Camera.getCamera();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("LEL","I'm sorry dave, I'm afraid I can't do that for you.",e);
-            Logging.log("Unfortunately, support for controllers has been dropped.");
-            return;
-        }
+        catapult = robot.getDeviceWithKeys("motor","catapult");
+        catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         Controllers ctrls = Controllers.getControllerObjects(this);
         this.main = ctrls.a();
@@ -140,29 +138,6 @@ public class VibotControlled extends OpMode {
     public void loop() {
         if (died) return;
 
-        if (cmr.isReady()) {
-            try {
-                cmr.queueCapture();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("LEL","I'm sorry dave, I'm afraid I can't do that for you.",e);
-                Logging.log("Unfortunately, support for controllers has been dropped.");
-                return;
-            }
-            image = cmr.image;
-        } else {
-            telemetry.addLine( "Camera not loaded" );
-        }
-
-        if (image != null) {
-            Bitmap bmp = CameraUtils.bitmapFromImage(image);
-            try {
-                ImageSaver.insertImage(Utils.getApp().getContentResolver(), bmp, String.valueOf(getRuntime()), "");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         ControllerState main = this.main.getControllerState();
         main.update();
         ControllerState turret = this.turret.getControllerState();
@@ -177,9 +152,10 @@ public class VibotControlled extends OpMode {
         lmot.setPower(left.b());
         rmot.setPower(right.b());
 
-        double itkpw = main.btnVal(Button.RT) - main.btnVal(Button.LT);
+        double itkpw = main.btnVal(Button.RT) * ( ( main.btnVal(Button.RB)==1 ) ? -1 : 1 );
 
         itk.setPower( itkpw );
+
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
