@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.vinesrobotics.sixteen.hardware.Catapult;
 import org.vinesrobotics.sixteen.hardware.Hardware;
 import org.vinesrobotics.sixteen.hardware.HardwareElement;
 import org.vinesrobotics.sixteen.hardware.controllers.Controller;
@@ -70,7 +71,7 @@ public class VibotControlled extends OpMode {
     MotorDeviceGroup lmot;
     MotorDeviceGroup rmot;
     DcMotor itk;
-    DcMotorImpl catapult;
+    Catapult catapult;
 
 
     final double catapult_pos = 1.0;
@@ -93,7 +94,7 @@ public class VibotControlled extends OpMode {
             for (HardwareElement he : lefts) {
                 lmot.addDevice((DcMotor) he.get());
             }
-            lmot.setDirection(DcMotorSimple.Direction.REVERSE);
+            lmot.setDirection(DcMotorSimple.Direction.FORWARD);
         }catch (Exception e){}
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
@@ -102,17 +103,17 @@ public class VibotControlled extends OpMode {
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
         }
-        rmot.setDirection(DcMotorSimple.Direction.FORWARD);
+        rmot.setDirection(DcMotorSimple.Direction.REVERSE);
         }catch (Exception e){}
 
         itk = robot.getDeviceWithKeys("intake","motor");
 
-        catapult = robot.getDeviceWithKeys("motor","catapult");
-        catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), (int) catapult_pos);
 
         Controllers ctrls = Controllers.getControllerObjects(this);
         this.main = ctrls.a();
         this.turret = ctrls.b();
+        //ctrls.calibrate();
     }
 
     /*
@@ -156,6 +157,7 @@ public class VibotControlled extends OpMode {
 
         itk.setPower( itkpw );
 
+        catapult.ready();
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );

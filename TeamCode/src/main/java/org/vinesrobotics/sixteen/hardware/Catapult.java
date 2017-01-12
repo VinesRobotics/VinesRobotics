@@ -31,6 +31,7 @@ public class Catapult {
 
     public Catapult(DcMotor mot, int pos) {
         catapult = mot;
+        mot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         catapult_pos = pos;
         ready();
     }

@@ -71,10 +71,15 @@ public class Controller {
 
             Logging.log("Please leave the joysticks on gamepad " + name + " in the neutral position.");
 
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException e) {
+            }
+
             float ma = Math.max(gamepad.left_stick_x,gamepad.left_stick_y);
             float mb = Math.max(gamepad.right_stick_x,gamepad.right_stick_y);
 
-            gamepad.setJoystickDeadzone( Math.max(ma,mb) + 0.01f );
+            gamepad.setJoystickDeadzone( Math.max(ma,mb) + 0.001f );
 
             Logging.log("Done! ");
 
