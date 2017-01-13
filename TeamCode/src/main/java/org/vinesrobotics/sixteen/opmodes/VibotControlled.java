@@ -65,8 +65,8 @@ public class VibotControlled extends OpMode {
     boolean died = false;
 
     Controllers c;
-    Controller main;
-    Controller turret;
+    Controller main_ct;
+    //Controller turret_ct;
 
     MotorDeviceGroup lmot;
     MotorDeviceGroup rmot;
@@ -74,7 +74,8 @@ public class VibotControlled extends OpMode {
     Catapult catapult;
 
 
-    final double catapult_pos = 1.0;
+    final int catapult_pos = 255;
+    final int catapult_root = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -108,11 +109,11 @@ public class VibotControlled extends OpMode {
 
         itk = robot.getDeviceWithKeys("intake","motor");
 
-        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), (int) catapult_pos);
+        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), catapult_pos, catapult_root);
 
         Controllers ctrls = Controllers.getControllerObjects(this);
-        this.main = ctrls.a();
-        this.turret = ctrls.b();
+        this.main_ct = ctrls.a();
+        //this.turret_ct = ctrls.b();
         //ctrls.calibrate();
     }
 
@@ -131,18 +132,17 @@ public class VibotControlled extends OpMode {
         if (died) return;
     }
 
+    boolean last_down = false;
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
-    Image image = null;
     @Override
     public void loop() {
         if (died) return;
+        catapult.tick();
 
-        ControllerState main = this.main.getControllerState();
-        main.update();
-        ControllerState turret = this.turret.getControllerState();
-        turret.update();
+        ControllerState main = this.main_ct.getControllerState();
+        //ControllerState turret = this.turret_ct.getControllerState();
 
         Vec2D<Double> left;
         Vec2D<Double> right;
@@ -153,11 +153,23 @@ public class VibotControlled extends OpMode {
         lmot.setPower(left.b());
         rmot.setPower(right.b());
 
-        double itkpw = main.btnVal(Button.RT) * ( ( main.btnVal(Button.RB)==1 ) ? -1 : 1 );
+        double itkpw = main.btnVal(Button.RT) * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
 
         itk.setPower( itkpw );
 
-        catapult.ready();
+        if (!catapult.isManual()) {
+            if (!main.isPressed(Button.X))
+                catapult.ready();
+            // Use LT LB
+
+        } else if (catapult.isManualReady() && !main.isPressed(Button.X)){
+            double catpw = main.btnVal(Button.LT) * ( ( main.isPressed(Button.LB) ) ? -1 : 1 );
+            catapult.catapult().setPower(catpw);
+        }
+
+        if (main.isPressed(Button.X)) catapult.fire();
+        if (main.isPressed(Button.DOWN) && !last_down) catapult.toggleManual();
+        last_down = main.isPressed(Button.DOWN);
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );

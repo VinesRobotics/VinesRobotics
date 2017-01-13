@@ -40,7 +40,6 @@ public class ControllerDebug extends OpMode {
         Logging.setTelemetry(telemetry);
 
         ctrls = Controllers.getControllerObjects(this);
-        ctrls.calibrate(CalibrationMode.SIMPLE);
     }
     public void loop(){
         int i = 0;

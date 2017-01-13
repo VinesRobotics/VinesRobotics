@@ -38,6 +38,7 @@ public class ControllerState {
 
     protected ControllerState(Controller cntr) {
         control = cntr;
+        update();
     }
 
     public boolean isPressed(Button btn) {
@@ -54,8 +55,7 @@ public class ControllerState {
         return new Vec2D<>( joyVal(j,Axis.X), joyVal(j,Axis.Y) );
     }
 
-    @Deprecated
-    public void update() {
+    protected void update() {
         //joys.clear();
         //buttons.clear();
         for (Button btn : Button.values()) {

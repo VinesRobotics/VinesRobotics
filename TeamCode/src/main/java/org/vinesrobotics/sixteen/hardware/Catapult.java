@@ -28,22 +28,68 @@ public class Catapult {
 
     private DcMotor catapult;
     private int catapult_pos = 255;
+    private int root = 0;
+    private final double pw = .5;
+    private boolean manual = false;
+    private boolean man_ready = false;
 
-    public Catapult(DcMotor mot, int pos) {
+    public boolean isManual(){
+        return manual;
+    }
+    public boolean isManualReady(){
+        return man_ready;
+    }
+    public DcMotor catapult() {
+        return catapult;
+    }
+
+    public Catapult(DcMotor mot, int pos, int root) {
         catapult = mot;
         mot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         catapult_pos = pos;
+        this.root = root;
         ready();
     }
 
     public void ready() {
-        catapult.setPower(1);
+        catapult.setPower(pw);
         catapult.setTargetPosition(catapult_pos);
     }
+    private int fired = 0;
     public void fire() {
+        boolean man = manual;
+        disableManual();
         catapult.setPower(1);
+        catapult.setTargetPosition(catapult_pos + 5);
+        if (man) fired = 5;
     }
-    public void enableControl() {
-
+    public void tick() {
+        if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition())
+            man_ready = true;
+        if (fired == 1) enableManual();
+        fired--;
+    }
+    public void enableManual() {
+        catapult.setPower(pw);
+        catapult.setTargetPosition(root);
+        catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        manual = true;
+        man_ready = false;
+    }
+    public void disableManual() {
+        manual = false;
+        catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void toggleManual() {
+        if (manual) {
+            disableManual();
+            ready();
+        }
+        else
+            enableManual();
+    }
+    public void close() {
+        catapult.setPower(1);
+        catapult.setTargetPosition(root);
     }
 }
