@@ -22,11 +22,6 @@
 
 package org.vinesrobotics.sixteen.opmodes;
 
-import android.content.ContentResolver;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -95,7 +90,7 @@ public class VibotControlled extends OpMode {
             for (HardwareElement he : lefts) {
                 lmot.addDevice((DcMotor) he.get());
             }
-            lmot.setDirection(DcMotorSimple.Direction.FORWARD);
+            lmot.setDirection(DcMotor.Direction.FORWARD);
         }catch (Exception e){}
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
@@ -104,11 +99,10 @@ public class VibotControlled extends OpMode {
         for (HardwareElement he : right) {
             rmot.addDevice((DcMotor)he.get());
         }
-        rmot.setDirection(DcMotorSimple.Direction.REVERSE);
+        rmot.setDirection(DcMotor.Direction.REVERSE);
         }catch (Exception e){}
 
         itk = robot.getDeviceWithKeys("intake","motor");
-        //itk.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), catapult_pos, catapult_root);
 
@@ -154,12 +148,14 @@ public class VibotControlled extends OpMode {
         lmot.setPower(left.b());
         rmot.setPower(right.b());
 
-        double itkpw = main.btnVal(Button.RT) * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
+
+        double itkpw = main.btnVal(Button.RT);// * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
 
         itk.setPower( itkpw );
+        // itk.getController().setMotorPower(itk.getPortNumber(),itkpw);
 
-        /*if (!catapult.isManual()) {
-            if (!main.isPressed(Button.X))
+        if (!catapult.isManual()) {
+            if (!main.isPressed(Button.RB))
                 catapult.ready();
             // Use LT LB
 
@@ -168,14 +164,15 @@ public class VibotControlled extends OpMode {
             catapult.catapult().setPower(catpw);
         }
 
-        if (main.isPressed(Button.X)) catapult.fire();
+        if (main.isPressed(Button.RB)) catapult.fire();
         if (main.isPressed(Button.DOWN) && !last_down) catapult.toggleManual();
-        last_down = main.isPressed(Button.DOWN);*/
+        last_down = main.isPressed(Button.DOWN);
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
         telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
         telemetry.addData( "Intake Speed", itkpw );
+        telemetry.addData( "Actual intake speed", itk.getPower() );
         updateTelemetry(telemetry);
     }
 
