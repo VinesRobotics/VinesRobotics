@@ -108,6 +108,7 @@ public class VibotControlled extends OpMode {
         }catch (Exception e){}
 
         itk = robot.getDeviceWithKeys("intake","motor");
+        //itk.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), catapult_pos, catapult_root);
 
@@ -157,7 +158,7 @@ public class VibotControlled extends OpMode {
 
         itk.setPower( itkpw );
 
-        if (!catapult.isManual()) {
+        /*if (!catapult.isManual()) {
             if (!main.isPressed(Button.X))
                 catapult.ready();
             // Use LT LB
@@ -169,7 +170,7 @@ public class VibotControlled extends OpMode {
 
         if (main.isPressed(Button.X)) catapult.fire();
         if (main.isPressed(Button.DOWN) && !last_down) catapult.toggleManual();
-        last_down = main.isPressed(Button.DOWN);
+        last_down = main.isPressed(Button.DOWN);*/
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
@@ -183,6 +184,7 @@ public class VibotControlled extends OpMode {
      */
     @Override
     public void stop() {
+        catapult.close();
     }
 
 }

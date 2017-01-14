@@ -101,7 +101,7 @@ public class Hardware {
     public void initHardware(HardwareMap hm) {
 
         // Call with default arguments
-        initHardware(hm,"[._-]");
+        initHardware(hm,"[\\._\\- ]");
 
     }
 
@@ -166,7 +166,7 @@ public class Hardware {
 
                 e.printStackTrace(ps);
 
-                Logging.log("ERROR: " + ps.toString());
+                Logging.log("ERROR: " + os.toString());
             }
 
         }
