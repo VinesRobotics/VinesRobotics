@@ -214,7 +214,7 @@ public class Hardware {
      * @param keys Keys to use as a filter
      * @return A list of hardware indices that match the criteria
      */
-    public List<HardwareElement> getDevicesWithAllKeys(String... keys){
+    public <T extends HardwareDevice> List<HardwareElement> getDevicesWithAllKeys(String... keys){
 
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
@@ -249,6 +249,26 @@ public class Hardware {
         }
 
         if(out.size() == 0) {
+            try {
+                Class<?> pty = Reflection.getClass(
+                        getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
+                );
+
+
+
+                if (pty.isAssignableFrom(DcMotorSimple.class)) {
+                    return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericMotorDevice())));
+                }
+
+                if (pty.isAssignableFrom(Servo.class)) {
+                    return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericServoDevice())));
+                }
+
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericHardwareDevice())));
         }
 
@@ -280,7 +300,7 @@ public class Hardware {
                         return (T) new GenericMotorDevice();
                     }
 
-                    if (pty.isAssignableFrom(DcMotorSimple.class)) {
+                    if (pty.isAssignableFrom(Servo.class)) {
                         return (T) new GenericServoDevice();
                     }
 
