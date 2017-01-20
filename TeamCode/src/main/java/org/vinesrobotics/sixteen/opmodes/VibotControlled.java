@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.vinesrobotics.sixteen.hardware.Catapult;
 import org.vinesrobotics.sixteen.hardware.Hardware;
@@ -65,9 +66,15 @@ public class VibotControlled extends OpMode {
 
     MotorDeviceGroup lmot;
     MotorDeviceGroup rmot;
+    Servo arm_1;
+    double a1_pos = 0;
+    Servo arm_2;
+    double a2_pos = 0;
     DcMotor itk;
     Catapult catapult;
 
+    final double a1_target = 0;
+    final double a2_target = 0;
 
     final int catapult_pos = 255;
     final int catapult_root = 0;
@@ -81,6 +88,7 @@ public class VibotControlled extends OpMode {
 
         try {
             robot.registerHardwareKeyName("intake");
+            robot.registerHardwareKeyName("bumper");
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
@@ -101,6 +109,9 @@ public class VibotControlled extends OpMode {
         }
         rmot.setDirection(DcMotor.Direction.REVERSE);
         }catch (Exception e){}
+
+        arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
+        arm_2 = robot.getDeviceWithKeys("bumper","servo","left");
 
         itk = robot.getDeviceWithKeys("intake","motor");
 
@@ -125,6 +136,10 @@ public class VibotControlled extends OpMode {
     @Override
     public void start() {
         if (died) return;
+        a1_pos = arm_1.getPosition();
+        arm_1.setPosition(a1_target);
+        a2_pos = arm_2.getPosition();
+        arm_2.setPosition(a2_target);
     }
 
     boolean last_down = false;
@@ -181,6 +196,10 @@ public class VibotControlled extends OpMode {
      */
     @Override
     public void stop() {
+
+        arm_1.setPosition(a1_pos);
+        arm_2.setPosition(a2_pos);
+
         catapult.close();
     }
 

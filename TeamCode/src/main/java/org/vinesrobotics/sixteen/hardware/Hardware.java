@@ -254,8 +254,6 @@ public class Hardware {
                         getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
                 );
 
-
-
                 if (pty.isAssignableFrom(DcMotorSimple.class)) {
                     return new ArrayList<>(Arrays.asList(new HardwareElement(new GenericMotorDevice())));
                 }
@@ -293,8 +291,6 @@ public class Hardware {
                     Class<?> pty = Reflection.getClass(
                             getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
                     );
-
-
 
                     if (pty.isAssignableFrom(DcMotorSimple.class)) {
                         return (T) new GenericMotorDevice();
