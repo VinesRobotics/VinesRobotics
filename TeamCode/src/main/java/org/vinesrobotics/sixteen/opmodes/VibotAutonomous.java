@@ -67,7 +67,7 @@ public class VibotAutonomous extends VibotHardwareBase {
     public void loop() {
         double delta = Utils.getDeltaTime(this.getRuntime());
         ctime += delta;
-        Logging.log(String.valueOf(ctime));
+        Logging.log(String.valueOf(Math.floor(ctime)));
 
         // Start
         if (Utils.checkInRange(ctime,0,1.5)) {

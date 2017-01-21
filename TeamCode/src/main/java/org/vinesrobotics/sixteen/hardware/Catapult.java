@@ -61,14 +61,14 @@ public class Catapult {
         boolean man = manual;
         disableManual();
         catapult.setPower(1);
-        catapult.setTargetPosition(catapult_pos + 5);
+        catapult.setTargetPosition(catapult_pos);
         if (man) fired = 5;
     }
     public void tick() {
         if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition())
             man_ready = true;
         if (fired == 1) enableManual();
-        fired--;
+        if (fired > 0) fired--;
     }
     public void enableManual() {
         catapult.setPower(pw);

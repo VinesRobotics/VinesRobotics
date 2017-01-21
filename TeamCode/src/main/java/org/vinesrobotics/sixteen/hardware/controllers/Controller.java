@@ -185,8 +185,7 @@ public class Controller {
     public ControllerState getControllerState() {
 
         if (controlState == null) controlState = new ControllerState(this);
-
-        controlState.update();
+        else controlState.update();
 
         return controlState;
     }

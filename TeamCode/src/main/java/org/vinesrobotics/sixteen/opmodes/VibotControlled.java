@@ -136,7 +136,7 @@ public class VibotControlled extends VibotHardwareBase {
         // itk.getController().setMotorPower(itk.getPortNumber(),itkpw);
 
         if (!catapult.isManual()) {
-            if (!main.isPressed(Button.RB))
+            if (!main.isPressed(Button.A))
                 catapult.ready();
             // Use LT LB
 
@@ -146,7 +146,7 @@ public class VibotControlled extends VibotHardwareBase {
             catapult.catapult().setPower(catpw);
         }
 
-        if (main.isPressed(Button.RB)) catapult.fire();
+        if (main.isPressed(Button.A)) catapult.fire();
         if (main.isPressed(Button.DOWN) && !last_down) catapult.toggleManual();
         last_down = main.isPressed(Button.DOWN);
 
