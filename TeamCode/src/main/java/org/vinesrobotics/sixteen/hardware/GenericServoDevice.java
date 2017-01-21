@@ -98,7 +98,7 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
      */
     @Override
     public double getPosition() {
-        return 0;
+        return Double.NaN;
     }
 
     /**

@@ -52,10 +52,10 @@ import java.util.List;
 
 @TeleOp(name="Controlled", group="Vines")
 //@Disabled
-public class VibotControlled extends OpMode {
+public class VibotControlled extends VibotHardwareBase {
 
     /* Declare OpMode members. */
-    Hardware robot       = new Hardware();
+    //Hardware robot       = new Hardware();
 
 
     boolean died = false;
@@ -64,58 +64,26 @@ public class VibotControlled extends OpMode {
     Controller main_ct;
     //Controller turret_ct;
 
-    MotorDeviceGroup lmot;
-    MotorDeviceGroup rmot;
-    Servo arm_1;
-    double a1_pos = 0;
-    Servo arm_2;
-    double a2_pos = 0;
-    DcMotor itk;
-    Catapult catapult;
+    //MotorDeviceGroup lmot;
+    //MotorDeviceGroup rmot;
+    //Servo arm_1;
+    //double a1_pos = 0;
+    //Servo arm_2;
+    //double a2_pos = 0;
+    //DcMotor itk;
+    //Catapult catapult;
 
-    final double a1_target = 0;
-    final double a2_target = 0;
+    //final double a1_target = 0;
+    //final double a2_target = 0;
 
-    final int catapult_pos = 255;
-    final int catapult_root = 0;
+    //final int catapult_pos = 255;
+    //final int catapult_root = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
-    public void init() {
-        Logging.setTelemetry(telemetry);
-
-        try {
-            robot.registerHardwareKeyName("intake");
-            robot.registerHardwareKeyName("bumper");
-        } catch (InvalidKeyException e) {}
-        robot.initHardware(hardwareMap);
-
-        List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
-        lmot = new MotorDeviceGroup();
-        try {
-            for (HardwareElement he : lefts) {
-                lmot.addDevice((DcMotor) he.get());
-            }
-            lmot.setDirection(DcMotor.Direction.FORWARD);
-        }catch (Exception e){}
-
-        List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
-        rmot = new MotorDeviceGroup();
-        try {
-        for (HardwareElement he : right) {
-            rmot.addDevice((DcMotor)he.get());
-        }
-        rmot.setDirection(DcMotor.Direction.REVERSE);
-        }catch (Exception e){}
-
-        arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
-        arm_2 = robot.getDeviceWithKeys("bumper","servo","left");
-
-        itk = robot.getDeviceWithKeys("intake","motor");
-
-        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("motor","catapult"), catapult_pos, catapult_root);
+    public void init_m() {
 
         Controllers ctrls = Controllers.getControllerObjects(this);
         this.main_ct = ctrls.a();
@@ -127,19 +95,15 @@ public class VibotControlled extends OpMode {
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop_m() {
     }
 
     /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start_m() {
         if (died) return;
-        a1_pos = arm_1.getPosition();
-        arm_1.setPosition(a1_target);
-        a2_pos = arm_2.getPosition();
-        arm_2.setPosition(a2_target);
     }
 
     boolean last_down = false;
@@ -191,17 +155,7 @@ public class VibotControlled extends OpMode {
         updateTelemetry(telemetry);
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
 
-        arm_1.setPosition(a1_pos);
-        arm_2.setPosition(a2_pos);
-
-        catapult.close();
-    }
 
 }
 // cause evry time I touch i get a felling

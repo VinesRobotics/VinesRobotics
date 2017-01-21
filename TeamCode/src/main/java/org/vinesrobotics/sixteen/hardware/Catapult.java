@@ -23,6 +23,7 @@
 package org.vinesrobotics.sixteen.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 public class Catapult {
 

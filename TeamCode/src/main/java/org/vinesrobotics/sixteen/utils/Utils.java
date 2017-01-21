@@ -97,6 +97,18 @@ public class Utils {
         final Method method = activityThreadClass.getMethod("currentApplication");
         return (Application) method.invoke(null, (Object[]) null);
     }
+
+    public static boolean checkInRange(double num, double min, double max) {
+        return num >= min && num <= max;
+    }
+
+    public static double limitTo(double base, double min, double max) {
+        double v = base-min;
+        max = max-min;
+        v = (v < 0)? max+v : v;
+        v = v % max;
+        return v + min;
+    }
 }
 
 

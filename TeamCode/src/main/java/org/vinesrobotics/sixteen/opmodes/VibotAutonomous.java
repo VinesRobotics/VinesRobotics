@@ -38,52 +38,45 @@ import java.security.InvalidKeyException;
 import java.util.List;
 
 @Autonomous(name="Autonomous",group="Vines")
-public class VibotAutonomous extends OpMode {
+public class VibotAutonomous extends VibotHardwareBase {
 
-    Hardware robot  = new Hardware();
-
-    MotorDeviceGroup lmot;
-    MotorDeviceGroup rmot;
-    DcMotor itk;
+    MotorDeviceGroup fwd;
 
     @Override
-    public void init() {
+    public void init_m() {
         Logging.setTelemetry(telemetry);
-
-        try {
-            robot.registerHardwareKeyName("intake");
-        } catch (InvalidKeyException e) {}
-        robot.initHardware(hardwareMap);
-
-        List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
-        lmot = new MotorDeviceGroup();
-        for (HardwareElement he : lefts) {
-            lmot.addDevice((DcMotor)he.get());
-        }
-        lmot.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
-        rmot = new MotorDeviceGroup();
-        for (HardwareElement he : right) {
-            rmot.addDevice((DcMotor)he.get());
-        }
-        rmot.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        itk = robot.getDeviceWithKeys("intake","motor");
+        fwd = new MotorDeviceGroup();
+        fwd.addDevice(lmot);
+        fwd.addDevice(rmot);
     }
 
-    public void start(){
-        lmot.setPower(-1);
-        rmot.setPower(1);
-        itk.setPower(1);
+    @Override
+    public void init_loop_m() {
+
+    }
+
+    public void start_m(){
+        //lmot.setPower(-1);
+        //rmot.setPower(1);
+        //itk.setPower(1);
         Utils.getDeltaTime(this.getRuntime());
     }
 
     @Override
     public void loop() {
         double delta = Utils.getDeltaTime(this.getRuntime());
-        Logging.log(String.valueOf(delta));
+        Logging.log(String.valueOf(getRuntime()));
 
+        // Start
+        if (Utils.checkInRange(getRuntime(),0,1.5)) {
+            fwd.setPower(1);
+        }
+        if (Utils.checkInRange(getRuntime(),1.5,2.9)) {
+            fwd.setPower(1);
+        }
+        if (getRuntime() > 2.9) {
+            fwd.setPower(0);
+        }
 
     }
 
