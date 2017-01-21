@@ -40,10 +40,10 @@ public abstract class VibotHardwareBase extends OpMode {
 
     MotorDeviceGroup lmot;
     MotorDeviceGroup rmot;
-    Servo arm_1;
+    /*Servo arm_1;
     double a1_pos = 0;
     Servo arm_2;
-    double a2_pos = 0;
+    double a2_pos = 0;*/
     DcMotor itk;
     Catapult catapult;
 
@@ -84,12 +84,12 @@ public abstract class VibotHardwareBase extends OpMode {
             rmot.setDirection(DcMotor.Direction.REVERSE);
         }catch (Exception e){}
 
-        arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
+        /*arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
         arm_1.scaleRange(0,1);
         arm_1.setPosition(Utils.limitTo(.78,0,1));
         arm_2 = robot.getDeviceWithKeys("bumper","servo","left");
         arm_2.scaleRange(0,1);
-        arm_1.setPosition(Utils.limitTo(.26,0,1));
+        arm_1.setPosition(Utils.limitTo(.26,0,1));*/
 
         itk = robot.getDeviceWithKeys("intake","motor");
 
@@ -108,9 +108,9 @@ public abstract class VibotHardwareBase extends OpMode {
 
     @Override
     public void start() {
-        a1_pos = arm_1.getPosition();
+        //a1_pos = arm_1.getPosition();
         //arm_1.setPosition(Utils.limitTo(1-a1_pos,0,1));
-        a2_pos = arm_2.getPosition();
+        //a2_pos = arm_2.getPosition();
         //arm_2.setPosition(Utils.limitTo(1-a2_pos,0,1));
         start_m();
     }
@@ -128,8 +128,8 @@ public abstract class VibotHardwareBase extends OpMode {
     @Override
     public void stop() {
 
-        arm_1.setPosition(a1_pos);
-        arm_2.setPosition(a2_pos);
+        //arm_1.setPosition(a1_pos);
+        //arm_2.setPosition(a2_pos);
 
         catapult.close();
 

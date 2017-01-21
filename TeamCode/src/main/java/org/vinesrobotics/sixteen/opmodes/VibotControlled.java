@@ -128,7 +128,7 @@ public class VibotControlled extends VibotHardwareBase {
         rmot.setPower(right.b());
 
 
-        double itkpw = main.btnVal(Button.RT);// * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
+        double itkpw = main.btnVal(Button.RT) * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
 
         itk.setPower( itkpw );
         // itk.getController().setMotorPower(itk.getPortNumber(),itkpw);

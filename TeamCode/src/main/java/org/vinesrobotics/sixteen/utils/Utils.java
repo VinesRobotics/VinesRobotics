@@ -91,6 +91,15 @@ public class Utils {
         return time - lltime;
     }
 
+    /**
+     * Gets the running App object. If for some reason android.app.ActivityThread doesn't exist or doesn't have currentApplication method,
+     * it throws the relevant exception.
+     * @return
+     * @throws ClassNotFoundException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     public static Application getApp() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         final Class<?> activityThreadClass =
                 Class.forName("android.app.ActivityThread");
@@ -98,10 +107,24 @@ public class Utils {
         return (Application) method.invoke(null, (Object[]) null);
     }
 
+    /**
+     * Checks if min <= num <= max
+     * @param num
+     * @param min
+     * @param max
+     * @return
+     */
     public static boolean checkInRange(double num, double min, double max) {
         return num >= min && num <= max;
     }
 
+    /**
+     * Limits base to be between min and max by wrapping it appropriately.
+     * @param base
+     * @param min
+     * @param max
+     * @return
+     */
     public static double limitTo(double base, double min, double max) {
         double v = base-min;
         max = max-min;
