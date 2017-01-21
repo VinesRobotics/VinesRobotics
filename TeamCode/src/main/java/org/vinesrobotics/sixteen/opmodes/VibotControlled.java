@@ -128,7 +128,9 @@ public class VibotControlled extends VibotHardwareBase {
         rmot.setPower(right.b());
 
 
-        double itkpw = main.btnVal(Button.RT) * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
+        double itkpw = main.btnVal(Button.RT);// * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
+
+        if (main.isPressed(Button.RB)) itkpw = -itkpw;
 
         itk.setPower( itkpw );
         // itk.getController().setMotorPower(itk.getPortNumber(),itkpw);
@@ -139,7 +141,8 @@ public class VibotControlled extends VibotHardwareBase {
             // Use LT LB
 
         } else if (catapult.isManualReady() && !main.isPressed(Button.X)){
-            double catpw = main.btnVal(Button.LT) * ( ( main.isPressed(Button.LB) ) ? -1 : 1 );
+            double catpw = main.btnVal(Button.LT);/// * ( ( main.isPressed(Button.LB) ) ? -1 : 1 );
+            if (main.isPressed(Button.LB)) catpw = -catpw;
             catapult.catapult().setPower(catpw);
         }
 
