@@ -115,6 +115,9 @@ public class VibotControlled extends VibotHardwareBase {
         if (died) return;
         catapult.tick();
 
+        telemetry.addData("CPOS",catapult.catapult().getCurrentPosition());
+        telemetry.addData("TPOS",catapult.catapult().getTargetPosition());
+
         ControllerState main = this.main_ct.getControllerState();
         //ControllerState turret = this.turret_ct.getControllerState();
 

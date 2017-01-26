@@ -30,7 +30,7 @@ public class Catapult {
     private DcMotor catapult;
     private int catapult_pos = 255;
     private int root = 0;
-    private final double pw = .5;
+    private final double pw = 1;
     private boolean manual = false;
     private boolean man_ready = false;
 
@@ -65,15 +65,16 @@ public class Catapult {
         if (man) fired = 5;
     }
     public void tick() {
-        if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition())
+        if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition()) {
             man_ready = true;
+            catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
         if (fired == 1) enableManual();
         if (fired > 0) fired--;
     }
     public void enableManual() {
         catapult.setPower(pw);
         catapult.setTargetPosition(root);
-        catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         manual = true;
         man_ready = false;
     }
