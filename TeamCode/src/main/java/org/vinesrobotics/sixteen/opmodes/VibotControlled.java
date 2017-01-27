@@ -117,6 +117,12 @@ public class VibotControlled extends VibotHardwareBase {
 
         telemetry.addData("CPOS",catapult.catapult().getCurrentPosition());
         telemetry.addData("TPOS",catapult.catapult().getTargetPosition());
+        telemetry.addData("PW",catapult.catapult().getPower());
+        telemetry.addData("At target",catapult.catapult().getTargetPosition()==catapult.catapult().getCurrentPosition());
+        telemetry.addData("Busy",catapult.catapult().isBusy());
+        telemetry.addData("Man",catapult.isManual());
+        telemetry.addData("Man Ready",catapult.isManualReady());
+
 
         ControllerState main = this.main_ct.getControllerState();
         //ControllerState turret = this.turret_ct.getControllerState();

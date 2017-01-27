@@ -25,12 +25,14 @@ package org.vinesrobotics.sixteen.hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
+import org.vinesrobotics.sixteen.utils.Utils;
+
 public class Catapult {
 
     private DcMotor catapult;
     private int catapult_pos = 255;
     private int root = 0;
-    private final double pw = 1;
+    private final double pw = .5;
     private boolean manual = false;
     private boolean man_ready = false;
 
@@ -46,6 +48,7 @@ public class Catapult {
 
     public Catapult(DcMotor mot, int pos, int root) {
         catapult = mot;
+        mot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         catapult_pos = pos;
         this.root = root;
@@ -54,22 +57,31 @@ public class Catapult {
 
     public void ready() {
         catapult.setPower(pw);
-        catapult.setTargetPosition(catapult_pos);
+        catapult.setTargetPosition(root);
     }
     private int fired = 0;
+    private boolean prev_man = false;
     public void fire() {
-        boolean man = manual;
+        prev_man = manual;
         disableManual();
         catapult.setPower(1);
         catapult.setTargetPosition(catapult_pos);
-        if (man) fired = 5;
+        fired = 50;
     }
     public void tick() {
         if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition()) {
             man_ready = true;
             catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        if (fired == 1) enableManual();
+        int tpos = catapult.getTargetPosition();
+        if (Utils.checkInRange(catapult.getCurrentPosition(),tpos-5,tpos+5))
+            catapult.setTargetPosition(catapult.getCurrentPosition());
+        if (fired == 1) {
+            catapult.setPower(pw);
+            catapult.setTargetPosition(root);
+            if (prev_man)
+                enableManual();
+        }
         if (fired > 0) fired--;
     }
     public void enableManual() {

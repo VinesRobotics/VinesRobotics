@@ -24,6 +24,7 @@ package org.vinesrobotics.sixteen.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.vinesrobotics.sixteen.hardware.Catapult;
@@ -47,7 +48,7 @@ public abstract class VibotHardwareBase extends OpMode {
     DcMotor itk;
     Catapult catapult;
 
-    final int catapult_pos = 255;
+    final int catapult_pos = 127;
     final int catapult_root = 0;
 
     Hardware robot = new Hardware();
@@ -94,6 +95,8 @@ public abstract class VibotHardwareBase extends OpMode {
         itk = robot.getDeviceWithKeys("intake","motor");
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
+
+        catapult.catapult().setDirection(DcMotorSimple.Direction.REVERSE);
 
         init_m();
     }
