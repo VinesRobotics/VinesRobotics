@@ -85,18 +85,17 @@ public abstract class VibotHardwareBase extends OpMode {
             rmot.setDirection(DcMotor.Direction.REVERSE);
         }catch (Exception e){}
 
+        itk = robot.getDeviceWithKeys("intake","motor");
+
+        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
+        catapult.catapult().setDirection(DcMotorSimple.Direction.REVERSE);
+
         /*arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
         arm_1.scaleRange(0,1);
         arm_1.setPosition(Utils.limitTo(.78,0,1));
         arm_2 = robot.getDeviceWithKeys("bumper","servo","left");
         arm_2.scaleRange(0,1);
         arm_1.setPosition(Utils.limitTo(.26,0,1));*/
-
-        itk = robot.getDeviceWithKeys("intake","motor");
-
-        catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
-
-        catapult.catapult().setDirection(DcMotorSimple.Direction.REVERSE);
 
         init_m();
     }

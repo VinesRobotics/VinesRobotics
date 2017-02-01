@@ -29,10 +29,9 @@ import org.vinesrobotics.sixteen.utils.Utils;
 
 public class Catapult {
 
-    private DcMotor catapult;
+    private MotorPositionFix catapult;
     private int catapult_pos = 255;
     private int root = 0;
-    private final double pw = .5;
     private boolean manual = false;
     private boolean man_ready = false;
 
@@ -47,16 +46,17 @@ public class Catapult {
     }
 
     public Catapult(DcMotor mot, int pos, int root) {
-        catapult = mot;
+        MotorPositionFix pfix = new MotorPositionFix(mot);
+        catapult = pfix;
+        DcMotor.RunMode rm = mot.getMode();
         mot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pfix.setMode(rm);
         catapult_pos = pos;
         this.root = root;
         ready();
     }
 
     public void ready() {
-        catapult.setPower(pw);
         catapult.setTargetPosition(root);
     }
     private int fired = 0;
@@ -64,20 +64,16 @@ public class Catapult {
     public void fire() {
         prev_man = manual;
         disableManual();
-        catapult.setPower(1);
         catapult.setTargetPosition(catapult_pos);
         fired = 50;
     }
     public void tick() {
         if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition()) {
             man_ready = true;
-            catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        int tpos = catapult.getTargetPosition();
-        if (Utils.checkInRange(catapult.getCurrentPosition(),tpos-5,tpos+5))
-            catapult.setTargetPosition(catapult.getCurrentPosition());
+        if (!manual)
+            catapult.tick();
         if (fired == 1) {
-            catapult.setPower(pw);
             catapult.setTargetPosition(root);
             if (prev_man)
                 enableManual();
@@ -85,14 +81,12 @@ public class Catapult {
         if (fired > 0) fired--;
     }
     public void enableManual() {
-        catapult.setPower(pw);
         catapult.setTargetPosition(root);
         manual = true;
         man_ready = false;
     }
     public void disableManual() {
         manual = false;
-        catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void toggleManual() {
         if (manual) {
@@ -103,7 +97,7 @@ public class Catapult {
             enableManual();
     }
     public void close() {
-        catapult.setPower(1);
         catapult.setTargetPosition(root);
+        catapult.deregister();
     }
 }
