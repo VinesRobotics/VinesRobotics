@@ -48,6 +48,8 @@ public class Range {
         return Math.max(min(), Math.min(max(), val));
     }
 
+    public Range add(double v) { return plus(v); }
+
     public Range plus(double v) {
         return new Range(minimum+v,maximum+v);
     }

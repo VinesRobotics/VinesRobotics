@@ -33,6 +33,6 @@ public class ClampedCurve implements Curve {
     }
     @Override
     public double getValueFor(double x) {
-        return range.clamp(x);
+        return range.clamp(curve.getValueFor(x));
     }
 }

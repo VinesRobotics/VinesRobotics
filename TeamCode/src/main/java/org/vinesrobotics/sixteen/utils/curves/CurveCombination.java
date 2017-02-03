@@ -46,14 +46,15 @@ public class CurveCombination implements Curve {
 
     @Override
     public double getValueFor(double x) {
+        double out = Double.POSITIVE_INFINITY;
         for (Map.Entry<Range, Curve> s : curves.entrySet()) {
             Range r = s.getKey();
             Curve c = s.getValue();
 
             if (r.inRange(x)) {
-                return c.getValueFor(x);
+                out =  c.getValueFor(x);
             }
         }
-        return -1;
+        return out;
     }
 }

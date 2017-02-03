@@ -27,11 +27,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ParabolicCurve implements Curve {
+public class QuadraticCurve implements Curve {
 
     private List<Double> coefficients;
 
-    public ParabolicCurve(double... coe) {
+    public QuadraticCurve(double... coe) {
         coefficients = new ArrayList<>();
         for (double d : coe) {
             coefficients.add(d);

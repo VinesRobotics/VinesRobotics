@@ -23,13 +23,20 @@
 package org.vinesrobotics.sixteen.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.I2cControllerPortDeviceImpl;
 
+import org.vinesrobotics.sixteen.utils.Range;
 import org.vinesrobotics.sixteen.utils.Utils;
+import org.vinesrobotics.sixteen.utils.curves.LinearCurve;
+
+import java.util.List;
 
 public class Catapult {
 
-    private MotorPositionFix catapult;
+    private DcMotor catapult;
     private int catapult_pos = 255;
     private int root = 0;
     private boolean manual = false;
@@ -46,11 +53,15 @@ public class Catapult {
     }
 
     public Catapult(DcMotor mot, int pos, int root) {
-        MotorPositionFix pfix = new MotorPositionFix(mot);
-        catapult = pfix;
-        DcMotor.RunMode rm = mot.getMode();
+        //MotorPositionFix pfix = new MotorPositionFix(mot);
+        catapult = mot;
+       // DcMotor.RunMode rm = mot.getMode();
         mot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pfix.setMode(rm);
+        mot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mot.setPower(1);
+        mot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //pfix.setMode(rm);
+        //pfix.setPowerCurve(new LinearCurve(1.d/200));
         catapult_pos = pos;
         this.root = root;
         ready();
@@ -67,12 +78,28 @@ public class Catapult {
         catapult.setTargetPosition(catapult_pos);
         fired = 50;
     }
+
+    private boolean lastReady = false;
     public void tick() {
-        if (manual && catapult.getCurrentPosition() == catapult.getTargetPosition()) {
+        if (manual && new Range(-10,10).add(catapult.getTargetPosition()).inRange(catapult.getCurrentPosition())) {
+            catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             man_ready = true;
         }
-        if (!manual)
-            catapult.tick();
+        if (!manual && man_ready) {
+            man_ready = false;
+        }
+        boolean tslr = false;
+        if (!manual &&
+                new Range(-10,10).add(catapult.getTargetPosition()).inRange(catapult.getCurrentPosition())
+                && !lastReady) {
+            catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            catapult.setTargetPosition(catapult.getCurrentPosition());
+            catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tslr = true;
+        }
+        lastReady = tslr;
+        //if (!manual)
+        //    catapult.tick();
         if (fired == 1) {
             catapult.setTargetPosition(root);
             if (prev_man)
@@ -86,6 +113,7 @@ public class Catapult {
         man_ready = false;
     }
     public void disableManual() {
+        catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         manual = false;
     }
     public void toggleManual() {
@@ -98,6 +126,6 @@ public class Catapult {
     }
     public void close() {
         catapult.setTargetPosition(root);
-        catapult.deregister();
+        //catapult.deregister();
     }
 }

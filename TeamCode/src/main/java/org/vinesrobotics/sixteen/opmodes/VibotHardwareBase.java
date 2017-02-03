@@ -74,6 +74,7 @@ public abstract class VibotHardwareBase extends OpMode {
                 lmot.addDevice((DcMotor) he.get());
             }
             lmot.setDirection(DcMotor.Direction.FORWARD);
+            lmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
@@ -83,12 +84,15 @@ public abstract class VibotHardwareBase extends OpMode {
                 rmot.addDevice((DcMotor)he.get());
             }
             rmot.setDirection(DcMotor.Direction.REVERSE);
+            rmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
         itk = robot.getDeviceWithKeys("intake","motor");
+        itk.setDirection(DcMotor.Direction.REVERSE);
+        rmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
-        catapult.catapult().setDirection(DcMotorSimple.Direction.REVERSE);
+        catapult.catapult().setDirection(DcMotor.Direction.REVERSE);
 
         /*arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
         arm_1.scaleRange(0,1);
