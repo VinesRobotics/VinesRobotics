@@ -27,42 +27,97 @@ public class Range {
     private final double minimum;
     private final double maximum;
 
+    /**
+     * Initializes an immutable {@link Range} object.
+     * @param min minimum value
+     * @param max maximum value
+     */
     public Range(double min, double max) {
         minimum = min;
         maximum = max;
     }
 
+    /**
+     * Gets the minimum value
+     * @return minimum value
+     */
     public double min() {
         return minimum;
     }
 
+    /**
+     * Gets the maximum value
+     * @return maximum value
+     */
     public double max() {
         return maximum;
     }
 
+    /**
+     * Checks if num is within this range.
+     * @param num Value to check
+     * @return true if num is in this range
+     */
     public boolean inRange(double num) {
         return num >= minimum && num <= maximum;
     }
 
+    /**
+     * Clamps val to this range. (eg. val < min == min, val > max == max)
+     * @param val Value to clamp
+     * @return clamped value
+     */
     public double clamp(double val) {
         return Math.max(min(), Math.min(max(), val));
     }
 
+    /**
+     * Alias for {@link #plus(double)}
+     * @see #plus(double)
+     */
     public Range add(double v) { return plus(v); }
 
+    /**
+     * Returns a new range with both the maximum and minimum incremented by v
+     * @param v
+     * @return
+     */
     public Range plus(double v) {
         return new Range(minimum+v,maximum+v);
     }
+
+    /**
+     * Returns a new range with both the maximum and minimum decremented by v
+     * @param v
+     * @return
+     */
     public Range minus(double v) {
         return new Range(minimum-v,maximum-v);
     }
+
+    /**
+     * Returns a new range with both the maximum and minimum multiplied by v
+     * @param v
+     * @return
+     */
     public Range mult(double v) {
         return new Range(minimum*v,maximum*v);
     }
+
+    /**
+     * Returns a new range with both the maximum and minimum divided by v
+     * @param v
+     * @return
+     */
     public Range div(double v) {
         return new Range(minimum/v,maximum/v);
     }
 
+    /**
+     * Checks if o is the same as this
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
 

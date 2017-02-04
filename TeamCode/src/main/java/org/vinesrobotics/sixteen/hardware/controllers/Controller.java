@@ -168,9 +168,9 @@ public class Controller {
 
         // Check if button is analog, look at ButtonType for what is and isn't
         if (!b.type().isAnalog()) {
-            b.value = Reflection.<Boolean>getFieldValue(b.f.value,gamepad) ? 1 : 0 ;
+            b.value = Reflection.getFieldValue(b.f.value,gamepad) ? 1 : 0 ;
         } else {
-            b.value = Reflection.<Float>getFieldValue(b.f.value, gamepad);
+            b.value = Reflection.getFieldValue(b.f.value, gamepad);
         }
 
         return b;

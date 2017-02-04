@@ -23,5 +23,10 @@
 package org.vinesrobotics.sixteen.utils.curves;
 
 public interface Curve {
+    /**
+     * Gets the value for x
+     * @param x Input
+     * @return Output
+     */
     double getValueFor(double x);
 }

@@ -27,6 +27,13 @@ import java.lang.reflect.Type;
 
 public class Reflection {
 
+    /**
+     * Gets Field variable from class by name.
+     * @see Class#getDeclaredField(String)
+     * @param clz Class to retrieve from
+     * @param name Name ov field
+     * @return Field variable or null
+     */
     public static Field getField(Class<?> clz, String name) {
         try {
             return clz.getDeclaredField(name);
@@ -35,6 +42,12 @@ public class Reflection {
         }
     }
 
+    /**
+     * Gets the value of a particular field from a given object
+     * @param field The Field type
+     * @param src The source object
+     * @return The value or null if an error occurs
+     */
     public static <T> T getFieldValue(Field field, Object src) {
         try {
             return (T) field.get(src);
@@ -45,6 +58,11 @@ public class Reflection {
 
     private static final String[] TYPE_NAME_PREFIX = {"class ","interface "};
 
+    /**
+     * Gets the name of a class specified by a {@link Type}
+     * @param type The {@link Type} to get the name of
+     * @return the name of the {@link Type} or an empty string if type is null
+     */
     public static String getClassName(Type type) {
         if (type==null) {
             return "";
@@ -58,6 +76,14 @@ public class Reflection {
         return className;
     }
 
+    /**
+     * Gets a {@link Class<?>} object from a {@link Type} object
+     * @param type the {@link Type} object
+     * @return a {@link Class<?>} represented by the type
+     * @throws ClassNotFoundException
+     * @see #getClassName(Type)
+     * @see Class#forName(String)
+     */
     public static Class<?> getClass(Type type)
             throws ClassNotFoundException {
         String className = getClassName(type);

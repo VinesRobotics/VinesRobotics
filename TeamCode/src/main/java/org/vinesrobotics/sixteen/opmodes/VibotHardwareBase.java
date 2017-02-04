@@ -125,15 +125,14 @@ public abstract class VibotHardwareBase extends OpMode {
         start_m();
     }
 
+    private Exception error = null;
+    private double ctime = 0;
+
     /**
      * User defined loop method
      * <p>
      * This method will be called repeatedly in a loop while this op mode is running
      */
-
-    private Exception error = null;
-    private double ctime = 0;
-
     public void loop() {
         if (error != null) {
             double delta = Utils.getDeltaTime(this.getRuntime());
