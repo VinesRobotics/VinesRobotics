@@ -145,6 +145,7 @@ public class VibotControlled extends VibotHardwareBase {
         lmot.setPower(left.b());
         rmot.setPower(right.b());
 
+        if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
 
         double itkpw = main.btnVal(Button.RT);// * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
 

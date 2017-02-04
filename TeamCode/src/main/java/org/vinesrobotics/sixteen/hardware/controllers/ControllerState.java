@@ -47,10 +47,10 @@ public class ControllerState {
     }
 
     private ControllerState(ControllerState dup) {
-        for (Map.Entry<String,Float> e : joys.entrySet()) {
+        for (Map.Entry<String,Float> e : dup.joys.entrySet()) {
             joys.put(e.getKey(),e.getValue());
         }
-        for (Map.Entry<String,Button> e : buttons.entrySet()) {
+        for (Map.Entry<String,Button> e : dup.buttons.entrySet()) {
             buttons.put(e.getKey(),e.getValue());
         }
     }
