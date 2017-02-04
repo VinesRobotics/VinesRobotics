@@ -34,6 +34,10 @@ import org.vinesrobotics.sixteen.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
@@ -48,7 +52,7 @@ public abstract class VibotHardwareBase extends OpMode {
     DcMotor itk;
     Catapult catapult;
 
-    final int catapult_pos = 127;
+    final int catapult_pos = -127;
     final int catapult_root = 0;
 
     Hardware robot = new Hardware();
@@ -89,10 +93,10 @@ public abstract class VibotHardwareBase extends OpMode {
 
         itk = robot.getDeviceWithKeys("intake","motor");
         itk.setDirection(DcMotor.Direction.REVERSE);
-        rmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        itk.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
-        catapult.catapult().setDirection(DcMotor.Direction.REVERSE);
+        catapult.catapult().setDirection(DcMotor.Direction.FORWARD);
 
         /*arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
         arm_1.scaleRange(0,1);
@@ -126,8 +130,39 @@ public abstract class VibotHardwareBase extends OpMode {
      * <p>
      * This method will be called repeatedly in a loop while this op mode is running
      */
-    @Override
-    public abstract void loop();
+
+    private Exception error = null;
+    private double ctime = 0;
+
+    public void loop() {
+        if (error != null) {
+            double delta = Utils.getDeltaTime(this.getRuntime());
+            ctime += delta;
+            ByteArrayOutputStream sw = new ByteArrayOutputStream();
+            error.printStackTrace(new PrintStream(sw));
+            try {
+                telemetry.addData("ERROR", sw.toString("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            updateTelemetry(telemetry);
+            if (ctime >= 5) {
+                Object nl = null;
+                nl.toString();
+            }
+        } else {
+
+            try {
+                loop_m();
+            } catch (Exception e) {
+                error = e;
+            }
+
+        }
+
+    }
+
+    protected abstract void loop_m();
 
     public void stop_m() {}
 

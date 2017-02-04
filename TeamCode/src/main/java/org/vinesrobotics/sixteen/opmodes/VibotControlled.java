@@ -60,9 +60,9 @@ public class VibotControlled extends VibotHardwareBase {
 
     boolean died = false;
 
-    Controllers c;
+    Controllers controllers;
     Controller main_ct;
-    //Controller turret_ct;
+    Controller turret_ct;
 
     //MotorDeviceGroup lmot;
     //MotorDeviceGroup rmot;
@@ -85,10 +85,12 @@ public class VibotControlled extends VibotHardwareBase {
     @Override
     public void init_m() {
 
-        Controllers ctrls = Controllers.getControllerObjects(this);
-        this.main_ct = ctrls.a();
-        //this.turret_ct = ctrls.b();
+        controllers = Controllers.getControllerObjects(this);
+        main_ct = controllers.a();
+        turret_ct = controllers.b();
         //ctrls.calibrate();
+        lastMain = main_ct.getControllerState();
+        lastTurret = turret_ct.getControllerState();
     }
 
     /*
@@ -106,26 +108,33 @@ public class VibotControlled extends VibotHardwareBase {
         if (died) return;
     }
 
-    boolean last_down = false;
+    boolean catapult_debug = false;
+    ControllerState lastMain = null;
+    ControllerState lastTurret = null;
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop_m() {
         if (died) return;
-        catapult.tick();
-
-        telemetry.addData("CPOS",catapult.catapult().getCurrentPosition());
-        telemetry.addData("TPOS",catapult.catapult().getTargetPosition());
-        telemetry.addData("PW",catapult.catapult().getPower());
-        telemetry.addData("At target",catapult.catapult().getTargetPosition()==catapult.catapult().getCurrentPosition());
-        telemetry.addData("Busy",catapult.catapult().isBusy());
-        telemetry.addData("Man",catapult.isManual());
-        telemetry.addData("Man Ready",catapult.isManualReady());
-
 
         ControllerState main = this.main_ct.getControllerState();
-        //ControllerState turret = this.turret_ct.getControllerState();
+        ControllerState turret = this.turret_ct.getControllerState();
+
+        catapult.tick();
+
+        if (catapult_debug) {
+            telemetry.addData("CPOS", catapult.catapult().getCurrentPosition());
+            telemetry.addData("TPOS", catapult.catapult().getTargetPosition());
+            telemetry.addData("PW", catapult.catapult().getPower());
+            telemetry.addData("At target", catapult.catapult().getTargetPosition() == catapult.catapult().getCurrentPosition());
+            telemetry.addData("Busy", catapult.catapult().isBusy());
+            telemetry.addData("Man", catapult.isManual());
+            telemetry.addData("Man Ready", catapult.isManualReady());
+        }
+
+
+        if (main.isPressed(Button.UP) && !lastMain.isPressed(Button.UP)) catapult_debug = !catapult_debug;
 
         Vec2D<Double> left;
         Vec2D<Double> right;
@@ -156,8 +165,7 @@ public class VibotControlled extends VibotHardwareBase {
         }
 
         if (main.isPressed(Button.A)) catapult.fire();
-        if (main.isPressed(Button.DOWN) && !last_down) catapult.toggleManual();
-        last_down = main.isPressed(Button.DOWN);
+        if (main.isPressed(Button.DOWN) && !lastMain.isPressed(Button.DOWN)) catapult.toggleManual();
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.b()-right.b())/2 );
@@ -165,6 +173,9 @@ public class VibotControlled extends VibotHardwareBase {
         telemetry.addData( "Intake Speed", itkpw );
         telemetry.addData( "Actual intake speed", itk.getPower() );
         updateTelemetry(telemetry);
+
+        lastMain = main_ct.getControllerState().clone();
+        lastTurret = turret_ct.getControllerState().clone();
     }
 
 

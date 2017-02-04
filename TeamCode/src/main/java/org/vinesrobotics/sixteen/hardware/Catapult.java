@@ -52,6 +52,12 @@ public class Catapult {
         return catapult;
     }
 
+    /**
+     * Initializes catapult to use a certain motor and position.
+     * @param mot DcMotor to use
+     * @param pos Target catapult position to use
+     * @param root Base position
+     */
     public Catapult(DcMotor mot, int pos, int root) {
         //MotorPositionFix pfix = new MotorPositionFix(mot);
         catapult = mot;
@@ -67,11 +73,18 @@ public class Catapult {
         ready();
     }
 
+    /**
+     * Resets catapult to root position
+     */
     public void ready() {
         catapult.setTargetPosition(root);
     }
     private int fired = 0;
     private boolean prev_man = false;
+
+    /**
+     * Shoots! Only works while tick() is being called.
+     */
     public void fire() {
         prev_man = manual;
         disableManual();
@@ -80,6 +93,10 @@ public class Catapult {
     }
 
     private boolean lastReady = false;
+
+    /**
+     * The tick function. Must be called once per loop.
+     */
     public void tick() {
         if (manual && new Range(-10,10).add(catapult.getTargetPosition()).inRange(catapult.getCurrentPosition())) {
             catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -92,9 +109,8 @@ public class Catapult {
         if (!manual &&
                 new Range(-10,10).add(catapult.getTargetPosition()).inRange(catapult.getCurrentPosition())
                 && !lastReady) {
-            catapult.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            catapult.setTargetPosition(catapult.getCurrentPosition());
-            catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int i = catapult.getCurrentPosition();
+            catapult.setTargetPosition(i);
             tslr = true;
         }
         lastReady = tslr;
@@ -107,15 +123,27 @@ public class Catapult {
         }
         if (fired > 0) fired--;
     }
+
+    /**
+     * Enables manual control mode by disabling automatic position setting.
+     */
     public void enableManual() {
         catapult.setTargetPosition(root);
         manual = true;
         man_ready = false;
     }
+
+    /**
+     * Does the opposite of enableManual()
+     */
     public void disableManual() {
         catapult.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         manual = false;
     }
+
+    /**
+     * Toggles manual mode using enableManual() and disableManual()
+     */
     public void toggleManual() {
         if (manual) {
             disableManual();
@@ -124,6 +152,11 @@ public class Catapult {
         else
             enableManual();
     }
+
+    /**
+     * Closes connections.
+     */
+    @Deprecated
     public void close() {
         catapult.setTargetPosition(root);
         //catapult.deregister();

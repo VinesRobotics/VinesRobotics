@@ -64,7 +64,7 @@ public class VibotAutonomous extends VibotHardwareBase {
     double ctime = 0;
 
     @Override
-    public void loop() {
+    public void loop_m() {
         double delta = Utils.getDeltaTime(this.getRuntime());
         ctime += delta;
         Logging.log(String.valueOf(Math.floor(ctime)));

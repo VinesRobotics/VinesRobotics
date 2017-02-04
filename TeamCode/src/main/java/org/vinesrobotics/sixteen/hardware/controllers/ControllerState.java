@@ -29,35 +29,73 @@ import org.vinesrobotics.sixteen.utils.Logging;
 import org.vinesrobotics.sixteen.utils.Vec2D;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class ControllerState {
     private HashMap<String, Float> joys = new HashMap<>();
     private HashMap<String,Button> buttons = new HashMap<>();
-    private Controller control;
+    private Controller control = null;
 
+    /**
+     * Initializes the controller state to controller cntr
+     * @param cntr Controller to init to
+     */
     protected ControllerState(Controller cntr) {
         control = cntr;
         update();
     }
 
+    private ControllerState(ControllerState dup) {
+        for (Map.Entry<String,Float> e : joys.entrySet()) {
+            joys.put(e.getKey(),e.getValue());
+        }
+        for (Map.Entry<String,Button> e : buttons.entrySet()) {
+            buttons.put(e.getKey(),e.getValue());
+        }
+    }
+
+    /**
+     * Checks if a given button is pressed.
+     * @param btn Button to check
+     * @return true if button is pressed
+     */
     public boolean isPressed(Button btn) {
         return btnVal(btn) > 0;
     }
 
+    /**
+     * Returns value of button btn
+     * @param btn Button to get the value ov
+     * @return value of btn
+     */
     public double btnVal(Button btn) { return buttons.get(btn.name()).value; }
 
+    /**
+     * Gets the value for a particular joystick/axis pair
+     * @param joystick Joystick to check
+     * @param ax Axis to check
+     * @return value of axis
+     */
     public double joyVal(Joystick joystick, Axis ax) {
         return joys.get(joystick.name()+ax.name());
     }
 
+    /**
+     * Gets the axis values of a joystick.
+     * @param j Joystick to check
+     * @return Value of joystick
+     */
     public Vec2D<Double> joy(Joystick j) {
         return new Vec2D<>( joyVal(j,Axis.X), joyVal(j,Axis.Y) );
     }
 
+    /**
+     * Updates state values with those from the Controller.
+     */
     protected void update() {
-        //joys.clear();
-        //buttons.clear();
+        if (control == null) return;
+
         for (Button btn : Button.values()) {
             buttons.put( btn.name(), control.getButton(btn) );
         }
@@ -66,7 +104,14 @@ public class ControllerState {
                 joys.put(joy.name() + ax.name(), control.getJoystick(joy).getAxis(ax) );
             }
         }
-        //Logging.log(buttons.toString());
+    }
+
+    /**
+     * Clones this ControllerState, without preserving references.
+     * @return THe new ControllerState.
+     */
+    public ControllerState clone() {
+        return new ControllerState(this);
     }
 
 }
