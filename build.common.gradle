@@ -1,24 +1,25 @@
 /*
- * Copyright (c) 2016 Vines High School Robotics Team
+ * Copyright (c) 2017 Vines High School Robotics Team
  *
- *                            Permission is hereby granted, free of charge, to any person obtaining a copy
- *                            of this software and associated documentation files (the "Software"), to deal
- *                            in the Software without restriction, including without limitation the rights
- *                            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *                            copies of the Software, and to permit persons to whom the Software is
- *                            furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *                            The above copyright notice and this permission notice shall be included in all
- *                            copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- *                            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *                            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *                            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *                            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *                            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *                            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *                            SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
+
 
 /**
  * build.common.gradle
@@ -44,13 +45,13 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '25.0.3'
 
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('../libs/ftc.debug.keystore')
+            storeFile rootProject.file('libs/ftc.debug.keystore')
             storePassword 'android'
         }
     }
@@ -72,7 +73,7 @@ android {
          * @see <a href="http://developer.android.com/tools/building/configuring-gradle.html">Configure Your Build</a>
          * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
          */
-        def manifestFile = file('../FtcRobotController/src/main/AndroidManifest.xml');
+        def manifestFile = project(':FtcRobotController').file('src/main/AndroidManifest.xml');
         def manifestText = manifestFile.getText()
         //
         def vCodePattern = Pattern.compile("versionCode=\"(\\d+(\\.\\d+)*)\"")
@@ -92,7 +93,8 @@ android {
     // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed
     buildTypes {
         release {
-            debuggable true
+            // Disable debugging for release versions so it can be uploaded to Google Play.
+            //debuggable true
             ndk {
                 abiFilters "armeabi-v7a"
             }
@@ -112,14 +114,13 @@ android {
 
     sourceSets.main {
         jni.srcDirs = []
-        jniLibs.srcDir "../libs"
+        jniLibs.srcDir rootProject.file('libs')
     }
 }
 
 repositories {
     flatDir {
-        dirs '../libs'
+        dirs rootProject.file('libs')
     }
 }
-
 apply from: 'build.release.gradle'
