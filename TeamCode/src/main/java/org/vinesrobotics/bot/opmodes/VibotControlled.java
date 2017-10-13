@@ -66,11 +66,9 @@ public class VibotControlled extends VibotHardwareBase {
      */
     @Override
     public void init_m() {
-
         controllers = Controllers.getControllerObjects(this);
         main_ct = controllers.a();
         turret_ct = controllers.b();
-        //ctrls.calibrate();
         lastMain = main_ct.getControllerState();
         lastTurret = turret_ct.getControllerState();
     }

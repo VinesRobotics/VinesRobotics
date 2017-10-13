@@ -24,6 +24,7 @@ package org.vinesrobotics.bot.hardware.groups;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,39 +33,14 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
     private List<DcMotor> devs = new ArrayList<>();
 
-    /**
-     * When the motor is running in one of the <a href="https://en.wikipedia.org/wiki/PID_controller">PID modes</a>
-     * the value set using the {@link #setPower(double) setPower()} method is indicative of a
-     * desired motor <em>velocity</em> rather than a raw <em>power</em> level. In those modes, the
-     * {@link #setMaxSpeed(int) setMaxSpeed()} method provides the interpretation of the speed to which
-     * a value of 1.0 passed to {@link #setPower(double) setPower()} should correspond.
-     *
-     * @param encoderTicksPerSecond the maximum targetable speed for this motor when the motor is
-     *                              in one of the PID modes, in units of encoder ticks per second.
-     * @see RunMode#RUN_USING_ENCODER
-     * @see RunMode#RUN_TO_POSITION
-     * @see #getMaxSpeed()
-     */
     @Override
-    public void setMaxSpeed(int encoderTicksPerSecond) {
-        for (DcMotor mot : devs) {
-            mot.setMaxSpeed(encoderTicksPerSecond);
-        }
+    public MotorConfigurationType getMotorType() {
+        return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
-    /**
-     * Returns the current maximum targetable speed for this motor when the motor is
-     * running in one of the PID modes.
-     *
-     * @return the current maximum targetable speed for this motor, in units of encoder
-     * ticks per second
-     * @see #setMaxSpeed(int)
-     */
     @Override
-    public int getMaxSpeed() {
-        for (DcMotor mot : devs) {
-            return mot.getMaxSpeed();
-        }return -1;
+    public void setMotorType(MotorConfigurationType motorConfigurationType) {
+
     }
 
     /**

@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMotorController,ServoController {
 
@@ -40,6 +41,16 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     @Override
     public double readRawVoltage() {
         return 0;
+    }
+
+    @Override
+    public void setMotorType(int i, MotorConfigurationType motorConfigurationType) {
+
+    }
+
+    @Override
+    public MotorConfigurationType getMotorType(int i) {
+        return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
     /**
@@ -83,16 +94,6 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
      */
     @Override
     public double getMotorPower(int motor) {
-        return 0;
-    }
-
-    @Override
-    public void setMotorMaxSpeed(int i, int i1) {
-
-    }
-
-    @Override
-    public int getMotorMaxSpeed(int i) {
         return 0;
     }
 
