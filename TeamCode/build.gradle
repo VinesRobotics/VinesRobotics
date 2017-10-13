@@ -31,3 +31,6 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+android {
+    buildToolsVersion '25.0.0'
+}
