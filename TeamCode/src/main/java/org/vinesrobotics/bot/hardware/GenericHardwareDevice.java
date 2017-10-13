@@ -86,30 +86,13 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
         return 0;
     }
 
-    /**
-     * Sets the maximum targetable motor speed when the indicated motor is running in one of the
-     * PID motor modes.
-     *
-     * @param motor                 the motor in question
-     * @param encoderTicksPerSecond the new maximum targetable motor speed, in units of encoder
-     *                              ticks per second
-     * @see DcMotor#setMaxSpeed(int)
-     */
     @Override
-    public void setMotorMaxSpeed(int motor, int encoderTicksPerSecond) {
+    public void setMotorMaxSpeed(int i, int i1) {
 
     }
 
-    /**
-     * Returns the current maximum targetable motor speed when the indicated motor is running
-     * in one of the PID modes
-     *
-     * @param motor the motor in question
-     * @return the current maximum targetable speed of that motor, in units of encoder ticks per second
-     * @see DcMotor#getMaxSpeed()
-     */
     @Override
-    public int getMotorMaxSpeed(int motor) {
+    public int getMotorMaxSpeed(int i) {
         return 0;
     }
 
