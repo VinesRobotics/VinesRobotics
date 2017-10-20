@@ -40,19 +40,15 @@ import java.util.List;
 
 public abstract class VibotHardwareBase extends OpMode {
 
-    MotorDeviceGroup lmot;
-    MotorDeviceGroup rmot;
-    /*Servo arm_1;
-    double a1_pos = 0;
-    Servo arm_2;
-    double a2_pos = 0;*/
+    public MotorDeviceGroup leftMotors;
+    public MotorDeviceGroup rightMotors;
+
     DcMotor itk;
     Catapult catapult;
-
     final int catapult_pos = -127;
     final int catapult_root = 0;
 
-    Hardware robot = new Hardware();
+    public Hardware robot = new Hardware();
 
     /**
      * User defined init method
@@ -65,27 +61,29 @@ public abstract class VibotHardwareBase extends OpMode {
         try {
             robot.registerHardwareKeyName("intake");
             robot.registerHardwareKeyName("bumper");
+            robot.registerHardwareKeyName("slide");
+            robot.registerHardwareKeyName("claw");
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
         List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
-        lmot = new MotorDeviceGroup();
+        leftMotors = new MotorDeviceGroup();
         try {
             for (HardwareElement he : lefts) {
-                lmot.addDevice((DcMotor) he.get());
+                leftMotors.addDevice((DcMotor) he.get());
             }
-            lmot.setDirection(DcMotor.Direction.FORWARD);
-            lmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftMotors.setDirection(DcMotor.Direction.FORWARD);
+            leftMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
         List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
-        rmot = new MotorDeviceGroup();
+        rightMotors = new MotorDeviceGroup();
         try {
             for (HardwareElement he : right) {
-                rmot.addDevice((DcMotor)he.get());
+                rightMotors.addDevice((DcMotor)he.get());
             }
-            rmot.setDirection(DcMotor.Direction.REVERSE);
-            rmot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightMotors.setDirection(DcMotor.Direction.REVERSE);
+            rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
         itk = robot.getDeviceWithKeys("intake","motor");
@@ -94,13 +92,6 @@ public abstract class VibotHardwareBase extends OpMode {
 
         catapult = new Catapult((DcMotor) robot.getDeviceWithKeys("catapult","motor"),catapult_pos,catapult_root);
         catapult.catapult().setDirection(DcMotor.Direction.FORWARD);
-
-        /*arm_1 = robot.getDeviceWithKeys("bumper","servo","right");
-        arm_1.scaleRange(0,1);
-        arm_1.setPosition(Utils.limitTo(.78,0,1));
-        arm_2 = robot.getDeviceWithKeys("bumper","servo","left");
-        arm_2.scaleRange(0,1);
-        arm_1.setPosition(Utils.limitTo(.26,0,1));*/
 
         init_m();
     }
@@ -164,11 +155,6 @@ public abstract class VibotHardwareBase extends OpMode {
 
     @Override
     public void stop() {
-
-        //arm_1.setPosition(a1_pos);
-        //arm_2.setPosition(a2_pos);
-
-        catapult.close();
 
         stop_m();
     }

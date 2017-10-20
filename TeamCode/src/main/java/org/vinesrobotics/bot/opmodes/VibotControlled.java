@@ -22,14 +22,20 @@
 
 package org.vinesrobotics.bot.opmodes;
 
+import android.app.Application;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.R;
 import org.vinesrobotics.bot.hardware.controllers.Controller;
 import org.vinesrobotics.bot.hardware.controllers.ControllerState;
 import org.vinesrobotics.bot.hardware.controllers.Controllers;
 import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
+import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
+
+import java.lang.reflect.InvocationTargetException;
 
 
 @TeleOp(name="Controlled", group="Vines")
@@ -46,8 +52,8 @@ public class VibotControlled extends VibotHardwareBase {
     Controller main_ct;
     Controller turret_ct;
 
-    //MotorDeviceGroup lmot;
-    //MotorDeviceGroup rmot;
+    //MotorDeviceGroup leftMotors;
+    //MotorDeviceGroup rightMotors;
     //Servo arm_1;
     //double a1_pos = 0;
     //Servo arm_2;
@@ -101,19 +107,6 @@ public class VibotControlled extends VibotHardwareBase {
         ControllerState main = this.main_ct.getControllerState();
         ControllerState turret = this.turret_ct.getControllerState();
 
-        catapult.tick();
-
-        if (catapult_debug) {
-            telemetry.addData("CPOS", catapult.catapult().getCurrentPosition());
-            telemetry.addData("TPOS", catapult.catapult().getTargetPosition());
-            telemetry.addData("PW", catapult.catapult().getPower());
-            telemetry.addData("At target", catapult.catapult().getTargetPosition() == catapult.catapult().getCurrentPosition());
-            telemetry.addData("Busy", catapult.catapult().isBusy());
-            telemetry.addData("Man", catapult.isManual());
-            telemetry.addData("Man Ready", catapult.isManualReady());
-        }
-
-
         if (main.isPressed(Button.UP) && !lastMain.isPressed(Button.UP)) catapult_debug = !catapult_debug;
 
         Vec2D<Double> left;
@@ -122,8 +115,8 @@ public class VibotControlled extends VibotHardwareBase {
         left = main.joy(Joystick.LEFT);
         right = main.joy(Joystick.RIGHT);
 
-        lmot.setPower(left.b());
-        rmot.setPower(right.b());
+        leftMotors.setPower(left.b());
+        rightMotors.setPower(right.b());
 
         if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
 
@@ -157,6 +150,18 @@ public class VibotControlled extends VibotHardwareBase {
 
         lastMain = main_ct.getControllerState().clone();
         lastTurret = turret_ct.getControllerState().clone();
+
+        try {
+            Utils.getContext().getResources().getText(R.string.VuForiaKey);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 

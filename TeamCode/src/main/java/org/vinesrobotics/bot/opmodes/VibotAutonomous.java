@@ -38,8 +38,8 @@ public class VibotAutonomous extends VibotHardwareBase {
     public void init_m() {
         Logging.setTelemetry(telemetry);
         fwd = new MotorDeviceGroup();
-        fwd.addDevice(lmot);
-        fwd.addDevice(rmot);
+        fwd.addDevice(leftMotors);
+        fwd.addDevice(rightMotors);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class VibotAutonomous extends VibotHardwareBase {
     }
 
     public void start_m(){
-        //lmot.setPower(-1);
-        //rmot.setPower(1);
+        //leftMotors.setPower(-1);
+        //rightMotors.setPower(1);
         //itk.setPower(1);
         Utils.getDeltaTime(this.getRuntime());
     }

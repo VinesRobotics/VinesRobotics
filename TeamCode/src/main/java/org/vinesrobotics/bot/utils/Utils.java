@@ -23,6 +23,7 @@
 package org.vinesrobotics.bot.utils;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -105,6 +106,10 @@ public class Utils {
                 Class.forName("android.app.ActivityThread");
         final Method method = activityThreadClass.getMethod("currentApplication");
         return (Application) method.invoke(null, (Object[]) null);
+    }
+
+    public static Context getContext() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        return getApp().getApplicationContext();
     }
 
     /**
