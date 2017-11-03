@@ -25,6 +25,7 @@ package org.vinesrobotics.bot.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 import org.vinesrobotics.bot.hardware.Hardware;
@@ -35,14 +36,13 @@ import org.vinesrobotics.bot.hardware.controllers.Controllers;
 import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
-import org.vinesrobotics.bot.hardware.robot.final_16.Catapult;
+import org.vinesrobotics.bot.hardware.groups.ServoDeviceGroup;
 import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidKeyException;
 import java.util.List;
@@ -54,6 +54,7 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup leftMotors;
     public MotorDeviceGroup rightMotors;
+    public ServoDeviceGroup clawServos;
 
     public Hardware robot = new Hardware();
 
@@ -88,10 +89,22 @@ public class VibotControlled extends OpMode {
             rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
+        List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
+        clawServos = new ServoDeviceGroup();
+        try {
+            for (HardwareElement he : right) {
+                Servo serv = (Servo)he.get();
+                clawServos.addDevice(serv);
+                //if (robot.)
+                // TODO check name and see if it should be reversed
+            }
+        }catch (Exception e){}
+
         // old init_m
         controllers = Controllers.getControllerObjects(this);
         main_ct = controllers.a();
-        lastMain = main_ct.getControllerState();
+
+
     }
 
     public void init_loop() {
@@ -102,6 +115,8 @@ public class VibotControlled extends OpMode {
     public void start() {
         /*start_m();*/
         if (died) return;
+
+        Utils.getDeltaTime(this.getRuntime());
     }
 
     private Exception error = null;
@@ -118,26 +133,15 @@ public class VibotControlled extends OpMode {
             ctime += delta;
             ByteArrayOutputStream sw = new ByteArrayOutputStream();
             error.printStackTrace(new PrintStream(sw));
-            try {
-                telemetry.addData("ERROR", sw.toString("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            telemetry.addLine(String.format("Error after %g seconds:%n%s", ctime, sw.toString()));
             updateTelemetry(telemetry);
-            if (ctime >= 5) {
-                Object nl = null;
-                nl.toString();
-            }
         } else {
-
             try {
                 loop_m();
             } catch (Exception e) {
                 error = e;
             }
-
         }
-
     }
 
     @Override
@@ -150,9 +154,6 @@ public class VibotControlled extends OpMode {
     Controllers controllers;
     Controller main_ct;
 
-    boolean catapult_debug = false;
-    ControllerState lastMain = null;
-
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -162,25 +163,35 @@ public class VibotControlled extends OpMode {
 
         ControllerState main = this.main_ct.getControllerState();
 
-        if (main.isPressed(Button.UP) && !main.last().isPressed(Button.UP)) catapult_debug = !catapult_debug;
+        Vec2D<Double> left = main.joy(Joystick.LEFT);
+        Vec2D<Double> right = main.joy(Joystick.RIGHT);
 
-        Vec2D<Double> left;
-        Vec2D<Double> right;
+        //leftMotors.setPower(left.y());
+        //rightMotors.setPower(right.y());
+        // TODO correct mapping based on the following
+        /*
+            +
+            y
+            -
 
-        left = main.joy(Joystick.LEFT);
-        right = main.joy(Joystick.RIGHT);
+            y+ -> lf/lb/rf/rb+
+            y- -> lf/lb/rf/rb-
 
-        leftMotors.setPower(left.y());
-        rightMotors.setPower(right.y());
+            -x+
+
+            x+ -> lf/lb+ rf/rb-
+            x- -> lf/lb- rf/rb+
+         */
 
         if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
+
+        // literal copy of Shields' code; there's a better way to do this
+        double servo_speed = 0.5;
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.y()-right.y())/2 );
         telemetry.addData( "Turning Speed", (-left.y()+right.y())/2 );
         updateTelemetry(telemetry);
-
-
 
         try { // VuForiaKey
             Utils.getContext().getResources().getText(R.string.VuForiaKey);
