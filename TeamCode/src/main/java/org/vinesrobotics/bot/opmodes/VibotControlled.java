@@ -55,12 +55,8 @@ public class VibotControlled extends OpMode {
     public MotorDeviceGroup leftMotors;
     public MotorDeviceGroup rightMotors;
 
-    DcMotor itk;
-    Catapult catapult;
-    final int catapult_pos = -127;
-    final int catapult_root = 0;
-
     public Hardware robot = new Hardware();
+
     @Override
     public void init() {
         Logging.setTelemetry(telemetry);
@@ -91,10 +87,6 @@ public class VibotControlled extends OpMode {
             rightMotors.setDirection(DcMotor.Direction.REVERSE);
             rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
-
-        itk = robot.getDeviceWithKeys("intake","motor");
-        itk.setDirection(DcMotor.Direction.REVERSE);
-        itk.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // old init_m
         controllers = Controllers.getControllerObjects(this);
@@ -188,7 +180,9 @@ public class VibotControlled extends OpMode {
         telemetry.addData( "Turning Speed", (-left.y()+right.y())/2 );
         updateTelemetry(telemetry);
 
-        try {
+
+
+        try { // VuForiaKey
             Utils.getContext().getResources().getText(R.string.VuForiaKey);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
