@@ -45,7 +45,7 @@ public class ImageSaver {
 
     /**
      * A copy of the Android internals  insertImage method, this method populates the
-     * meta data with DATE_ADDED and DATE_TAKEN. This fixes a common problem where media
+     * meta data with DATE_ADDED and DATE_TAKEN. This fixes x common problem where media
      * that is inserted manually gets saved at the end of the gallery (because date is not populated).
      * @see android.provider.MediaStore.Images.Media#insertImage(ContentResolver, Bitmap, String, String)
      */

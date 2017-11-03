@@ -53,16 +53,16 @@ public class Controllers {
     }
 
     /**
-     * Gets a reference to Controller "A"
-     * @return a reference to Controller "A"
+     * Gets x reference to Controller "A"
+     * @return x reference to Controller "A"
      */
     public Controller a(){
         return gpa;
     }
 
     /**
-     * Gets a reference to Controller "B"
-     * @return a reference to Controller "B"
+     * Gets x reference to Controller "B"
+     * @return x reference to Controller "B"
      */
     public Controller b(){
         return gpb;

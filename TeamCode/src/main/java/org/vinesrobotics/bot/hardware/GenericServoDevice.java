@@ -72,11 +72,11 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Sets the current position of the servo, expressed as a fraction of its available
+     * Sets the current position of the servo, expressed as x fraction of its available
      * range. If PWM power is enabled for the servo, the servo will attempt to move to
      * the indicated position.
      *
-     * @param position the position to which the servo should move, a value in the range [0.0, 1.0]
+     * @param position the position to which the servo should move, x value in the range [0.0, 1.0]
      * @see ServoController#pwmEnable()
      * @see #getPosition()
      */
@@ -87,7 +87,7 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
 
     /**
      * Returns the position to which the servo was last commanded to move. Note that this method
-     * does NOT read a position from the servo through any electrical means, as no such electrical
+     * does NOT read x position from the servo through any electrical means, as no such electrical
      * mechanism is, generally, available.
      *
      * @return the position to which the servo was last commanded to move, or Double.NaN
@@ -102,9 +102,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Scales the available movement range of the servo to be a subset of its maximum range. Subsequent
+     * Scales the available movement range of the servo to be x subset of its maximum range. Subsequent
      * positioning calls will operate within that subset range. This is useful if your servo has
-     * only a limited useful range of movement due to the physical hardware that it is manipulating
+     * only x limited useful range of movement due to the physical hardware that it is manipulating
      * (as is often the case) but you don't want to have to manually scale and adjust the input
      * to {@link #setPosition(double) setPosition()} each time.
      * <p>
@@ -121,8 +121,8 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
      * the servo, not its currently scaled range, if any. Thus, scaleRange(0.0, 1.0) will reset
      * the servo to its full range of movement.</p>
      *
-     * @param min the lower limit of the servo movement range, a value in the interval [0.0, 1.0]
-     * @param max the upper limit of the servo movement range, a value in the interval [0.0, 1.0]
+     * @param min the lower limit of the servo movement range, x value in the interval [0.0, 1.0]
+     * @param max the upper limit of the servo movement range, x value in the interval [0.0, 1.0]
      * @see #setPosition(double)
      */
     @Override

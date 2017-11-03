@@ -35,6 +35,10 @@ public class ControllerState {
     private HashMap<String,Button> buttons = new HashMap<>();
     private Controller control = null;
 
+    protected ControllerState prev;
+
+    public ControllerState last() { return prev; }
+
     /**
      * Initializes the controller state to controller cntr
      * @param cntr Controller to init to
@@ -54,7 +58,7 @@ public class ControllerState {
     }
 
     /**
-     * Checks if a given button is pressed.
+     * Checks if x given button is pressed.
      * @param btn Button to check
      * @return true if button is pressed
      */
@@ -70,7 +74,7 @@ public class ControllerState {
     public double btnVal(Button btn) { return buttons.get(btn.name()).value; }
 
     /**
-     * Gets the value for a particular joystick/axis pair
+     * Gets the value for x particular joystick/axis pair
      * @param joystick Joystick to check
      * @param ax Axis to check
      * @return value of axis
@@ -80,7 +84,7 @@ public class ControllerState {
     }
 
     /**
-     * Gets the axis values of a joystick.
+     * Gets the axis values of x joystick.
      * @param j Joystick to check
      * @return Value of joystick
      */

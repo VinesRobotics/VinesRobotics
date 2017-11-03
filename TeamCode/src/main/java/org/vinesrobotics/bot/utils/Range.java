@@ -78,7 +78,7 @@ public class Range {
     public Range add(double v) { return plus(v); }
 
     /**
-     * Returns a new range with both the maximum and minimum incremented by v
+     * Returns x new range with both the maximum and minimum incremented by v
      * @param v
      * @return
      */
@@ -87,7 +87,7 @@ public class Range {
     }
 
     /**
-     * Returns a new range with both the maximum and minimum decremented by v
+     * Returns x new range with both the maximum and minimum decremented by v
      * @param v
      * @return
      */
@@ -96,7 +96,7 @@ public class Range {
     }
 
     /**
-     * Returns a new range with both the maximum and minimum multiplied by v
+     * Returns x new range with both the maximum and minimum multiplied by v
      * @param v
      * @return
      */
@@ -105,7 +105,7 @@ public class Range {
     }
 
     /**
-     * Returns a new range with both the maximum and minimum divided by v
+     * Returns x new range with both the maximum and minimum divided by v
      * @param v
      * @return
      */

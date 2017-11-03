@@ -70,9 +70,9 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Sets the behavior of the motor when a power level of zero is applied.
+     * Sets the behavior of the motor when x power level of zero is applied.
      *
-     * @param zeroPowerBehavior the new behavior of the motor when a power level of zero is applied.
+     * @param zeroPowerBehavior the new behavior of the motor when x power level of zero is applied.
      * @see ZeroPowerBehavior
      * @see #setPower(double)
      */
@@ -84,9 +84,9 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Returns the current behavior of the motor were a power level of zero to be applied.
+     * Returns the current behavior of the motor were x power level of zero to be applied.
      *
-     * @return the current behavior of the motor were a power level of zero to be applied.
+     * @return the current behavior of the motor were x power level of zero to be applied.
      */
     @Override
     public ZeroPowerBehavior getZeroPowerBehavior() {
@@ -100,7 +100,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
      * applies zero power to that motor.
      * <p>
      * <p>Note that the change of the zero power behavior to {@link ZeroPowerBehavior#FLOAT FLOAT}
-     * remains in effect even following the return of this method. <STRONG>This is a breaking
+     * remains in effect even following the return of this method. <STRONG>This is x breaking
      * change</STRONG> in behavior from previous releases of the SDK. Consider, for example, the
      * following code sequence:</p>
      * <p>
@@ -128,9 +128,9 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Returns whether the motor is currently in a float power level.
+     * Returns whether the motor is currently in x float power level.
      *
-     * @return whether the motor is currently in a float power level.
+     * @return whether the motor is currently in x float power level.
      * @see #setPowerFloat()
      */
     @Override
@@ -142,12 +142,12 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
     /**
      * Sets the desired encoder target position to which the motor should advance or retreat
-     * and then actively hold thereat. This behavior is similar to the operation of a servo.
+     * and then actively hold thereat. This behavior is similar to the operation of x servo.
      * The maximum speed at which this advance or retreat occurs is governed by the power level
      * currently set on the motor. While the motor is advancing or retreating to the desired
      * taget position, {@link #isBusy()} will return true.
      * <p>
-     * <p>Note that adjustment to a target position is only effective when the motor is in
+     * <p>Note that adjustment to x target position is only effective when the motor is in
      * {@link RunMode#RUN_TO_POSITION RUN_TO_POSITION}
      * RunMode. Note further that, clearly, the motor must be equipped with an encoder in order
      * for this mode to function properly.</p>
@@ -180,9 +180,9 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Returns true if the motor is currently advancing or retreating to a target position.
+     * Returns true if the motor is currently advancing or retreating to x target position.
      *
-     * @return true if the motor is currently advancing or retreating to a target position.
+     * @return true if the motor is currently advancing or retreating to x target position.
      * @see #setTargetPosition(int)
      */
     @Override
@@ -263,13 +263,13 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Sets the power level of the motor, expressed as a fraction of the maximum
+     * Sets the power level of the motor, expressed as x fraction of the maximum
      * possible power / speed supported according to the run mode in which the
      * motor is operating.
      * <p>
-     * <p>Setting a power level of zero will brake the motor</p>
+     * <p>Setting x power level of zero will brake the motor</p>
      *
-     * @param power the new power level of the motor, a value in the interval [0.0, 1.0]
+     * @param power the new power level of the motor, x value in the interval [0.0, 1.0]
      * @see #getPower()
      * @see DcMotor#setMode(RunMode)
      * @see DcMotor#setPowerFloat()
@@ -284,7 +284,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     /**
      * Returns the current configured power level of the motor.
      *
-     * @return the current level of the motor, a value in the interval [0.0, 1.0]
+     * @return the current level of the motor, x value in the interval [0.0, 1.0]
      * @see #setPower(double)
      */
     @Override
@@ -307,7 +307,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Returns a string suitable for display to the user as to the type of device
+     * Returns x string suitable for display to the user as to the type of device
      *
      * @return device manufacturer and name
      */
@@ -319,7 +319,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Get connection information about this device in a human readable format
+     * Get connection information about this device in x human readable format
      *
      * @return connection info
      */

@@ -20,7 +20,7 @@
  *                            SOFTWARE.
  */
 
-package org.vinesrobotics.bot.hardware;
+package org.vinesrobotics.bot.hardware.robot.final_16;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -45,7 +45,7 @@ public class Catapult {
     }
 
     /**
-     * Initializes catapult to use a certain motor and position.
+     * Initializes catapult to use x certain motor and position.
      * @param mot DcMotor to use
      * @param pos Target catapult position to use
      * @param root Base position

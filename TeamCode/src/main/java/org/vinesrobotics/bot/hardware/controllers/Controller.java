@@ -159,7 +159,7 @@ public class Controller {
     }
 
     /**
-     * Gets a button value; if a boolean, true is 1, false is 0; if Float, then the float.
+     * Gets x button value; if x boolean, true is 1, false is 0; if Float, then the float.
      *
      * @param b Button to check, value property modified
      * @return Same object as passed in, but with value property modified
@@ -184,8 +184,12 @@ public class Controller {
     private ControllerState controlState;
     public ControllerState getControllerState() {
 
+        ControllerState prev = (controlState == null)? null : controlState.clone();
+
         if (controlState == null) controlState = new ControllerState(this);
         else controlState.update();
+
+        controlState.prev = prev;
 
         return controlState;
     }

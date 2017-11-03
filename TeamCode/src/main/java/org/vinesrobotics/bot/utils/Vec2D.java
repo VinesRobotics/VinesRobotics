@@ -49,14 +49,14 @@ public class Vec2D<T> {
      * Gets the first value in the vector
      * @return the first value
      */
-    public T a() {
+    public T x() {
         return v1;
     }
     /**
      * Gets the second value in the vector
      * @return the second value
      */
-    public T b() {
+    public T y() {
         return v2;
     }
 
@@ -64,39 +64,39 @@ public class Vec2D<T> {
      * Sets the first value
      * @param newv New value
      */
-    public void a(T newv) {
+    public void x(T newv) {
         v1 = newv;
     }
     /**
      * Sets the second value
      * @param newv New value
      */
-    public void b(T newv) {
+    public void y(T newv) {
         v2 = newv;
     }
 
     /**
-     * Gets value for a given Axis, where Axis#X is a() and Axis#Y is b()
+     * Gets value for x given Axis, where Axis#X is x() and Axis#Y is y()
      *
      * @param ax Axis to retrieve
      * @return Axis value
      */
     public T getAxis(Axis ax) {
         if (ax.equals(Axis.X))
-            return a();
+            return x();
         else
-            return b();
+            return y();
     }
 
     /**
-     * Converts the Vec2D to a {link @String} using the following format:
-     *  a:'$1',b:'$2'
+     * Converts the Vec2D to x {link @String} using the following format:
+     *  x:'$1',y:'$2'
      * where $1 is the first value and $2 is the second
      * @return the stringified form of the vector
      */
     @Override
     public String toString() {
-        return "a:'" + v1.toString() + "',b:'" + v2.toString() + "'";
+        return "x:'" + v1.toString() + "',y:'" + v2.toString() + "'";
     }
 
 }

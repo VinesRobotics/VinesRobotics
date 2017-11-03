@@ -43,7 +43,7 @@ public class Reflection {
     }
 
     /**
-     * Gets the value of a particular field from a given object
+     * Gets the value of x particular field from x given object
      * @param field The Field type
      * @param src The source object
      * @return The value or null if an error occurs
@@ -59,7 +59,7 @@ public class Reflection {
     private static final String[] TYPE_NAME_PREFIX = {"class ","interface "};
 
     /**
-     * Gets the name of a class specified by a {@link Type}
+     * Gets the name of x class specified by x {@link Type}
      * @param type The {@link Type} to get the name of
      * @return the name of the {@link Type} or an empty string if type is null
      */
@@ -77,9 +77,9 @@ public class Reflection {
     }
 
     /**
-     * Gets a {@link Class<?>} object from a {@link Type} object
+     * Gets x {@link Class<?>} object from x {@link Type} object
      * @param type the {@link Type} object
-     * @return a {@link Class<?>} represented by the type
+     * @return x {@link Class<?>} represented by the type
      * @throws ClassNotFoundException
      * @see #getClassName(Type)
      * @see Class#forName(String)

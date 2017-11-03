@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Vines High School Robotics Team
+ * Copyright (c) 2017 Vines High School Robotics Team
  *
  *                            Permission is hereby granted, free of charge, to any person obtaining a copy
  *                            of this software and associated documentation files (the "Software"), to deal
@@ -22,92 +22,155 @@
 
 package org.vinesrobotics.bot.opmodes;
 
-import android.app.Application;
-
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.R;
+import org.vinesrobotics.bot.hardware.Hardware;
+import org.vinesrobotics.bot.hardware.HardwareElement;
 import org.vinesrobotics.bot.hardware.controllers.Controller;
 import org.vinesrobotics.bot.hardware.controllers.ControllerState;
 import org.vinesrobotics.bot.hardware.controllers.Controllers;
 import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
+import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
+import org.vinesrobotics.bot.hardware.robot.final_16.Catapult;
+import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.security.InvalidKeyException;
+import java.util.List;
 
 
-@TeleOp(name="Controlled", group="Vines")
+@TeleOp(name="Controlled (17)", group="Vines")
 //@Disabled
-public class VibotControlled extends VibotHardwareBase {
+public class VibotControlled extends OpMode {
 
-    /* Declare OpMode members. */
-    //Hardware robot       = new Hardware();
+    public MotorDeviceGroup leftMotors;
+    public MotorDeviceGroup rightMotors;
 
+    DcMotor itk;
+    Catapult catapult;
+    final int catapult_pos = -127;
+    final int catapult_root = 0;
 
-    boolean died = false;
-
-    Controllers controllers;
-    Controller main_ct;
-    Controller turret_ct;
-
-    //MotorDeviceGroup leftMotors;
-    //MotorDeviceGroup rightMotors;
-    //Servo arm_1;
-    //double a1_pos = 0;
-    //Servo arm_2;
-    //double a2_pos = 0;
-    //DcMotor itk;
-    //Catapult catapult;
-
-    //final double a1_target = 0;
-    //final double a2_target = 0;
-
-    //final int catapult_pos = 255;
-    //final int catapult_root = 0;
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
+    public Hardware robot = new Hardware();
     @Override
-    public void init_m() {
+    public void init() {
+        Logging.setTelemetry(telemetry);
+        try {
+            robot.registerHardwareKeyName("intake");
+            robot.registerHardwareKeyName("bumper");
+            robot.registerHardwareKeyName("slide");
+            robot.registerHardwareKeyName("claw");
+        } catch (InvalidKeyException e) {}
+        robot.initHardware(hardwareMap);
+
+        List<HardwareElement> lefts = robot.getDevicesWithAllKeys("left","drive");
+        leftMotors = new MotorDeviceGroup();
+        try {
+            for (HardwareElement he : lefts) {
+                leftMotors.addDevice((DcMotor) he.get());
+            }
+            leftMotors.setDirection(DcMotor.Direction.FORWARD);
+            leftMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }catch (Exception e){}
+
+        List<HardwareElement> right = robot.getDevicesWithAllKeys("right","drive");
+        rightMotors = new MotorDeviceGroup();
+        try {
+            for (HardwareElement he : right) {
+                rightMotors.addDevice((DcMotor)he.get());
+            }
+            rightMotors.setDirection(DcMotor.Direction.REVERSE);
+            rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }catch (Exception e){}
+
+        itk = robot.getDeviceWithKeys("intake","motor");
+        itk.setDirection(DcMotor.Direction.REVERSE);
+        itk.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // old init_m
         controllers = Controllers.getControllerObjects(this);
         main_ct = controllers.a();
-        turret_ct = controllers.b();
         lastMain = main_ct.getControllerState();
-        lastTurret = turret_ct.getControllerState();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop_m() {
+    public void init_loop() {
+        /*init_loop_m();*/
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
-    public void start_m() {
+    public void start() {
+        /*start_m();*/
         if (died) return;
     }
 
+    private Exception error = null;
+    private double ctime = 0;
+
+    /**
+     * User defined loop method
+     * <p>
+     * This method will be called repeatedly in x loop while this op mode is running
+     */
+    public void loop() {
+        if (error != null) {
+            double delta = Utils.getDeltaTime(this.getRuntime());
+            ctime += delta;
+            ByteArrayOutputStream sw = new ByteArrayOutputStream();
+            error.printStackTrace(new PrintStream(sw));
+            try {
+                telemetry.addData("ERROR", sw.toString("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            updateTelemetry(telemetry);
+            if (ctime >= 5) {
+                Object nl = null;
+                nl.toString();
+            }
+        } else {
+
+            try {
+                loop_m();
+            } catch (Exception e) {
+                error = e;
+            }
+
+        }
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    private boolean died = false;
+
+    Controllers controllers;
+    Controller main_ct;
+
     boolean catapult_debug = false;
     ControllerState lastMain = null;
-    ControllerState lastTurret = null;
+
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
-    @Override
+    // loop_m separation preserved to remove error checking dirtiness
     public void loop_m() {
         if (died) return;
 
         ControllerState main = this.main_ct.getControllerState();
-        ControllerState turret = this.turret_ct.getControllerState();
 
-        if (main.isPressed(Button.UP) && !lastMain.isPressed(Button.UP)) catapult_debug = !catapult_debug;
+        if (main.isPressed(Button.UP) && !main.last().isPressed(Button.UP)) catapult_debug = !catapult_debug;
 
         Vec2D<Double> left;
         Vec2D<Double> right;
@@ -115,41 +178,15 @@ public class VibotControlled extends VibotHardwareBase {
         left = main.joy(Joystick.LEFT);
         right = main.joy(Joystick.RIGHT);
 
-        leftMotors.setPower(left.b());
-        rightMotors.setPower(right.b());
+        leftMotors.setPower(left.y());
+        rightMotors.setPower(right.y());
 
         if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
 
-        double itkpw = main.btnVal(Button.RT);// * ( ( main.isPressed(Button.RB) ) ? -1 : 1 );
-
-        if (main.isPressed(Button.RB)) itkpw = -itkpw;
-
-        itk.setPower( itkpw );
-        // itk.getController().setMotorPower(itk.getPortNumber(),itkpw);
-
-        if (!catapult.isManual()) {
-            if (!main.isPressed(Button.A))
-                catapult.ready();
-            // Use LT LB
-
-        } else if (catapult.isManualReady() && !main.isPressed(Button.X)){
-            double catpw = main.btnVal(Button.LT);/// * ( ( main.isPressed(Button.LB) ) ? -1 : 1 );
-            if (main.isPressed(Button.LB)) catpw = -catpw;
-            catapult.catapult().setPower(catpw);
-        }
-
-        if (main.isPressed(Button.A)) catapult.fire();
-        if (main.isPressed(Button.DOWN) && !lastMain.isPressed(Button.DOWN)) catapult.toggleManual();
-
         telemetry.addLine( "Values in range of -1 to +1" );
-        telemetry.addData( "Speed", (-left.b()-right.b())/2 );
-        telemetry.addData( "Turning Speed", (-left.b()+right.b())/2 );
-        telemetry.addData( "Intake Speed", itkpw );
-        telemetry.addData( "Actual intake speed", itk.getPower() );
+        telemetry.addData( "Speed", (-left.y()-right.y())/2 );
+        telemetry.addData( "Turning Speed", (-left.y()+right.y())/2 );
         updateTelemetry(telemetry);
-
-        lastMain = main_ct.getControllerState().clone();
-        lastTurret = turret_ct.getControllerState().clone();
 
         try {
             Utils.getContext().getResources().getText(R.string.VuForiaKey);
@@ -163,8 +200,4 @@ public class VibotControlled extends VibotHardwareBase {
             e.printStackTrace();
         }
     }
-
-
-
 }
-// cause evry time I touch i get a felling

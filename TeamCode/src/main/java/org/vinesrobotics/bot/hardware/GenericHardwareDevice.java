@@ -32,7 +32,7 @@ import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMotorController,ServoController {
 
     /**
-     * Returns the sensor's current value as a raw voltage level. Note that for
+     * Returns the sensor's current value as x raw voltage level. Note that for
      * Returns the light level voltage as reported by the sensor. Note that returned values
      * INCREASE as the light energy INCREASES.
      *
@@ -203,7 +203,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Set the position of a servo at the given channel
+     * Set the position of x servo at the given channel
      *
      * @param servo    channel of servo
      * @param position from 0.0 to 1.0
@@ -214,7 +214,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the position of a servo at a given channel
+     * Get the position of x servo at x given channel
      *
      * @param servo channel of servo
      * @return position, scaled from 0.0 to 1.0
@@ -235,7 +235,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Returns a string suitable for display to the user as to the type of device
+     * Returns x string suitable for display to the user as to the type of device
      *
      * @return device manufacturer and name
      */
@@ -245,7 +245,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get connection information about this device in a human readable format
+     * Get connection information about this device in x human readable format
      *
      * @return connection info
      */

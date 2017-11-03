@@ -25,7 +25,7 @@ package org.vinesrobotics.bot.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.vinesrobotics.bot.hardware.Catapult;
+import org.vinesrobotics.bot.hardware.robot.final_16.Catapult;
 import org.vinesrobotics.bot.hardware.Hardware;
 import org.vinesrobotics.bot.hardware.HardwareElement;
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
@@ -38,7 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
-public abstract class VibotHardwareBase extends OpMode {
+public abstract class VibotHardwareBase_OLD extends OpMode {
 
     public MotorDeviceGroup leftMotors;
     public MotorDeviceGroup rightMotors;
@@ -119,7 +119,7 @@ public abstract class VibotHardwareBase extends OpMode {
     /**
      * User defined loop method
      * <p>
-     * This method will be called repeatedly in a loop while this op mode is running
+     * This method will be called repeatedly in x loop while this op mode is running
      */
     public void loop() {
         if (error != null) {

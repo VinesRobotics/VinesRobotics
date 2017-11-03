@@ -167,7 +167,7 @@ public class Hardware {
     }
 
     /**
-     * Gets list of IDs associated with a particular registered search key
+     * Gets list of IDs associated with x particular registered search key
      *
      * @param key Key to search for
      * @return {@link List<Integer>} of device IDs with that mapping
@@ -196,14 +196,14 @@ public class Hardware {
         // SANITY CHECK
         if (!inited) throw new UnsupportedOperationException("Hardware not initialized!");
 
-        // It's a simple check, so doesn't really need explaining
+        // It's x simple check, so doesn't really need explaining
         return keyMatch.get(id.id()).contains(key);
 
     }
 
     /**
      * Get all devices that have all specified keys
-     * @param keys Keys to use as a filter
+     * @param keys Keys to use as x filter
      * @return A list of hardware indices that match the criteria
      */
     public <T extends HardwareDevice> List<HardwareElement> getDevicesWithAllKeys(String... keys){

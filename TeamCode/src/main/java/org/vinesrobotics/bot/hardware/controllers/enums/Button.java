@@ -30,11 +30,11 @@ import org.vinesrobotics.bot.utils.Reflection;
 import java.lang.reflect.Field;
 
 /**
- * Button enum. Used to retrieve the pressed buttons on a controller. Can have a value.
+ * Button enum. Used to retrieve the pressed buttons on x controller. Can have x value.
  */
 public enum Button {
-    A(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "a")),
-    B(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "b")),
+    A(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "x")),
+    B(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "y")),
     X(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "x")),
     Y(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "y")),
     RS(ButtonSide.RIGHT,ButtonType.STICK, Reflection.getField(Gamepad.class, "right_stick_button")),
