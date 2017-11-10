@@ -22,7 +22,12 @@
 
 package org.vinesrobotics.bot.utils.curves;
 
+import org.firstinspires.ftc.robotcore.internal.android.dex.util.Unsigned;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,17 +37,58 @@ import java.util.Map;
 public abstract class CurveBase implements Curve {
 
     private Map<Double,Double> cache = new HashMap<>();
+    private Map<Double,Long> cachect = new HashMap<>();
 
     private boolean useCache = true;
     public void enableCache() {useCache = true;}
     public void disableCache() {useCache = false;}
 
+    private int cacheSize = 512;
+    public void setCacheSize(int caches){cacheSize = caches;}
+
+    public CurveBase() {
+        if (cacheCleanThread == null) cacheCleanThread = new CacheCleanThread();
+        if (!cacheCleanThread.isAlive()) cacheCleanThread.start();
+
+        cacheCleanThread.curves.add(this);
+    }
+
     public abstract double getValue(double x);
+
+    private static CacheCleanThread cacheCleanThread;
+    private class CacheCleanThread extends Thread {
+        public List<CurveBase> curves;
+
+        public CacheCleanThread() {
+            curves = Collections.synchronizedList(new ArrayList<CurveBase>());
+
+            this.setDaemon(true);
+            this.setName("Curve Cache Cleaner");
+            this.setPriority(Thread.MIN_PRIORITY);
+        }
+
+        public void run() {
+
+        }
+    }
 
     @Override
     public double getValueFor(double x) {
-        //return Math.pow(base,x);
-        return 0;
+
+        if (useCache) {
+            if (cache.containsKey(x)) {
+                cachect.put(x, cachect.get(x)+1);
+                return cache.get(x);
+            } else {
+                double v = getValue(x);
+                cache.put(x, v);
+                cachect.put(x, 1l);
+                return v;
+            }
+        } else {
+            return getValue(x);
+        }
+
     }
 
 }

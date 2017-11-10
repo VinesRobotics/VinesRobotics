@@ -27,7 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.R;
+import org.vinesrobotics.bot.R;
 import org.vinesrobotics.bot.hardware.Hardware;
 import org.vinesrobotics.bot.hardware.HardwareElement;
 import org.vinesrobotics.bot.hardware.controllers.Controller;
@@ -95,8 +95,9 @@ public class VibotControlled extends OpMode {
             for (HardwareElement he : right) {
                 Servo serv = (Servo)he.get();
                 clawServos.addDevice(serv);
-                //if (robot.)
-                // TODO check name and see if it should be reversed
+                if (robot.hasKey(he, "right")) {
+                    serv.setDirection(Servo.Direction.REVERSE);
+                }
             }
         }catch (Exception e){}
 
@@ -129,15 +130,13 @@ public class VibotControlled extends OpMode {
      */
     public void loop() {
         if (error != null) {
-            double delta = Utils.getDeltaTime(this.getRuntime());
-            ctime += delta;
             ByteArrayOutputStream sw = new ByteArrayOutputStream();
             error.printStackTrace(new PrintStream(sw));
-            telemetry.addLine(String.format("Error after %g seconds:%n%s", ctime, sw.toString()));
+            telemetry.addLine(String.format("Error after %g seconds:%n%s", this.getRuntime(), sw.toString()));
             updateTelemetry(telemetry);
         } else {
             try {
-                loop_m();
+                loop_m(Utils.getDeltaTime(this.getRuntime()));
             } catch (Exception e) {
                 error = e;
             }
@@ -158,7 +157,8 @@ public class VibotControlled extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     // loop_m separation preserved to remove error checking dirtiness
-    public void loop_m() {
+    double clawPosition = 0.5;
+    public void loop_m(double deltaTime) {
         if (died) return;
 
         ControllerState main = this.main_ct.getControllerState();
@@ -166,27 +166,24 @@ public class VibotControlled extends OpMode {
         Vec2D<Double> left = main.joy(Joystick.LEFT);
         Vec2D<Double> right = main.joy(Joystick.RIGHT);
 
-        //leftMotors.setPower(left.y());
-        //rightMotors.setPower(right.y());
-        // TODO correct mapping based on the following
-        /*
-            +
-            y
-            -
+        double lPower = left.y(),rPower = lPower;
 
-            y+ -> lf/lb/rf/rb+
-            y- -> lf/lb/rf/rb-
+        lPower *= left.x();
+        rPower *= -left.x();
 
-            -x+
+        leftMotors.setPower(lPower);
+        rightMotors.setPower(rPower);
 
-            x+ -> lf/lb+ rf/rb-
-            x- -> lf/lb- rf/rb+
-         */
+
 
         if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
 
         // literal copy of Shields' code; there's a better way to do this
         double servo_speed = 0.5;
+        if (main.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
+        if (main.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
+
+        clawServos.setPosition(clawPosition);
 
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData( "Speed", (-left.y()-right.y())/2 );
