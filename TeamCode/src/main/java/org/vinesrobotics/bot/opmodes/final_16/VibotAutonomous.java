@@ -29,7 +29,7 @@ import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 
-@Autonomous(name="Autonomous",group="Vines")
+@Autonomous(name="Vibot_Autonomous",group="Vines")
 public class VibotAutonomous extends VibotHardwareBase {
 
     MotorDeviceGroup fwd;

@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import org.vinesrobotics.bot.R;
 import org.vinesrobotics.bot.hardware.Hardware;
@@ -54,6 +55,14 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup leftMotors;
     public MotorDeviceGroup rightMotors;
+
+    public DcMotor linSlide;
+    MotorConfigurationType linSlideCfg;
+    double linSlideMax = 4.5;
+    double linSlideMin = 0;
+    double linSlideSpeed = 2.25;
+    double linSlideUnitMultiplier;
+
     public ServoDeviceGroup clawServos;
 
     public Hardware robot = new Hardware();
@@ -88,6 +97,13 @@ public class VibotControlled extends OpMode {
             rightMotors.setDirection(DcMotor.Direction.REVERSE);
             rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
+
+        List<HardwareElement> slides = robot.getDevicesWithAllKeys("motor", "slide");
+        linSlide = (DcMotor) slides.get(0).get();
+        linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linSlideCfg = linSlide.getMotorType();
+        linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
 
         List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
         clawServos = new ServoDeviceGroup();
@@ -158,6 +174,7 @@ public class VibotControlled extends OpMode {
      */
     // loop_m separation preserved to remove error checking dirtiness
     double clawPosition = 0.5;
+    double slidePosition = linSlideMin;
     public void loop_m(double deltaTime) {
         if (died) return;
 
@@ -175,11 +192,20 @@ public class VibotControlled extends OpMode {
         rightMotors.setPower(rPower);
 
 
+        double slidePower = 1; // power
+        if (linSlide.getPower()!=slidePower) linSlide.setPower(slidePower);
+        if (main.isPressed(Button.UP)) slidePosition += linSlideSpeed;
+        if (main.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed;
+        if (slidePosition > linSlideMax) slidePosition = linSlideMax;
+        if (slidePosition < linSlideMin) slidePosition = linSlideMin;
+        int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
+        if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
+
 
         if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
 
         // literal copy of Shields' code; there's a better way to do this
-        double servo_speed = 0.5;
+        double servo_speed = 50;
         if (main.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
         if (main.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
 
