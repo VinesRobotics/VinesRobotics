@@ -24,7 +24,7 @@ package org.vinesrobotics.bot.utils.curves;
 
 import org.vinesrobotics.bot.utils.Range;
 
-public class ClampedCurve implements Curve {
+public class ClampedCurve extends CurveBase {
     public Curve curve;
     private Range range;
     public ClampedCurve(Curve c,Range r) {
@@ -32,7 +32,7 @@ public class ClampedCurve implements Curve {
         range = r;
     }
     @Override
-    public double getValueFor(double x) {
+    public double getValue(double x) {
         return range.clamp(curve.getValueFor(x));
     }
 }

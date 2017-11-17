@@ -22,14 +22,14 @@
 
 package org.vinesrobotics.bot.utils.curves;
 
-public class ExponentialCurve implements Curve {
+public class ExponentialCurve extends CurveBase {
     private double base = 0;
 
     public ExponentialCurve(double base) {
         this.base = base;
     }
     @Override
-    public double getValueFor(double x) {
+    public double getValue(double x) {
         return Math.pow(base,x);
     }
 }

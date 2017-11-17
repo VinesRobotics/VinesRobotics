@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PolynomialCurve implements Curve {
+public class PolynomialCurve extends CurveBase {
 
     private List<Double> coefficients;
 
@@ -39,7 +39,7 @@ public class PolynomialCurve implements Curve {
     }
 
     @Override
-    public double getValueFor(double x) {
+    public double getValue(double x) {
         double sum = 0;
         int i = 1;
         for (double co : coefficients) {

@@ -22,7 +22,7 @@
 
 package org.vinesrobotics.bot.utils.curves;
 
-public class LinearCurve implements Curve {
+public class LinearCurve extends CurveBase {
     private double slope = 0;
     private double b = 0;
 
@@ -33,8 +33,9 @@ public class LinearCurve implements Curve {
     public LinearCurve(double slope) {
         this(slope,0);
     }
+
     @Override
-    public double getValueFor(double x) {
+    public double getValue(double x) {
         return x*slope + b;
     }
 }

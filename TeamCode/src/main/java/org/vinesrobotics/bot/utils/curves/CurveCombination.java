@@ -27,11 +27,15 @@ import org.vinesrobotics.bot.utils.Range;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CurveCombination implements Curve {
+public class CurveCombination extends CurveBase {
 
     public Map<Range,Curve> curves = new HashMap<>();
 
     public void setCurve(Range r, Curve c) {
+        if (c instanceof CurveBase && this.useCache) {
+            CurveBase cb = (CurveBase) c;
+            cb.disableCache();
+        }
         curves.put(r,c);
     }
 
@@ -45,7 +49,7 @@ public class CurveCombination implements Curve {
     }
 
     @Override
-    public double getValueFor(double x) {
+    public double getValue(double x) {
         double out = Double.POSITIVE_INFINITY;
         for (Map.Entry<Range, Curve> s : curves.entrySet()) {
             Range r = s.getKey();
