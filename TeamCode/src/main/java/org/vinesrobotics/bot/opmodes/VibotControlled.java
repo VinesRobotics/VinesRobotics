@@ -27,7 +27,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
+import com.vuforia.Vuforia;
+import com.vuforia.VuforiaBase;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.vinesrobotics.bot.R;
 import org.vinesrobotics.bot.hardware.Hardware;
 import org.vinesrobotics.bot.hardware.HardwareElement;
@@ -56,10 +60,12 @@ public class VibotControlled extends OpMode {
     public MotorDeviceGroup leftMotors;
     public MotorDeviceGroup rightMotors;
 
-    public DcMotor linSlide;
+    public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    double linSlideMax = 4.5;
-    double linSlideMin = 0;
+    static double mainLinSlideMax = 2.75;
+    double linSlideMax = mainLinSlideMax;
+    static double mainLinSlideMin = 0;
+    double linSlideMin = mainLinSlideMin;
     double linSlideSpeed = 2.25;
     double linSlideUnitMultiplier;
 
@@ -99,16 +105,27 @@ public class VibotControlled extends OpMode {
         }catch (Exception e){}
 
         List<HardwareElement> slides = robot.getDevicesWithAllKeys("motor", "slide");
-        linSlide = (DcMotor) slides.get(0).get();
-        linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linSlideCfg = linSlide.getMotorType();
-        linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
+        linSlide = new MotorDeviceGroup();
+        try {
+            linSlide.addDevice((DcMotor) slides.get(0).get());
+            linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linSlide.setContainsOne();
+            linSlideCfg = linSlide.getMotorType();
+            linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
+
+            int cpos = linSlide.getCurrentPosition(); // new zero position
+            double newz = cpos/linSlideUnitMultiplier;
+            linSlideMin = mainLinSlideMin-newz;
+            linSlideMax = mainLinSlideMax-newz;
+
+            slidePosition = linSlideMin;
+        }catch (Exception e){}
 
         List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
         clawServos = new ServoDeviceGroup();
         try {
-            for (HardwareElement he : right) {
+            for (HardwareElement he : claw) {
                 Servo serv = (Servo)he.get();
                 clawServos.addDevice(serv);
                 if (robot.hasKey(he, "right")) {
@@ -121,7 +138,7 @@ public class VibotControlled extends OpMode {
         controllers = Controllers.getControllerObjects(this);
         main_ct = controllers.a();
 
-
+        //Vuforia.init();
     }
 
     public void init_loop() {
@@ -161,7 +178,7 @@ public class VibotControlled extends OpMode {
 
     @Override
     public void stop() {
-
+        //Vuforia.deinit();
     }
 
     private boolean died = false;
@@ -183,10 +200,7 @@ public class VibotControlled extends OpMode {
         Vec2D<Double> left = main.joy(Joystick.LEFT);
         Vec2D<Double> right = main.joy(Joystick.RIGHT);
 
-        double lPower = left.y(),rPower = lPower;
-
-        lPower *= left.x();
-        rPower *= -left.x();
+        double lPower = left.y(),rPower = right.y();
 
         leftMotors.setPower(lPower);
         rightMotors.setPower(rPower);
@@ -194,8 +208,8 @@ public class VibotControlled extends OpMode {
 
         double slidePower = 1; // power
         if (linSlide.getPower()!=slidePower) linSlide.setPower(slidePower);
-        if (main.isPressed(Button.UP)) slidePosition += linSlideSpeed;
-        if (main.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed;
+        if (main.isPressed(Button.UP)) slidePosition += linSlideSpeed * deltaTime;
+        if (main.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed * deltaTime;
         if (slidePosition > linSlideMax) slidePosition = linSlideMax;
         if (slidePosition < linSlideMin) slidePosition = linSlideMin;
         int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
@@ -212,11 +226,22 @@ public class VibotControlled extends OpMode {
         clawServos.setPosition(clawPosition);
 
         telemetry.addLine( "Values in range of -1 to +1" );
-        telemetry.addData( "Speed", (-left.y()-right.y())/2 );
-        telemetry.addData( "Turning Speed", (-left.y()+right.y())/2 );
+        telemetry.addData("LS.x", left.x());
+        telemetry.addData("LS.y", left.y());
+        telemetry.addData("leftMotors.power", leftMotors.getPower());
+        telemetry.addData("rightMotors.power", rightMotors.getPower());
+        telemetry.addData("Speed", (-lPower-rPower)/2 );
+        telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
+        telemetry.addData("clawPosition", clawPosition);
+        telemetry.addData("calcSlidePos", calcPos);
+        telemetry.addData("slidePosition", slidePosition);
+        telemetry.addData("linSlideUnitMultiplier", linSlideUnitMultiplier);
+        telemetry.addData("deltaTime", deltaTime);
         updateTelemetry(telemetry);
 
         try { // VuForiaKey
+            //VuforiaTrackables tracks = new VuforiaTrackables();
+
             Utils.getContext().getResources().getText(R.string.VuForiaKey);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

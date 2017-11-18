@@ -33,8 +33,19 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
     private List<DcMotor> devs = new ArrayList<>();
 
+    private boolean hasOne = false;
+    public void setContainsOne() {
+        hasOne = true;
+    }
+    public void setContainsMultiple() {
+        hasOne = false;
+    }
+
     @Override
     public MotorConfigurationType getMotorType() {
+        if (hasOne)
+            for (DcMotor mot : devs)
+                return mot.getMotorType();
         return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
