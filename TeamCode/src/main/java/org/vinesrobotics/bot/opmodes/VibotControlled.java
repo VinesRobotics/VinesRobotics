@@ -227,16 +227,12 @@ public class VibotControlled extends OpMode {
         clawServos.setPosition(clawPosition);
 
         telemetry.addLine( "Values in range of -1 to +1" );
-        telemetry.addData("LS.x", left.x());
-        telemetry.addData("LS.y", left.y());
-        telemetry.addData("leftMotors.power", leftMotors.getPower());
-        telemetry.addData("rightMotors.power", rightMotors.getPower());
         telemetry.addData("Speed", (-lPower-rPower)/2 );
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
         telemetry.addData("clawPosition", clawPosition);
-        telemetry.addData("calcSlidePos", calcPos);
-        telemetry.addData("slidePosition", slidePosition);
-        telemetry.addData("linSlideUnitMultiplier", linSlideUnitMultiplier);
+        telemetry.addData("servoSpeed", servo_speed);
+        telemetry.addData("a", main.isPressed(Button.A));
+        telemetry.addData("b", main.isPressed(Button.X));
         telemetry.addData("deltaTime", deltaTime);
         updateTelemetry(telemetry);
 
