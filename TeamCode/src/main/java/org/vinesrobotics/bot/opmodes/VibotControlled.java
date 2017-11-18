@@ -25,6 +25,7 @@ package org.vinesrobotics.bot.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 import com.vuforia.Vuforia;
@@ -100,7 +101,7 @@ public class VibotControlled extends OpMode {
             for (HardwareElement he : right) {
                 rightMotors.addDevice((DcMotor)he.get());
             }
-            rightMotors.setDirection(DcMotor.Direction.REVERSE);
+            rightMotors.setDirection(DcMotor.Direction.FORWARD);
             rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
