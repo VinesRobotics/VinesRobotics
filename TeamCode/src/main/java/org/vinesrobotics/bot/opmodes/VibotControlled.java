@@ -101,7 +101,7 @@ public class VibotControlled extends OpMode {
             for (HardwareElement he : right) {
                 rightMotors.addDevice((DcMotor)he.get());
             }
-            rightMotors.setDirection(DcMotor.Direction.FORWARD);
+            rightMotors.setDirection(DcMotor.Direction.REVERSE);
             rightMotors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }catch (Exception e){}
 
@@ -233,9 +233,9 @@ public class VibotControlled extends OpMode {
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
         telemetry.addData("clawPosition", clawPosition);
         telemetry.addData("servoSpeed", servo_speed);
-        telemetry.addData("a", main.isPressed(Button.A));
-        telemetry.addData("x", main.isPressed(Button.X));
-        telemetry.addData("deltaTime", deltaTime);
+        telemetry.addData("slidePosition", slidePosition);
+        telemetry.addData("slideMin", linSlideMin);
+        telemetry.addData("slideMax", linSlideMax);
         updateTelemetry(telemetry);
 
         try { // VuForiaKey
