@@ -223,6 +223,8 @@ public class VibotControlled extends OpMode {
         double servo_speed = 50;
         if (main.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
         if (main.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
+        if (clawPosition > 1) clawPosition = 1;
+        if (clawPosition < 0) clawPosition = 0;
 
         clawServos.setPosition(clawPosition);
 
@@ -232,7 +234,7 @@ public class VibotControlled extends OpMode {
         telemetry.addData("clawPosition", clawPosition);
         telemetry.addData("servoSpeed", servo_speed);
         telemetry.addData("a", main.isPressed(Button.A));
-        telemetry.addData("b", main.isPressed(Button.X));
+        telemetry.addData("x", main.isPressed(Button.X));
         telemetry.addData("deltaTime", deltaTime);
         updateTelemetry(telemetry);
 

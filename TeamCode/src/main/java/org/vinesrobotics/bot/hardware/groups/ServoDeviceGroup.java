@@ -30,6 +30,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
 import org.vinesrobotics.bot.utils.Range;
 import org.vinesrobotics.bot.utils.curves.ClampedCurve;
 import org.vinesrobotics.bot.utils.curves.Curve;
+import org.vinesrobotics.bot.utils.curves.CurveBase;
 import org.vinesrobotics.bot.utils.curves.LinearCurve;
 
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     @Override
     public void setPosition(double position) {
+        positionCurve.disableCache();
         pos = positionCurve.getValueFor(position);
         for (Servo servo : devs) {
             servo.setPosition(pos);
@@ -87,7 +89,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         return pos;
     }
 
-    private Curve positionCurve = new ClampedCurve(new LinearCurve(1), new Range(0,1));
+    private CurveBase positionCurve = new ClampedCurve(new LinearCurve(1), new Range(0,1));
 
     /**
      * This is the only function that is not a direct passthrough;

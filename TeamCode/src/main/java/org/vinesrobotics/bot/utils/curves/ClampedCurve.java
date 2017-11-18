@@ -29,6 +29,10 @@ public class ClampedCurve extends CurveBase {
     private Range range;
     public ClampedCurve(Curve c,Range r) {
         curve = c;
+        if (c instanceof CurveBase && this.useCache) {
+            CurveBase cb = (CurveBase) c;
+            cb.disableCache();
+        }
         range = r;
     }
     @Override

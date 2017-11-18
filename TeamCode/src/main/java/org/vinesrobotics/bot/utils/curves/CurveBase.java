@@ -22,6 +22,10 @@
 
 package org.vinesrobotics.bot.utils.curves;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.util.ArraySet;
+
 import org.firstinspires.ftc.robotcore.internal.android.dex.util.Unsigned;
 
 import java.util.ArrayList;
@@ -42,9 +46,9 @@ public abstract class CurveBase implements Curve {
     private Map<Double,Double> cache = new ConcurrentHashMap<>();
     private Map<Double,Long> cachect = new ConcurrentHashMap<>();
 
-    protected boolean useCache = true;
-    public void enableCache() {useCache = true;}
-    public void disableCache() {useCache = false;}
+    protected boolean useCache;
+    public void enableCache() { cacheCleanThread.curves.add(this); useCache = true;}
+    public void disableCache() { cacheCleanThread.curves.remove(this); useCache = false;}
 
     protected int cacheSize = 512;
     public void setCacheSize(int caches){cacheSize = caches;}
@@ -53,17 +57,18 @@ public abstract class CurveBase implements Curve {
         if (cacheCleanThread == null) cacheCleanThread = new CacheCleanThread();
         if (!cacheCleanThread.isAlive()) cacheCleanThread.start();
 
-        cacheCleanThread.curves.add(this);
+        enableCache();
     }
 
     public abstract double getValue(double x);
 
     private static CacheCleanThread cacheCleanThread;
     private class CacheCleanThread extends Thread {
-        public List<CurveBase> curves;
+        public Set<CurveBase> curves;
 
+        @TargetApi(Build.VERSION_CODES.M)
         public CacheCleanThread() {
-            curves = Collections.synchronizedList(new ArrayList<CurveBase>());
+            curves = Collections.synchronizedSet(new ArraySet<CurveBase>());
 
             this.setDaemon(true);
             this.setName("Curve Cache Cleaner");
