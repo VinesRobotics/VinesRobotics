@@ -43,10 +43,14 @@ public class Controller {
     private float rzx = 0.0f;
     private float rzy = 0.0f;
 
+    protected Controller () {
+        this(null, null);
+    }
     protected Controller (Gamepad gp, String name) {
         gamepad = gp;
         this.name = name;
-        gamepad.setJoystickDeadzone(0.0f);
+        if (gp != null)
+            gamepad.setJoystickDeadzone(0.0f);
     }
 
     /**
@@ -184,7 +188,7 @@ public class Controller {
     private ControllerState controlState;
     public ControllerState getControllerState() {
 
-        ControllerState prev = (controlState == null)? null : controlState.clone();
+        ControllerState prev = (controlState == null)? new NullConstrollerState() : controlState.clone();
 
         if (controlState == null) controlState = new ControllerState(this);
         else controlState.update();

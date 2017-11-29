@@ -67,10 +67,11 @@ public class VibotControlled extends OpMode {
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
-    double linSlideSpeed = 2.25;
+    double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
     public ServoDeviceGroup clawServos;
+    public ServoDeviceGroup jewelArmServos;
 
     public Hardware robot = new Hardware();
 
@@ -82,6 +83,8 @@ public class VibotControlled extends OpMode {
             robot.registerHardwareKeyName("bumper");
             robot.registerHardwareKeyName("slide");
             robot.registerHardwareKeyName("claw");
+            robot.registerHardwareKeyName("jewel");
+            robot.registerHardwareKeyName("arm");
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
 
@@ -115,12 +118,16 @@ public class VibotControlled extends OpMode {
             linSlideCfg = linSlide.getMotorType();
             linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
 
+            /*
             int cpos = linSlide.getCurrentPosition(); // new zero position
             double newz = cpos/linSlideUnitMultiplier;
             linSlideMin = mainLinSlideMin-newz;
             linSlideMax = mainLinSlideMax-newz;
 
             slidePosition = linSlideMin;
+
+            linSlide.setTargetPosition((int)Math.round(linSlideMin * linSlideUnitMultiplier));
+            */
         }catch (Exception e){}
 
         List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
@@ -135,9 +142,19 @@ public class VibotControlled extends OpMode {
             }
         }catch (Exception e){}
 
+        List<HardwareElement> jarm = robot.getDevicesWithAllKeys("jewel","arm","servo");
+        jewelArmServos = new ServoDeviceGroup();
+        try {
+            for (HardwareElement he : jarm) {
+                Servo serv = (Servo)he.get();
+                jewelArmServos.addDevice(serv);
+            }
+        }catch (Exception e){}
+
         // old init_m
         controllers = Controllers.getControllerObjects(this);
         main_ct = controllers.a();
+        sub_ct = controllers.b();
 
         //Vuforia.init();
     }
@@ -186,6 +203,10 @@ public class VibotControlled extends OpMode {
 
     Controllers controllers;
     Controller main_ct;
+    Controller sub_ct;
+
+    boolean debugMode = false;
+    boolean configureMode = false;
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -197,6 +218,7 @@ public class VibotControlled extends OpMode {
         if (died) return;
 
         ControllerState main = this.main_ct.getControllerState();
+        ControllerState sub = this.sub_ct.getControllerState();
 
         Vec2D<Double> left = main.joy(Joystick.LEFT);
         Vec2D<Double> right = main.joy(Joystick.RIGHT);
@@ -206,23 +228,19 @@ public class VibotControlled extends OpMode {
         leftMotors.setPower(lPower);
         rightMotors.setPower(rPower);
 
-
         double slidePower = 1; // power
         if (linSlide.getPower()!=slidePower) linSlide.setPower(slidePower);
-        if (main.isPressed(Button.UP)) slidePosition += linSlideSpeed * deltaTime;
-        if (main.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed * deltaTime;
+        if (sub.isPressed(Button.UP)) slidePosition += linSlideSpeed * deltaTime;
+        if (sub.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed * deltaTime;
         if (slidePosition > linSlideMax) slidePosition = linSlideMax;
         if (slidePosition < linSlideMin) slidePosition = linSlideMin;
         int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
         if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
 
-
-        if (main.isPressed(Button.RS) && main.isPressed(Button.LS)) main = null;
-
         // literal copy of Shields' code; there's a better way to do this
         double servo_speed = 50;
-        if (main.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
-        if (main.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
+        if (sub.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
+        if (sub.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
         if (clawPosition > 1) clawPosition = 1;
         if (clawPosition < 0) clawPosition = 0;
 
@@ -231,11 +249,35 @@ public class VibotControlled extends OpMode {
         telemetry.addLine( "Values in range of -1 to +1" );
         telemetry.addData("Speed", (-lPower-rPower)/2 );
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
-        telemetry.addData("clawPosition", clawPosition);
-        telemetry.addData("servoSpeed", servo_speed);
-        telemetry.addData("slidePosition", slidePosition);
-        telemetry.addData("slideMin", linSlideMin);
-        telemetry.addData("slideMax", linSlideMax);
+
+        boolean lastToggle = main.last().btnVal(Button.LT)>0 && main.last().isPressed(Button.LEFT) && sub.last().btnVal(Button.RT)>0 && sub.last().isPressed(Button.RIGHT);
+        boolean toggleDebug = main.btnVal(Button.LT)>0 && main.isPressed(Button.LEFT) && sub.btnVal(Button.RT)>0 && sub.isPressed(Button.RIGHT);
+
+        telemetry.addData("lastToggle", lastToggle);
+        telemetry.addData("toggleDebug", toggleDebug);
+        if (toggleDebug && !lastToggle) debugMode =! debugMode;
+        if (debugMode) {
+            telemetry.addLine();
+            telemetry.addLine("Debugging");
+
+            telemetry.addData("clawPosition", clawPosition);
+            telemetry.addData("servoSpeed", servo_speed);
+            telemetry.addData("slidePosition", slidePosition);
+            telemetry.addData("slideMin", linSlideMin);
+            telemetry.addData("slideMax", linSlideMax);
+
+            lastToggle = main.last().btnVal(Button.LT)>0 && main.last().btnVal(Button.RT)>0;
+            boolean toggleConfigure = main.btnVal(Button.LT)>0 && main.btnVal(Button.RT)>0;
+            if (toggleConfigure && !lastToggle) configureMode =! configureMode;
+            if (configureMode) {
+                telemetry.addLine();
+                telemetry.addLine("Configuring");
+
+                // slide pos cfg info
+                telemetry.addData("realSlideMin", mainLinSlideMin);
+                telemetry.addData("realSlideMax", mainLinSlideMax);
+            }
+        }
         updateTelemetry(telemetry);
 
         try { // VuForiaKey
