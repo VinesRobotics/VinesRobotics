@@ -63,7 +63,7 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 2.75;
+    static double mainLinSlideMax = 3;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
@@ -114,7 +114,7 @@ public class VibotControlled extends OpMode {
             linSlide.addDevice((DcMotor) slides.get(0).get());
             linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linSlide.setContainsOne();
+            linSlide.setContainsOne(); // required to properly get the motor type
             linSlideCfg = linSlide.getMotorType();
             linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
 
@@ -157,6 +157,11 @@ public class VibotControlled extends OpMode {
         sub_ct = controllers.b();
 
         //Vuforia.init();
+        init_spec();
+    }
+
+    public void init_spec() {
+
     }
 
     public void init_loop() {
@@ -172,7 +177,7 @@ public class VibotControlled extends OpMode {
     }
 
     private Exception error = null;
-    private double ctime = 0;
+    public double ctime = 0;
 
     /**
      * User defined loop method
@@ -187,7 +192,10 @@ public class VibotControlled extends OpMode {
             updateTelemetry(telemetry);
         } else {
             try {
-                loop_m(Utils.getDeltaTime(this.getRuntime()));
+                if (died) return;
+                double delta = Utils.getDeltaTime(this.getRuntime());
+                ctime += delta;
+                loop_m(delta);
             } catch (Exception e) {
                 error = e;
             }
@@ -215,8 +223,6 @@ public class VibotControlled extends OpMode {
     double clawPosition = 0.5;
     double slidePosition = linSlideMin;
     public void loop_m(double deltaTime) {
-        if (died) return;
-
         ControllerState main = this.main_ct.getControllerState();
         ControllerState sub = this.sub_ct.getControllerState();
 
