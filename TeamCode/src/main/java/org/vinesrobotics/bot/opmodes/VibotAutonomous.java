@@ -43,45 +43,64 @@ public class VibotAutonomous extends VibotControlled {
     @Override
     public void init_spec() {
         clawServos.setPosition(1);
-    }
-
-    @Override
-    public void loop_m(double delta) {
-        jewelArmServos.setPosition(1);
 
         switch (Position) {
             case BlueBack: {
-                if (ctime < .6) {
-                    leftMotors.setPower(.95);
-                    rightMotors.setPower(1);
+                leftMotors.reverseDirection();
+                rightMotors.reverseDirection();
+            } break;
+            case RedBack: {
+            } break;
+
+            case BlueFront: {
+                leftMotors.reverseDirection();
+                rightMotors.reverseDirection();
+            } break;
+            case RedFront: {
+            } break;
+        }
+    }
+
+    private static double timingConstant = 1.;
+    private static double smallOffset = .5;
+
+    @Override
+    public void loop_m(double delta) {
+        jewelArmServos.setPosition(-1);
+
+        switch (Position) {
+            case BlueBack: {
+                if (ctime < timingConstant) {
+                    leftMotors.setPower(1d);
+                    rightMotors.setPower(1d-smallOffset);
                 } else {
                     leftMotors.setPower(0);
                     rightMotors.setPower(0);
                 }
             } break;
-            case RedBack: {
-                if (ctime < .6) {
-                    leftMotors.setPower(1);
-                    rightMotors.setPower(.95);
+            case BlueFront: {
+                if (ctime < timingConstant) {
+                    leftMotors.setPower(1d-smallOffset);
+                    rightMotors.setPower(1d);
                 } else {
                     leftMotors.setPower(0);
                     rightMotors.setPower(0);
                 }
             } break;
 
-            case BlueFront: {
-                if (ctime < .6) {
-                    leftMotors.setPower(1);
-                    rightMotors.setPower(.95);
+            case RedBack: {
+                if (ctime < timingConstant) {
+                    leftMotors.setPower(1d-smallOffset);
+                    rightMotors.setPower(1d);
                 } else {
                     leftMotors.setPower(0);
                     rightMotors.setPower(0);
                 }
             } break;
             case RedFront: {
-                if (ctime < .6) {
-                    leftMotors.setPower(1);
-                    rightMotors.setPower(.95);
+                if (ctime < timingConstant) {
+                    leftMotors.setPower(1d);
+                    rightMotors.setPower(1d-smallOffset);
                 } else {
                     leftMotors.setPower(0);
                     rightMotors.setPower(0);
@@ -89,11 +108,15 @@ public class VibotAutonomous extends VibotControlled {
             } break;
         }
 
+        if (ctime < timingConstant) {
+            jewelArmServos.setPosition(0);
+        }
+
     }
 
     @Override
     public void stop() {
-        jewelArmServos.setPosition(0);
+
     }
 
 }

@@ -148,18 +148,6 @@ public class VibotControlled extends VibotHardwareBase {
 
         lastMain = main_ct.getControllerState().clone();
         lastTurret = turret_ct.getControllerState().clone();
-
-        try {
-            Utils.getContext().getResources().getText(R.string.VuForiaKey);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
     }
 
 

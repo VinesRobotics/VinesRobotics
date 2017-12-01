@@ -22,12 +22,19 @@
 
 package org.vinesrobotics.bot.utils.vuforia;
 
+import android.app.Activity;
+import android.os.AsyncTask;
+
 import com.vuforia.CameraDevice;
 import com.vuforia.ObjectTracker;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
 import com.vuforia.VuMarkTarget;
 import com.vuforia.Vuforia;
+
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.vinesrobotics.bot.R;
+import org.vinesrobotics.bot.utils.Utils;
 
 /**
  * Created by ViBots on 11/18/2017.
@@ -37,9 +44,68 @@ public class VuforiaManager {
 
     private boolean mCameraRunning;
 
-    public static void init() {
-        Vuforia.init();
+    /*public static void init() {
+        Vuforia.setInitParameters(mActivity, mVuforiaFlags, "ad57f7d0d29d41369bd421227b27dc8e");
+        do {
+// Vuforia.init() blocks until an initialization step is
+// complete, then it proceeds to the next step and reports
+// progress in percents (0 ... 100%).
+// If Vuforia.init() returns -1, it indicates an error.
+// Initialization is done when progress has reached 100%.
+            mProgressValue = Vuforia.init();
+// Publish the progress value:
+            publishProgress(mProgressValue);
+// We check whether the task has been canceled in the
+// meantime (by calling AsyncTask.cancel(true)).
+// and bail out if it has, thus stopping this thread.
+// This is necessary as the AsyncTask will run to completion
+// regardless of the status of the component that
+// started is.
+        } while (!isCancelled() && mProgressValue >= 0
+                && mProgressValue < 100);
+        return (mProgressValue > 0);
+    }*/
+
+
+
+    //
+    // An async task to initialize Vuforia asynchronously.
+    private class InitVuforiaTask extends AsyncTask<Void, Integer, Boolean> {
+        // Initialize with invalid value:
+        private int mProgressValue = -1;
+
+
+        protected Boolean doInBackground(Void... params) {
+            // Prevent the onDestroy() method to overlap with initialization:
+            //synchronized (mShutdownLock) {
+                Vuforia.setInitParameters(AppUtil.getInstance().getActivity(), 0,
+                        Utils.getContext().getResources().getText(R.string.VuForiaKey).toString());
+
+                do {
+                    // Vuforia.init() blocks until an initialization step is
+                    // complete, then it proceeds to the next step and reports
+                    // progress in percents (0 ... 100%).
+                    // If Vuforia.init() returns -1, it indicates an error.
+                    // Initialization is done when progress has reached 100%.
+                    mProgressValue = Vuforia.init();
+
+                    // Publish the progress value:
+                    publishProgress(mProgressValue);
+
+                    // We check whether the task has been canceled in the
+                    // meantime (by calling AsyncTask.cancel(true)).
+                    // and bail out if it has, thus stopping this thread.
+                    // This is necessary as the AsyncTask will run to completion
+                    // regardless of the status of the component that
+                    // started is.
+                } while (!isCancelled() && mProgressValue >= 0
+                        && mProgressValue < 100);
+
+                return (mProgressValue > 0);
+            //}
+        }
     }
+    //
 
     int camera;
 

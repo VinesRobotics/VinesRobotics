@@ -63,13 +63,15 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 3;
+    static double mainLinSlideMax = 3.15;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
     double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
+    static double clawServoMin = .5;
+    static double clawServoMax = 1;
     public ServoDeviceGroup clawServos;
     public ServoDeviceGroup jewelArmServos;
 
@@ -244,11 +246,11 @@ public class VibotControlled extends OpMode {
         if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
 
         // literal copy of Shields' code; there's a better way to do this
-        double servo_speed = 50;
+        double servo_speed = .8;
         if (sub.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
         if (sub.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
-        if (clawPosition > 1) clawPosition = 1;
-        if (clawPosition < 0) clawPosition = 0;
+        if (clawPosition > clawServoMax) clawPosition = clawServoMax;
+        if (clawPosition < clawServoMin) clawPosition = clawServoMin;
 
         clawServos.setPosition(clawPosition);
 
@@ -285,19 +287,5 @@ public class VibotControlled extends OpMode {
             }
         }
         updateTelemetry(telemetry);
-
-        try { // VuForiaKey
-            //VuforiaTrackables tracks = new VuforiaTrackables();
-
-            Utils.getContext().getResources().getText(R.string.VuForiaKey);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
     }
 }

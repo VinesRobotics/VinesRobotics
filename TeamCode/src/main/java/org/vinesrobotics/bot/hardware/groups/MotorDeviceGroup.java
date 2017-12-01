@@ -374,6 +374,14 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
         }
     }
 
+    public void reverseDirection() {
+        for (DcMotor servo : devs) {
+            Direction dir = servo.getDirection();
+            dir = dir == Direction.FORWARD ? Direction.REVERSE : Direction.FORWARD;
+            servo.setDirection(dir);
+        }
+    }
+
     @Override
     public void clear() {
         devs.clear();

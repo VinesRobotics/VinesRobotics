@@ -108,8 +108,12 @@ public class Utils {
         return (Application) method.invoke(null, (Object[]) null);
     }
 
-    public static Context getContext() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return getApp().getApplicationContext();
+    public static Context getContext() {
+        try {
+            return getApp().getApplicationContext();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
