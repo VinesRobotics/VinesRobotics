@@ -42,7 +42,7 @@ public class VibotAutonomous extends VibotControlled {
         Position = pos;
     }
 
-   @Override
+    @Override
     public void init_spec() {
        clawServos.setPosition(clawServoMax);
 
@@ -70,7 +70,7 @@ public class VibotAutonomous extends VibotControlled {
 
        telemetry.addLine("Vu inited");
        telemetry.update();
-   }
+    }
 
     private static double timingConstant = 1.;
     private static double turnDuration = 1;
@@ -95,7 +95,7 @@ public class VibotAutonomous extends VibotControlled {
                     leftMotors.setPower(1d-smallOffset);
                     rightMotors.setPower(1d);
                 }
-       } break;
+            } break;
 
             case RedBack: {
                 if (ctime < timingConstant) {
