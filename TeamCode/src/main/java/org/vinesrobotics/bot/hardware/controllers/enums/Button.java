@@ -24,13 +24,12 @@ package org.vinesrobotics.bot.hardware.controllers.enums;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.vinesrobotics.bot.hardware.controllers.LocalControl;
 import org.vinesrobotics.bot.utils.Reflection;
 
 import java.lang.reflect.Field;
 
 /**
- * Button enum. Used to retrieve the pressed buttons on x controller. Can have x value.
+ * Button enum. Used to retrieve the pressed buttons on a controller. Can have either a boolean or floating point value.
  */
 public enum Button {
     A(ButtonSide.NA,ButtonType.BUTTON, Reflection.getField(Gamepad.class, "a")),
@@ -50,8 +49,11 @@ public enum Button {
     UP(ButtonSide.NA,ButtonType.DPAD, Reflection.getField(Gamepad.class, "dpad_up")),
     DOWN(ButtonSide.NA,ButtonType.DPAD, Reflection.getField(Gamepad.class, "dpad_down"));
 
+    // Represents the side of the controller the button is on. Only used for sticks, bumpers and triggers.
     private ButtonSide s;
+    // Represents the type of the button (button, stick, bumper, trigger d-pad)
     private ButtonType t;
+    // A float version of the value between 0 and 1 (0 or 1 for boolean values)
     public float value = 0;
 
     /**
@@ -69,14 +71,26 @@ public enum Button {
         return t;
     }
 
-    public LocalControl<Field> f;
+    // A field to allow classes in the controllers package to access a sort-of private or protected field
+    public org.vinesrobotics.bot.hardware.controllers.LocalControl<Field> f;
 
+    /**
+     * The constructor. Used to define the values for each enum value.
+     * @param side The side that the button is on. NA for no relevant side.
+     * @param type The type of button.
+     * @param field The Field to access to get the value of the button.
+     */
     Button(ButtonSide side, ButtonType type, Field field) {
         s = side;
         t = type;
-        f = new LocalControl<>(field);
+        f = new org.vinesrobotics.bot.hardware.controllers.LocalControl<>(field);
     }
 
+    /**
+     * Gives a string representation of the Button object.
+     * Return in form '%{ENUM name}%(%{value}%)'.
+     * @return String form of this enum instance.
+     */
     public String toString(){
         return super.toString() + "(" + value + ")";
     }
