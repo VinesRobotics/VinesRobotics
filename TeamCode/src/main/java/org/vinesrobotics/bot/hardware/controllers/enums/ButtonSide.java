@@ -22,8 +22,20 @@
 
 package org.vinesrobotics.bot.hardware.controllers.enums;
 
+/**
+ * An enum representing the side of the controller a given Button is on.
+ */
 public enum ButtonSide {
+    /**
+     * Right side.
+     */
     RIGHT,
+    /**
+     * Left side.
+     */
     LEFT,
+    /**
+     * Side information is not relevant.
+     */
     NA
 }

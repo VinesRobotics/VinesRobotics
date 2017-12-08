@@ -22,19 +22,47 @@
 
 package org.vinesrobotics.bot.hardware.controllers.enums;
 
+/**
+ * An enum representing the type of button and any metadata necessary.
+ */
 public enum ButtonType {
+    /**
+     * A button on the D-Pad
+     */
     DPAD(false),
+    /**
+     * A bumper.
+     */
     BUMPER(false),
+    /**
+     * A trigger.
+     */
     TRIGGER(true),
+    /**
+     * A stick button (when you push down).
+     */
     STICK(false),
+    /**
+     * Any other button.
+     */
     BUTTON(false);
 
+    /**
+     * Whether or not the type is analog or not. The only analog type if the trigger.
+     */
     boolean analog = false;
 
+    /**
+     * @return whether or not the type is analog or not.
+     */
     public boolean isAnalog() {
         return analog;
     }
 
+    /**
+     * The constructor. Used to set whether or not an option is analog.
+     * @param analog Whether or not the type is analog;
+     */
     ButtonType(boolean analog) {
         this.analog = analog;
     }
