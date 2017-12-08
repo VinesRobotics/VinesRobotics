@@ -66,7 +66,7 @@ public class VibotAutonomous extends VibotControlled {
            break;
        }
 
-       //VuforiaManager.init();
+       VuforiaManager.init();
 
        telemetry.addLine("Vu inited");
        telemetry.update();

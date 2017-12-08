@@ -50,8 +50,11 @@ public class VuforiaManager {
         task.execute();
 
         try {
-            if (blockUntilDone)
-                task.wait();
+            if (blockUntilDone) {
+                synchronized (task) {
+                    task.wait();
+                }
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -71,32 +74,34 @@ public class VuforiaManager {
         protected Boolean doInBackground(Void... params) {
             // Prevent the onDestroy() method to overlap with initialization:
             //synchronized (mShutdownLock) {
-                Vuforia.setInitParameters(AppUtil.getInstance().getActivity(), 0,
-                        Utils.getContext().getResources().getText(R.string.VuForiaKey).toString());
+            Vuforia.setInitParameters(AppUtil.getInstance().getActivity(), 0,
+            Utils.getContext().getResources().getText(R.string.VuForiaKey).toString());
 
-                do {
-                    // Vuforia.init() blocks until an initialization step is
-                    // complete, then it proceeds to the next step and reports
-                    // progress in percents (0 ... 100%).
-                    // If Vuforia.init() returns -1, it indicates an error.
-                    // Initialization is done when progress has reached 100%.
-                    mProgressValue = Vuforia.init();
+            do {
+                // Vuforia.init() blocks until an initialization step is
+                // complete, then it proceeds to the next step and reports
+                // progress in percents (0 ... 100%).
+                // If Vuforia.init() returns -1, it indicates an error.
+                // Initialization is done when progress has reached 100%.
+                mProgressValue = Vuforia.init();
 
-                    // Publish the progress value:
-                    publishProgress(mProgressValue);
+                // Publish the progress value:
+                publishProgress(mProgressValue);
 
-                    // We check whether the task has been canceled in the
-                    // meantime (by calling AsyncTask.cancel(true)).
-                    // and bail out if it has, thus stopping this thread.
-                    // This is necessary as the AsyncTask will run to completion
-                    // regardless of the status of the component that
-                    // started is.
-                } while (!isCancelled() && mProgressValue >= 0
-                        && mProgressValue < 100);
+                // We check whether the task has been canceled in the
+                // meantime (by calling AsyncTask.cancel(true)).
+                // and bail out if it has, thus stopping this thread.
+                // This is necessary as the AsyncTask will run to completion
+                // regardless of the status of the component that
+                // started is.
+            } while (!isCancelled() && mProgressValue >= 0
+            && mProgressValue < 100);
 
+            synchronized (this) {
                 this.notifyAll();
+            }
 
-                return (mProgressValue > 0);
+            return (mProgressValue > 0);
             //}
         }
     }
@@ -121,6 +126,8 @@ public class VuforiaManager {
     }*/
 
     public void startVuforia(int camera) {
+        if (!Vuforia.isInitialized()) init();
+
         startCameraAndTrackers(camera);
 
         if(!CameraDevice.getInstance().setFocusMode(CameraDevice.FOCUS_MODE.FOCUS_MODE_CONTINUOUSAUTO))
