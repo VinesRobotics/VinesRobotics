@@ -44,33 +44,26 @@ public class VuforiaManager {
 
     private boolean mCameraRunning;
 
-    /*public static void init() {
-        Vuforia.setInitParameters(mActivity, mVuforiaFlags, "ad57f7d0d29d41369bd421227b27dc8e");
-        do {
-// Vuforia.init() blocks until an initialization step is
-// complete, then it proceeds to the next step and reports
-// progress in percents (0 ... 100%).
-// If Vuforia.init() returns -1, it indicates an error.
-// Initialization is done when progress has reached 100%.
-            mProgressValue = Vuforia.init();
-// Publish the progress value:
-            publishProgress(mProgressValue);
-// We check whether the task has been canceled in the
-// meantime (by calling AsyncTask.cancel(true)).
-// and bail out if it has, thus stopping this thread.
-// This is necessary as the AsyncTask will run to completion
-// regardless of the status of the component that
-// started is.
-        } while (!isCancelled() && mProgressValue >= 0
-                && mProgressValue < 100);
-        return (mProgressValue > 0);
-    }*/
+    public static void init(boolean blockUntilDone) {
+        InitVuforiaTask task = new InitVuforiaTask();
+
+        task.execute();
+
+        try {
+            if (blockUntilDone)
+                task.wait();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void init() {init(true);}
 
 
 
     //
     // An async task to initialize Vuforia asynchronously.
-    private class InitVuforiaTask extends AsyncTask<Void, Integer, Boolean> {
+    private static class InitVuforiaTask extends AsyncTask<Void, Integer, Boolean> {
         // Initialize with invalid value:
         private int mProgressValue = -1;
 
@@ -100,6 +93,8 @@ public class VuforiaManager {
                     // started is.
                 } while (!isCancelled() && mProgressValue >= 0
                         && mProgressValue < 100);
+
+                this.notifyAll();
 
                 return (mProgressValue > 0);
             //}

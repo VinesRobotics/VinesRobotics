@@ -63,14 +63,14 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 3.15;
+    static double mainLinSlideMax = 3.32;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
     double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
-    static double clawServoMin = .5;
+    static double clawServoMin = -1;
     static double clawServoMax = 1;
     public ServoDeviceGroup clawServos;
     public ServoDeviceGroup jewelArmServos;
