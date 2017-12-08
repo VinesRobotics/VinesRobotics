@@ -31,10 +31,16 @@ import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Reflection;
 import org.vinesrobotics.bot.utils.Vec2D;
 
+/**
+ * A representation (using a more object-oriented API) of the content of the {link @Gamepad} class
+ */
 public class Controller {
+    // the gamepad referenced
     private Gamepad gamepad;
+    // the internal name of the controller
     private String name = "";
 
+    // Calibration mode. This really should be nothing other than {link @CalibrationMode::SIMPLE}.
     private CalibrationMode ctype = CalibrationMode.SIMPLE;
 
     // COMPLEX mode ignore values
@@ -43,9 +49,18 @@ public class Controller {
     private float rzx = 0.0f;
     private float rzy = 0.0f;
 
+    /**
+     * A null constructor. Used with the {link @NullControllerState}
+     */
     protected Controller () {
         this(null, null);
     }
+
+    /**
+     * A constructor to create an object that references the gamepad with the specified name.
+     * @param gp the {link @Gamepad} object to pull data from
+     * @param name the name of the controller
+     */
     protected Controller (Gamepad gp, String name) {
         gamepad = gp;
         this.name = name;
@@ -54,20 +69,20 @@ public class Controller {
     }
 
     /**
-     * Calibrates controller
-     *
+     * Calibrates controller.
+     * Should never be used.
      */
+    @Deprecated
     public void calibrate() {
         calibrate(CalibrationMode.SIMPLE);
     }
 
     /**
      * Calibrates controller using one of 2 modes
-     *
-     * Probably should be left unused
-     *
+     * Should never be used.
      * @param type Mode
      */
+    @Deprecated
     public void calibrate(CalibrationMode type) {
 
         // SIMPLE calibration mode
@@ -123,7 +138,7 @@ public class Controller {
     /**
      * Gets value of specified joystick
      * @param stick Joystick to get the value of
-     * @return value
+     * @return value of the joystick in (X,Y)
      */
     public Vec2D<Float> getJoystick(Joystick stick) {
 
@@ -163,7 +178,7 @@ public class Controller {
     }
 
     /**
-     * Gets x button value; if x boolean, true is 1, false is 0; if Float, then the float.
+     * Gets x button value; if x boolean, true is 1, false is 0; if float, then the float.
      *
      * @param b Button to check, value property modified
      * @return Same object as passed in, but with value property modified
@@ -180,19 +195,25 @@ public class Controller {
         return b;
     }
 
-    /**
-     * Gets the state of the controller at the moment
-     *
-     * @return the controller's current state
-     */
+    // Reference to previous controller state
     private ControllerState controlState;
+
+    /**
+     * Get the current state of the controller.
+     * @return a {link @ControllerState}. May or may not be the same object as the previous time it
+     * was called.
+     */
     public ControllerState getControllerState() {
 
-        ControllerState prev = (controlState == null)? new NullConstrollerState() : controlState.clone();
+        // If this is the first call, prev is a {link @NullControllerState}
+        // else clone the previous
+        ControllerState prev = (controlState == null)? new NullControllerState() : controlState.clone();
 
+        // update or create a controller state to return
         if (controlState == null) controlState = new ControllerState(this);
         else controlState.update();
 
+        // assign the prev field to the calculated value
         controlState.prev = prev;
 
         return controlState;

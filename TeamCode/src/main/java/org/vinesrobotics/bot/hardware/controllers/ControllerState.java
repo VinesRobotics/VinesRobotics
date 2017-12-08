@@ -31,12 +31,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControllerState {
+    // the joystick map
     private HashMap<String, Float> joys = new HashMap<>();
+    // the button map
     private HashMap<String,Button> buttons = new HashMap<>();
+    // a reference to the {link @Controller} to get the information from
     private Controller control = null;
 
+    // the previous state (last cycle). Used for edge detection on inputs.
     protected ControllerState prev;
 
+    /**
+     * Gets the previous ControllerState
+     * @return the last ControllerState
+     */
     public ControllerState last() { return prev; }
 
     /**
@@ -48,6 +56,10 @@ public class ControllerState {
         update();
     }
 
+    /**
+     * Clones the specified ControllerState
+     * @param dup the state to clone
+     */
     private ControllerState(ControllerState dup) {
         for (Map.Entry<String,Float> e : dup.joys.entrySet()) {
             joys.put(e.getKey(),e.getValue());
@@ -58,7 +70,7 @@ public class ControllerState {
     }
 
     /**
-     * Checks if x given button is pressed.
+     * Checks if given button is pressed.
      * @param btn Button to check
      * @return true if button is pressed
      */
@@ -74,7 +86,7 @@ public class ControllerState {
     public double btnVal(Button btn) { return buttons.get(btn.name()).value; }
 
     /**
-     * Gets the value for x particular joystick/axis pair
+     * Gets the value for particular joystick/axis pair
      * @param joystick Joystick to check
      * @param ax Axis to check
      * @return value of axis
@@ -84,7 +96,7 @@ public class ControllerState {
     }
 
     /**
-     * Gets the axis values of x joystick.
+     * Gets the axis values of joystick.
      * @param j Joystick to check
      * @return Value of joystick
      */
@@ -110,7 +122,7 @@ public class ControllerState {
 
     /**
      * Clones this ControllerState, without preserving references.
-     * @return THe new ControllerState.
+     * @return The new ControllerState.
      */
     public ControllerState clone() {
         return new ControllerState(this);

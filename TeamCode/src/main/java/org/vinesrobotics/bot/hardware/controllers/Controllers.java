@@ -31,20 +31,30 @@ import org.vinesrobotics.bot.hardware.controllers.enums.CalibrationMode;
  * Created by Vines HS Robotics on 10/14/2016.
  */
 
+/**
+ * A manager class for both controllers available to the {link @OpMode}.
+ */
 public class Controllers {
 
     /**
-     * Generates new Controllers object linked to an OpMode.
-     * @param omode OpMode to link to
+     * Generates new Controllers object linked to an {link @OpMode}.
+     * @param omode {link @OpMode} to link to
      * @return the generated Controllers object
      */
     public static Controllers getControllerObjects(OpMode omode) {
         return new Controllers(omode.gamepad1, omode.gamepad2);
     }
 
+    // The {link @Controller} referencing gamepad 1
     private Controller gpa = null;
+    // The {link @Controller} referencing gamepad 2
     private Controller gpb = null;
 
+    /**
+     * Initializes the Controllers object with two {link @Gamepad}s.
+     * @param one gamepad 1
+     * @param two gamepad 2
+     */
     private Controllers(Gamepad one, Gamepad two) {
         if (one != null)
             gpa = new Controller(one,"1");
@@ -53,24 +63,23 @@ public class Controllers {
     }
 
     /**
-     * Gets x reference to Controller "A"
-     * @return x reference to Controller "A"
+     * Gets reference to Controller "A"
+     * @return reference to Controller "A"
      */
     public Controller a(){
         return gpa;
     }
 
     /**
-     * Gets x reference to Controller "B"
-     * @return x reference to Controller "B"
+     * Gets reference to Controller "B"
+     * @return reference to Controller "B"
      */
     public Controller b(){
         return gpb;
     }
 
     /**
-     * Gets an array containing both controllers
-     *
+     * Gets an array containing both controller.
      * @return Array with both controllers
      */
     public Controller[] getControllers() {
@@ -80,6 +89,7 @@ public class Controllers {
     /**
      * Calibrates both controllers with {link @CalibrationMode.SIMPLE}
      */
+    @Deprecated
     public void calibrate() {
         calibrate(CalibrationMode.SIMPLE);
     }
@@ -88,6 +98,7 @@ public class Controllers {
      * Calibrates both controllers with the same CalibrationType
      * @param caltyp The CalibrationType to use
      */
+    @Deprecated
     public void calibrate(CalibrationMode caltyp) {
         a().calibrate(caltyp);
         b().calibrate(caltyp);

@@ -22,8 +22,18 @@
 
 package org.vinesrobotics.bot.hardware.controllers;
 
+/**
+ * Allows the package to access the value of any field with this type.
+ * @param <T> The type of value to store.
+ */
 public class LocalControl<T> {
+    // the value of the variable
     protected T value;
+
+    /**
+     * A constructor to set the value of the field.
+     * @param v the value to store
+     */
     public LocalControl(T v) {
         value = v;
     }

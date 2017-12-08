@@ -31,9 +31,16 @@ import org.vinesrobotics.bot.utils.Vec2D;
  * Created by ViBots on 11/29/2017.
  */
 
-public class NullConstrollerState extends ControllerState {
+/**
+ * A zeroed controller state. Used as the previous field for a {link @ControllerState} the first time
+ * it is read.
+ */
+public class NullControllerState extends ControllerState {
 
-    protected NullConstrollerState() {
+    /**
+     * Basic default constructor.
+     */
+    protected NullControllerState() {
         super(new Controller());
     }
 
