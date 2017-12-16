@@ -40,10 +40,18 @@ import java.util.List;
  * Created by ViBots on 11/3/2017.
  */
 
+/**
+ * A {link @DeviceGroup} implementation for a {link @Servo}
+ */
 public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
+    // the servo list
     private List<Servo> devs = new ArrayList<>();
 
+    /**
+     * Gets the controller for the first servo.
+     * @return
+     */
     @Override
     public ServoController getController() {
         for (Servo servo : devs) {
@@ -51,6 +59,9 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }return null;
     }
 
+    /**
+     * Gets the port   number for the first servo.
+     */
     @Override
     public int getPortNumber() {
         for (Servo servo : devs) {
@@ -58,8 +69,13 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         } return 0;
     }
 
+    // the current direction for the servos
     private Direction direction = Direction.FORWARD;
 
+    /**
+     * Sets the direction of the servos
+     * @param direction the new direction
+     */
     @Override
     public void setDirection(Direction direction) {
         this.direction = direction;
@@ -68,13 +84,22 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }
     }
 
+    /**
+     * Gets the current direction for the servos
+     * @return the current direction
+     */
     @Override
     public Direction getDirection() {
         return direction;
     }
 
+    // current position
     private double pos = 0;
 
+    /**
+     * Sets the target position after applying the given curve.
+     * @param position
+     */
     @Override
     public void setPosition(double position) {
         positionCurve.disableCache();
@@ -84,28 +109,41 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }
     }
 
+    /**
+     * Gets the current target position
+     * @return the current target position
+     */
     @Override
     public double getPosition() {
         return pos;
     }
 
+    // current curve
     private CurveBase positionCurve = new ClampedCurve(new LinearCurve(1), new Range(0,1));
 
     /**
      * This is the only function that is not a direct passthrough;
      * the value is scaled before being passed on
-     * @param min
-     * @param max
+     * @param min the new minimum
+     * @param max the new maximum
      */
     @Override
     public void scaleRange(double min, double max) {
         positionCurve = new ClampedCurve(new LinearCurve(max-min, min), new Range(0,1));
     }
 
+    /**
+     * Sets the position curve to use
+     * @param curve the new curve (is clamped to 0-1)
+     */
     public void setPositionCurve(Curve curve) {
         positionCurve = new ClampedCurve(curve, new Range(0,1));
     }
 
+    /**
+     * Gets the manufacturer of the first servo
+     * @return the manufacturer
+     */
     @Override
     public Manufacturer getManufacturer() {
         for (Servo servo : devs) {
@@ -113,6 +151,10 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }return null;
     }
 
+    /**
+     * Gets the name of the first device
+     * @return the name
+     */
     @Override
     public String getDeviceName() {
         for (Servo servo : devs) {
@@ -120,6 +162,10 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }return null;
     }
 
+    /**
+     * Gets the connection info of the first device
+     * @return the connection info
+     */
     @Override
     public String getConnectionInfo() {
         for (Servo servo : devs) {
@@ -127,6 +173,10 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }return null;
     }
 
+    /**
+     * Gets the version of the first servo
+     * @return teh version
+     */
     @Override
     public int getVersion() {
         for (Servo servo : devs) {
@@ -134,6 +184,9 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }return 0;
     }
 
+    /**
+     * Resets the device configuration for all servos
+     */
     @Override
     public void resetDeviceConfigurationForOpMode() {
         for (Servo servo : devs) {
@@ -141,6 +194,9 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }
     }
 
+    /**
+     * Closes all servos
+     */
     @Override
     public void close() {
         for (Servo servo : devs) {
@@ -148,11 +204,17 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }
     }
 
+    /**
+     * Clears the internal list of servos.
+     */
     @Override
     public void clear() {
         devs.clear();
     }
 
+    /**
+     * Reverses (as opposed to sets) the direction of all servos.
+     */
     public void reverseDirection() {
         for (Servo servo : devs) {
             Direction dir = servo.getDirection();
@@ -161,6 +223,10 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
         }
     }
 
+    /**
+     * Adds a device to the internal list.
+     * @param device the device to add
+     */
     @Override
     public void addDevice(Servo device) {
         devs.add(device);
