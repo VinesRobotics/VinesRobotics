@@ -63,7 +63,7 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 3.7 ;
+    static double mainLinSlideMax = 3.85 ;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
@@ -224,6 +224,8 @@ public class VibotControlled extends OpMode {
     // loop_m separation preserved to remove error checking dirtiness
     protected double clawPosition = 0;
     protected double slidePosition = linSlideMin;
+    private boolean lastToggleDebug = false;
+    private boolean lastToggleConfig = false;
     public void loop_m(double deltaTime) {
         ControllerState main = this.main_ct.getControllerState();
         ControllerState sub = this.sub_ct.getControllerState();
@@ -258,12 +260,11 @@ public class VibotControlled extends OpMode {
         telemetry.addData("Speed", (-lPower-rPower)/2 );
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
 
-        boolean lastToggle = main.last().isPressed(Button.LB) && main.last().isPressed(Button.RB);
+        //boolean lastToggle = main.last().isPressed(Button.LB) && main.last().isPressed(Button.RB);
         boolean toggleDebug = main.isPressed(Button.LB) && main.isPressed(Button.RB);
 
-        telemetry.addData("lastToggle", lastToggle);
-        telemetry.addData("toggleDebug", toggleDebug);
-        if (toggleDebug && !lastToggle) debugMode =! debugMode;
+        if (toggleDebug && !lastToggleDebug) debugMode =! debugMode;
+        lastToggleDebug = toggleDebug;
         if (debugMode) {
             telemetry.addLine();
             telemetry.addLine("Debugging");
@@ -274,18 +275,51 @@ public class VibotControlled extends OpMode {
             telemetry.addData("slideMin", linSlideMin);
             telemetry.addData("slideMax", linSlideMax);
 
-            lastToggle = main.last().isPressed(Button.X);
             boolean toggleConfigure = main.isPressed(Button.X);
-            if (toggleConfigure && !lastToggle) configureMode =! configureMode;
+            if (toggleConfigure && !lastToggleConfig) configureMode =! configureMode;
+            lastToggleConfig = toggleConfigure;
             if (configureMode) {
                 telemetry.addLine();
                 telemetry.addLine("Configuring");
 
                 // slide pos cfg info
+                telemetry.addLine("UP/DN to change realSlideMin");
+                telemetry.addLine("L/R to change realSlideMax");
                 telemetry.addData("realSlideMin", mainLinSlideMin);
                 telemetry.addData("realSlideMax", mainLinSlideMax);
+
+                boolean up = main.isPressed(Button.UP);
+                boolean dn = main.isPressed(Button.DOWN);
+                boolean l = main.isPressed(Button.LEFT);
+                boolean r = main.isPressed(Button.RIGHT);
+
+                if (up && ! lastPressedUp) {
+                    mainLinSlideMin += .5;
+                    linSlideMin += .5;
+                }
+                if (dn && ! lastPressedDn) {
+                    mainLinSlideMin -= .5;
+                    linSlideMin -= .5;
+                }
+                if (l && ! lastPressedL) {
+                    mainLinSlideMax += .5;
+                    linSlideMax += .5;
+                }
+                if (r && ! lastPressedR) {
+                    mainLinSlideMax -= .5;
+                    linSlideMax -= .5;
+                }
+
+                lastPressedUp = up;
+                lastPressedDn = dn;
+                lastPressedL = l;
+                lastPressedR = r;
             }
         }
         updateTelemetry(telemetry);
     }
+    boolean lastPressedUp = false;
+    boolean lastPressedDn = false;
+    boolean lastPressedL = false;
+    boolean lastPressedR = false;
 }

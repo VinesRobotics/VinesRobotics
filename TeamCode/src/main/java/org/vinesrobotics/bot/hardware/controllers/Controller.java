@@ -209,7 +209,7 @@ public class Controller {
      */
     public ControllerState getControllerState() {
 
-        // If this is the first call, prev is a {link @NullControllerState}
+        // If this is the first call, prev is a {@link NullControllerState}
         // else clone the previous
         ControllerState prev = (controlState == null)? new NullControllerState() : controlState.clone();
 
