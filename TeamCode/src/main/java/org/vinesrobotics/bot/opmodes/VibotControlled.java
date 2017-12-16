@@ -70,7 +70,7 @@ public class VibotControlled extends OpMode {
     double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
-    static double clawServoMin = -1;
+    static double clawServoMin = 0;
     static double clawServoMax = 1;
     public ServoDeviceGroup clawServos;
     public ServoDeviceGroup jewelArmServos;
@@ -254,12 +254,12 @@ public class VibotControlled extends OpMode {
 
         clawServos.setPosition(clawPosition);
 
-        telemetry.addLine( "Values in range of -1 to +1" );
+        telemetry.addLine("Values in range of -1 to +1" );
         telemetry.addData("Speed", (-lPower-rPower)/2 );
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
 
-        boolean lastToggle = main.last().btnVal(Button.LT)>0 && main.last().isPressed(Button.LEFT) && sub.last().btnVal(Button.RT)>0 && sub.last().isPressed(Button.RIGHT);
-        boolean toggleDebug = main.btnVal(Button.LT)>0 && main.isPressed(Button.LEFT) && sub.btnVal(Button.RT)>0 && sub.isPressed(Button.RIGHT);
+        boolean lastToggle = main.last().isPressed(Button.LB) && main.last().isPressed(Button.RB);
+        boolean toggleDebug = main.isPressed(Button.LB) && main.isPressed(Button.RB);
 
         telemetry.addData("lastToggle", lastToggle);
         telemetry.addData("toggleDebug", toggleDebug);
@@ -274,8 +274,8 @@ public class VibotControlled extends OpMode {
             telemetry.addData("slideMin", linSlideMin);
             telemetry.addData("slideMax", linSlideMax);
 
-            lastToggle = main.last().btnVal(Button.LT)>0 && main.last().btnVal(Button.RT)>0;
-            boolean toggleConfigure = main.btnVal(Button.LT)>0 && main.btnVal(Button.RT)>0;
+            lastToggle = main.last().isPressed(Button.X);
+            boolean toggleConfigure = main.isPressed(Button.X);
             if (toggleConfigure && !lastToggle) configureMode =! configureMode;
             if (configureMode) {
                 telemetry.addLine();
