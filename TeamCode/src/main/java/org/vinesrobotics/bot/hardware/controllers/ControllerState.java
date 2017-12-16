@@ -30,6 +30,9 @@ import org.vinesrobotics.bot.utils.Vec2D;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An immutable object to hold the state of a controller at any given point
+ */
 public class ControllerState {
     // the joystick map
     private HashMap<String, Float> joys = new HashMap<>();

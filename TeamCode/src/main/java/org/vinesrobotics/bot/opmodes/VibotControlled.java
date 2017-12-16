@@ -63,7 +63,7 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 3.32;
+    static double mainLinSlideMax = 3.7 ;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
@@ -222,7 +222,7 @@ public class VibotControlled extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     // loop_m separation preserved to remove error checking dirtiness
-    double clawPosition = 0.5;
+    double clawPosition = 0;
     double slidePosition = linSlideMin;
     public void loop_m(double deltaTime) {
         ControllerState main = this.main_ct.getControllerState();
