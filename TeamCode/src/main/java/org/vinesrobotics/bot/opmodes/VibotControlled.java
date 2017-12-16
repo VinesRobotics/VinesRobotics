@@ -211,19 +211,19 @@ public class VibotControlled extends OpMode {
 
     private boolean died = false;
 
-    Controllers controllers;
-    Controller main_ct;
-    Controller sub_ct;
+    protected Controllers controllers;
+    protected Controller main_ct;
+    protected Controller sub_ct;
 
-    boolean debugMode = false;
-    boolean configureMode = false;
+    protected boolean debugMode = false;
+    protected boolean configureMode = false;
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     // loop_m separation preserved to remove error checking dirtiness
-    double clawPosition = 0;
-    double slidePosition = linSlideMin;
+    protected double clawPosition = 0;
+    protected double slidePosition = linSlideMin;
     public void loop_m(double deltaTime) {
         ControllerState main = this.main_ct.getControllerState();
         ControllerState sub = this.sub_ct.getControllerState();

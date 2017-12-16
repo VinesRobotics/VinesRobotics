@@ -29,18 +29,32 @@ import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A {link @DeviceGroup} used for grouping {lik @DcMotor}s.
+ */
 public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
+    // list of devices
     private List<DcMotor> devs = new ArrayList<>();
 
+    // whether or not the group has only one device. used when getting motor type.
     private boolean hasOne = false;
-    public void setContainsOne() {
-        hasOne = true;
-    }
+
+    /**
+     * Sets hasOne
+     */
+    public void setContainsOne() { hasOne = true; }
+    /**
+     * Unsets hasOne
+     */
     public void setContainsMultiple() {
         hasOne = false;
     }
 
+    /**
+     * Gets the motor configuration type for the ONE motor in the group
+     * @return the {link @MotorConfigurationType} for the ONE motor
+     */
     @Override
     public MotorConfigurationType getMotorType() {
         if (hasOne)
@@ -49,7 +63,12 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
         return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
+    /**
+     * Actually does noting. Impl because of base class.
+     * @param motorConfigurationType
+     */
     @Override
+    @Deprecated
     public void setMotorType(MotorConfigurationType motorConfigurationType) {
 
     }
@@ -374,6 +393,9 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
         }
     }
 
+    /**
+     * Reversed the direction (as opposed to setting the direction) of the motors.
+     */
     public void reverseDirection() {
         for (DcMotor servo : devs) {
             Direction dir = servo.getDirection();
@@ -382,11 +404,18 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
         }
     }
 
+    /**
+     * Clears the device list.
+     */
     @Override
     public void clear() {
         devs.clear();
     }
 
+    /**
+     * Adds a device to the internal list.
+     * @param device the device to add
+     */
     @Override
     public void addDevice(DcMotor device) {
         devs.add(device);

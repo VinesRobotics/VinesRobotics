@@ -26,6 +26,11 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import java.util.List;
 
+/**
+ * A base class defining the basic functions for a device group - something that allows multiple
+ * HardwareDevices to be controlled at the same time.
+ * @param <T> the hardware device that is being grouped
+ */
 public abstract class DeviceGroup<T extends HardwareDevice> {
 
     public void setDevices( List<T> devices ) {
