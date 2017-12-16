@@ -29,35 +29,48 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
-public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMotorController,ServoController {
+/**
+ * A generic non-functional implementation of a hardware device, including an AnalogSensor,
+ * DcMotorController, and ServoController
+ */
+public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMotorController,
+        ServoController {
 
     /**
-     * Returns the sensor's current value as x raw voltage level. Note that for
-     * Returns the light level voltage as reported by the sensor. Note that returned values
-     * INCREASE as the light energy INCREASES.
+     * Does nothing.
      *
-     * @return unscaled / unclipped voltage level reported by the device
+     * @return 0
      */
     @Override
     public double readRawVoltage() {
         return 0;
     }
 
+    /**
+     * Does nothing.
+     * @param i
+     * @param motorConfigurationType
+     */
     @Override
     public void setMotorType(int i, MotorConfigurationType motorConfigurationType) {
 
     }
 
+    /**
+     * Does nothing.
+     * @param i
+     * @return MotorConfigurationType.getUnspecifiedMotorType()
+     */
     @Override
     public MotorConfigurationType getMotorType(int i) {
         return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
     /**
-     * Set the current motor mode. {@link DcMotor.RunMode}
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @param mode  run mode
+     * @param motor
+     * @param mode
      */
     @Override
     public void setMotorMode(int motor, DcMotor.RunMode mode) {
@@ -65,10 +78,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the current motor mode. Returns the current "run mode".
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return run mode
+     * @param motor
+     * @return null
      */
     @Override
     public DcMotor.RunMode getMotorMode(int motor) {
@@ -76,10 +89,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Set the current motor power
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @param power from -1.0 to 1.0
+     * @param motor
+     * @param power
      */
     @Override
     public void setMotorPower(int motor, double power) {
@@ -87,10 +100,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the current motor power
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return scaled from -1.0 to 1.0
+     * @param motor
+     * @return 0
      */
     @Override
     public double getMotorPower(int motor) {
@@ -98,10 +111,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Is the motor busy?
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return true if the motor is busy
+     * @param motor
+     * @return false
      */
     @Override
     public boolean isBusy(int motor) {
@@ -109,10 +122,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Sets the behavior of the motor when zero power is applied.
+     * Does nothing.
      *
      * @param motor
-     * @param zeroPowerBehavior the behavior of the motor when zero power is applied.
+     * @param zeroPowerBehavior
      */
     @Override
     public void setMotorZeroPowerBehavior(int motor, DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
@@ -120,10 +133,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Returns the current zero power behavior of the motor.
+     * Does nothing.
      *
      * @param motor
-     * @return the current zero power behavior of the motor.
+     * @return null
      */
     @Override
     public DcMotor.ZeroPowerBehavior getMotorZeroPowerBehavior(int motor) {
@@ -131,10 +144,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Is motor power set to float?
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return true of motor is set to float
+     * @param motor
+     * @return false
      */
     @Override
     public boolean getMotorPowerFloat(int motor) {
@@ -142,12 +155,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Set the motor target position. This takes in an integer, which is not scaled.
-     * <p>
-     * Motor power should be positive if using run to position
+     * Does nothing.
      *
-     * @param motor    port of motor
-     * @param position range from Integer.MIN_VALUE to Integer.MAX_VALUE
+     * @param motor
+     * @param position
      */
     @Override
     public void setMotorTargetPosition(int motor, int position) {
@@ -155,10 +166,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the current motor target position
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return integer, unscaled
+     * @param motor
+     * @return 0
      */
     @Override
     public int getMotorTargetPosition(int motor) {
@@ -166,10 +177,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the current motor position
+     * Does nothing.
      *
-     * @param motor port of motor
-     * @return integer, unscaled
+     * @param motor
+     * @return 0
      */
     @Override
     public int getMotorCurrentPosition(int motor) {
@@ -177,7 +188,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Enables all of the servos connected to this controller
+     * Does nothing.
      */
     @Override
     public void pwmEnable() {
@@ -185,7 +196,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Disables all of the servos connected to this controller
+     * Does nothing.
      */
     @Override
     public void pwmDisable() {
@@ -193,9 +204,9 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Returns the enablement status of the collective set of servos connected to this controller
+     * Does nothing.
      *
-     * @return the enablement status of the collective set of servos connected to this controller
+     * @return null
      */
     @Override
     public PwmStatus getPwmStatus() {
@@ -203,10 +214,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Set the position of x servo at the given channel
+     * Does nothing.
      *
-     * @param servo    channel of servo
-     * @param position from 0.0 to 1.0
+     * @param servo
+     * @param position
      */
     @Override
     public void setServoPosition(int servo, double position) {
@@ -214,10 +225,10 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get the position of x servo at x given channel
+     * Does nothing.
      *
-     * @param servo channel of servo
-     * @return position, scaled from 0.0 to 1.0
+     * @param servo
+     * @return 0
      */
     @Override
     public double getServoPosition(int servo) {
@@ -225,9 +236,9 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Returns an indication of the manufacturer of this device.
+     * Does nothing.
      *
-     * @return the device's manufacturer
+     * @return null
      */
     @Override
     public Manufacturer getManufacturer() {
@@ -235,9 +246,9 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Returns x string suitable for display to the user as to the type of device
+     * Does nothing.
      *
-     * @return device manufacturer and name
+     * @return "GENERIC DEVICE"
      */
     @Override
     public String getDeviceName() {
@@ -245,9 +256,9 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Get connection information about this device in x human readable format
+     * Does nothing.
      *
-     * @return connection info
+     * @return ""
      */
     @Override
     public String getConnectionInfo() {
@@ -255,9 +266,9 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Version
+     * Does nothing.
      *
-     * @return get the version of this device
+     * @return 0
      */
     @Override
     public int getVersion() {
@@ -265,8 +276,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Resets the device's configuration to that which is expected at the beginning of an OpMode.
-     * For example, motors will reset the their direction to 'forward'.
+     * Does nothing.
      */
     @Override
     public void resetDeviceConfigurationForOpMode() {
@@ -274,7 +284,7 @@ public class GenericHardwareDevice implements HardwareDevice,AnalogSensor,DcMoto
     }
 
     /**
-     * Closes this device
+     * Does nothing.
      */
     @Override
     public void close() {

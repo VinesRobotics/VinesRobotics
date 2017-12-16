@@ -24,26 +24,53 @@ package org.vinesrobotics.bot.hardware;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
+/**
+ * A single element of the collection that is {@link Hardware}.
+ */
 public class HardwareElement {
 
+    // the {@link Hardware} instance
     private Hardware hardware;
+    // the device id
     private int deviceid;
+    // the actual device
     private HardwareDevice hardev = null;
 
+    /**
+     * Initializes with a {@link Hardware} instance and an ID.
+     *
+     * @param hw the {@link Hardware} instance
+     * @param id the ID the element is identified by
+     */
     protected HardwareElement(Hardware hw, int id) {
         hardware = hw;
         deviceid = id;
     }
 
+    /**
+     * Initializes with a {@link HardwareDevice}. Used with {@link GenericHardwareDevice}s.
+     *
+     * @param hd the {@link HardwareDevice} to link to
+     */
     protected HardwareElement(HardwareDevice hd) {
         deviceid = 0;
         hardev = hd;
     }
 
+    /**
+     * Gets the ID associated with the element. 0 if initialized with a {@link HardwareDevice}.
+     *
+     * @return the ID
+     */
     public int id(){
         return deviceid;
     }
 
+    /**
+     * Get the {@link HardwareDevice} associated with the element.
+     *
+     * @return the {@link HardwareDevice}
+     */
     public HardwareDevice get(){
         if (hardev != null) {
             return hardev;

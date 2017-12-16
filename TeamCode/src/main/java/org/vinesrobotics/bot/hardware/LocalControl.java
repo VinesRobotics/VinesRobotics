@@ -22,6 +22,11 @@
 
 package org.vinesrobotics.bot.hardware;
 
+/**
+ * Allows this package to access the value of any fields of this type.
+ *
+ * @param <T> the field type
+ */
 public class LocalControl<T> {
     protected T value;
     public LocalControl(T v) {

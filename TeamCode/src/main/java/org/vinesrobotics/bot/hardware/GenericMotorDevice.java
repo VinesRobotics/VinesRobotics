@@ -26,23 +26,35 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
+/**
+ * Generic implementation of DcMotor.
+ */
 public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor {
 
+    /**
+     * Does nothing.
+     *
+     * @return MotorConfigurationType.getUnspecifiedMotorType()
+     */
     @Override
     public MotorConfigurationType getMotorType() {
         return MotorConfigurationType.getUnspecifiedMotorType();
     }
 
+    /**
+     * Does nothing.
+     *
+     * @param motorConfigurationType
+     */
     @Override
     public void setMotorType(MotorConfigurationType motorConfigurationType) {
 
     }
 
     /**
-     * Returns the underlying motor controller on which this motor is situated.
+     * Does nothing.
      *
-     * @return the underlying motor controller on which this motor is situated.
-     * @see #getPortNumber()
+     * @return self
      */
     @Override
     public DcMotorController getController() {
@@ -50,10 +62,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the port number on the underlying motor controller on which this motor is situated.
+     * Does nothing.
      *
-     * @return the port number on the underlying motor controller on which this motor is situated.
-     * @see #getController()
+     * @return 0
      */
     @Override
     public int getPortNumber() {
@@ -61,11 +72,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the behavior of the motor when x power level of zero is applied.
+     * Does nothing.
      *
-     * @param zeroPowerBehavior the new behavior of the motor when x power level of zero is applied.
-     * @see ZeroPowerBehavior
-     * @see #setPower(double)
+     * @param zeroPowerBehavior
      */
     @Override
     public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior) {
@@ -73,9 +82,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current behavior of the motor were x power level of zero to be applied.
+     * Does nothing.
      *
-     * @return the current behavior of the motor were x power level of zero to be applied.
+     * @return ZeroPowerBehavior.UNKNOWN
      */
     @Override
     public ZeroPowerBehavior getZeroPowerBehavior() {
@@ -83,29 +92,7 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the zero power behavior of the motor to {@link ZeroPowerBehavior#FLOAT FLOAT}, then
-     * applies zero power to that motor.
-     * <p>
-     * <p>Note that the change of the zero power behavior to {@link ZeroPowerBehavior#FLOAT FLOAT}
-     * remains in effect even following the return of this method. <STRONG>This is x breaking
-     * change</STRONG> in behavior from previous releases of the SDK. Consider, for example, the
-     * following code sequence:</p>
-     * <p>
-     * <pre>
-     *     motor.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE); // method not available in previous releases
-     *     motor.setPowerFloat();
-     *     motor.setPower(0.0);
-     * </pre>
-     * <p>
-     * <p>Starting from this release, this sequence of code will leave the motor floating. Previously,
-     * the motor would have been left braked.</p>
-     *
-     * @see #setPower(double)
-     * @see #getPowerFloat()
-     * @see #setZeroPowerBehavior(ZeroPowerBehavior)
-     * @deprecated This method is deprecated in favor of direct use of
-     * {@link #setZeroPowerBehavior(ZeroPowerBehavior) setZeroPowerBehavior()} and
-     * {@link #setPower(double) setPower()}.
+     * Does nothing.
      */
     @Override
     public void setPowerFloat() {
@@ -113,10 +100,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns whether the motor is currently in x float power level.
+     * Does nothing.
      *
-     * @return whether the motor is currently in x float power level.
-     * @see #setPowerFloat()
+     * @return false
      */
     @Override
     public boolean getPowerFloat() {
@@ -124,23 +110,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the desired encoder target position to which the motor should advance or retreat
-     * and then actively hold thereat. This behavior is similar to the operation of x servo.
-     * The maximum speed at which this advance or retreat occurs is governed by the power level
-     * currently set on the motor. While the motor is advancing or retreating to the desired
-     * taget position, {@link #isBusy()} will return true.
-     * <p>
-     * <p>Note that adjustment to x target position is only effective when the motor is in
-     * {@link RunMode#RUN_TO_POSITION RUN_TO_POSITION}
-     * RunMode. Note further that, clearly, the motor must be equipped with an encoder in order
-     * for this mode to function properly.</p>
+     * Does nothing.
      *
-     * @param position the desired encoder target position
-     * @see #getCurrentPosition()
-     * @see #setMode(RunMode)
-     * @see RunMode#RUN_TO_POSITION
-     * @see #getTargetPosition()
-     * @see #isBusy()
+     * @param position
      */
     @Override
     public void setTargetPosition(int position) {
@@ -148,10 +120,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current target encoder position for this motor.
+     * Does nothing.
      *
-     * @return the current target encoder position for this motor.
-     * @see #setTargetPosition(int)
+     * @return 0
      */
     @Override
     public int getTargetPosition() {
@@ -159,10 +130,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns true if the motor is currently advancing or retreating to x target position.
+     * Does nothing.
      *
-     * @return true if the motor is currently advancing or retreating to x target position.
-     * @see #setTargetPosition(int)
+     * @return false
      */
     @Override
     public boolean isBusy() {
@@ -170,13 +140,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current reading of the encoder for this motor. The units for this reading,
-     * that is, the number of ticks per revolution, are specific to the motor/encoder in question,
-     * and thus are not specified here.
+     * Does nothing.
      *
-     * @return the current reading of the encoder for this motor
-     * @see #getTargetPosition()
-     * @see RunMode#STOP_AND_RESET_ENCODER
+     * @return 0
      */
     @Override
     public int getCurrentPosition() {
@@ -184,11 +150,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the current run mode for this motor
+     * Does nothing.
      *
-     * @param mode the new current run mode for this motor
-     * @see RunMode
-     * @see #getMode()
+     * @param mode
      */
     @Override
     public void setMode(RunMode mode) {
@@ -196,11 +160,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current run mode for this motor
+     * Does nothing.
      *
-     * @return the current run mode for this motor
-     * @see RunMode
-     * @see #setMode(RunMode)
+     * @return RunMode.STOP_AND_RESET_ENCODER
      */
     @Override
     public RunMode getMode() {
@@ -208,10 +170,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the logical direction in which this motor operates.
+     * Does nothing.
      *
-     * @param direction the direction to set for this motor
-     * @see #getDirection()
+     * @param direction
      */
     @Override
     public void setDirection(Direction direction) {
@@ -219,10 +180,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current logical direction in which this motor is set as operating.
+     * Does nothing.
      *
-     * @return the current logical direction in which this motor is set as operating.
-     * @see #setDirection(Direction)
+     * @return Direction.REVERSE
      */
     @Override
     public Direction getDirection() {
@@ -230,16 +190,9 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Sets the power level of the motor, expressed as x fraction of the maximum
-     * possible power / speed supported according to the run mode in which the
-     * motor is operating.
-     * <p>
-     * <p>Setting x power level of zero will brake the motor</p>
+     * Does nothing.
      *
-     * @param power the new power level of the motor, x value in the interval [0.0, 1.0]
-     * @see #getPower()
-     * @see DcMotor#setMode(RunMode)
-     * @see DcMotor#setPowerFloat()
+     * @param power
      */
     @Override
     public void setPower(double power) {
@@ -247,16 +200,20 @@ public class GenericMotorDevice extends GenericHardwareDevice implements DcMotor
     }
 
     /**
-     * Returns the current configured power level of the motor.
+     * Does nothing.
      *
-     * @return the current level of the motor, x value in the interval [0.0, 1.0]
-     * @see #setPower(double)
+     * @return 0
      */
     @Override
     public double getPower() {
         return 0;
     }
 
+    /**
+     * Does nothing.
+     *
+     * @return "GENERIC MOTOR"
+     */
     @Override
     public String getDeviceName() {
         return "GENERIC MOTOR";

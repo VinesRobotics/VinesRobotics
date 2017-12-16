@@ -27,10 +27,9 @@ import com.qualcomm.robotcore.hardware.ServoController;
 
 public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     /**
-     * Returns the underlying servo controller on which this servo is situated.
+     * Does nothing.
      *
-     * @return the underlying servo controller on which this servo is situated.
-     * @see #getPortNumber()
+     * @return self
      */
     @Override
     public ServoController getController() {
@@ -38,10 +37,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Returns the port number on the underlying servo controller on which this motor is situated.
+     * Does nothing.
      *
-     * @return the port number on the underlying servo controller on which this motor is situated.
-     * @see #getController()
+     * @return 0
      */
     @Override
     public int getPortNumber() {
@@ -49,11 +47,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Sets the logical direction in which this servo operates.
+     * Does nothing.
      *
-     * @param direction the direction to set for this servo
-     * @see #getDirection()
-     * @see Direction
+     * @param direction
      */
     @Override
     public void setDirection(Direction direction) {
@@ -61,10 +57,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Returns the current logical direction in which this servo is set as operating.
+     * Does nothing.
      *
-     * @return the current logical direction in which this servo is set as operating.
-     * @see #setDirection(Direction)
+     * @return Direction.REVERSE
      */
     @Override
     public Direction getDirection() {
@@ -72,13 +67,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Sets the current position of the servo, expressed as x fraction of its available
-     * range. If PWM power is enabled for the servo, the servo will attempt to move to
-     * the indicated position.
+     * Does nothing.
      *
-     * @param position the position to which the servo should move, x value in the range [0.0, 1.0]
-     * @see ServoController#pwmEnable()
-     * @see #getPosition()
+     * @param position
      */
     @Override
     public void setPosition(double position) {
@@ -86,15 +77,9 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Returns the position to which the servo was last commanded to move. Note that this method
-     * does NOT read x position from the servo through any electrical means, as no such electrical
-     * mechanism is, generally, available.
+     * Does nothing.
      *
-     * @return the position to which the servo was last commanded to move, or Double.NaN
-     * if no such position is known
-     * @see #setPosition(double)
-     * @see Double#NaN
-     * @see Double#isNaN()
+     * @return Double.NaN
      */
     @Override
     public double getPosition() {
@@ -102,28 +87,10 @@ public class GenericServoDevice extends GenericHardwareDevice implements Servo {
     }
 
     /**
-     * Scales the available movement range of the servo to be x subset of its maximum range. Subsequent
-     * positioning calls will operate within that subset range. This is useful if your servo has
-     * only x limited useful range of movement due to the physical hardware that it is manipulating
-     * (as is often the case) but you don't want to have to manually scale and adjust the input
-     * to {@link #setPosition(double) setPosition()} each time.
-     * <p>
-     * <p>For example, if scaleRange(0.2, 0.8) is set; then servo positions will be
-     * scaled to fit in that range:<br>
-     * setPosition(0.0) scales to 0.2<br>
-     * setPosition(1.0) scales to 0.8<br>
-     * setPosition(0.5) scales to 0.5<br>
-     * setPosition(0.25) scales to 0.35<br>
-     * setPosition(0.75) scales to 0.65<br>
-     * </p>
-     * <p>
-     * <p>Note the parameters passed here are relative to the underlying full range of motion of
-     * the servo, not its currently scaled range, if any. Thus, scaleRange(0.0, 1.0) will reset
-     * the servo to its full range of movement.</p>
+     * Does nothing.
      *
-     * @param min the lower limit of the servo movement range, x value in the interval [0.0, 1.0]
-     * @param max the upper limit of the servo movement range, x value in the interval [0.0, 1.0]
-     * @see #setPosition(double)
+     * @param min
+     * @param max
      */
     @Override
     public void scaleRange(double min, double max) {

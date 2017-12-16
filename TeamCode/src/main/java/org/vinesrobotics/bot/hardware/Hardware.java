@@ -41,12 +41,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Allows for names to be keyed instead of hardcoded, and have easy access to all with given keys.
+ */
 public class Hardware {
+    // device list
     private ArrayList<HardwareDevice> devices = new ArrayList<>();
+    // key matches
     private ArrayList<ArrayList<String>> keyMatch = new ArrayList<>();
 
+    // are we initialized?
     boolean inited = false;
-    public Map<String,ArrayList<HardwareElement>> keyMaps = new HashMap<>();
+    // mappings of keys to element lists
+    protected Map<String,ArrayList<HardwareElement>> keyMaps = new HashMap<>();
+    // the keys to search for
     private ArrayList<String> keys = new ArrayList<>();
     { // Add some default keys that might be useful.
         keys.add("left");
@@ -97,6 +105,12 @@ public class Hardware {
 
     }
 
+    /**
+     * Gets a device with the given ID
+     *
+     * @param id the ID to look up
+     * @return the device associated with the ID
+     */
     public HardwareDevice getDevice(int id){
         return devices.get(id);
     }
@@ -170,7 +184,7 @@ public class Hardware {
      * Gets list of IDs associated with x particular registered search key
      *
      * @param key Key to search for
-     * @return {@link List<Integer>} of device IDs with that mapping
+     * @return {@link List<HardwareElement>} of devices with that mapping
      */
     public List<HardwareElement> searchByRegisteredKey(String key) {
 
@@ -190,7 +204,6 @@ public class Hardware {
      * @param key Key to check
      * @return Has key associated.
      */
-
     public boolean hasKey(HardwareElement id, String key) {
 
         // SANITY CHECK
@@ -204,7 +217,7 @@ public class Hardware {
     /**
      * Get all devices that have all specified keys
      * @param keys Keys to use as x filter
-     * @return A list of hardware indices that match the criteria
+     * @return A list of {@link HardwareElement}s that match the criteria
      */
     public <T extends HardwareDevice> List<HardwareElement> getDevicesWithAllKeys(String... keys){
 
@@ -240,10 +253,12 @@ public class Hardware {
             }
         }
 
+        // Ensure output is always populated with something
         if(out.size() == 0) {
             try {
                 Class<?> pty = Reflection.getClass(
-                        getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
+                        getClass().getDeclaredMethod("getDeviceWithKeys", String[].class)
+                                .getTypeParameters()[0].getBounds()[0]
                 );
 
                 if (pty.isAssignableFrom(DcMotorSimple.class)) {
@@ -271,7 +286,7 @@ public class Hardware {
      * @see Hardware#getDevicesWithAllKeys(String...)
      *
      * @param keys The keys to
-     * @param <T> The type to cast to. It may fail, this function errors in that case.
+     * @param <T> The type to cast to. It may fail, this method errors in that case.
      * @return the device
      */
     public <T extends HardwareDevice> T getDeviceWithKeys(String... keys) {
@@ -281,7 +296,8 @@ public class Hardware {
             do {
                 try {
                     Class<?> pty = Reflection.getClass(
-                            getClass().getDeclaredMethod("getDeviceWithKeys", String[].class).getTypeParameters()[0].getBounds()[0]
+                            getClass().getDeclaredMethod("getDeviceWithKeys", String[].class)
+                                    .getTypeParameters()[0].getBounds()[0]
                     );
 
                     if (pty.isAssignableFrom(DcMotorSimple.class)) {
