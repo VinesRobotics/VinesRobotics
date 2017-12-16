@@ -32,13 +32,14 @@ import org.vinesrobotics.bot.hardware.controllers.enums.CalibrationMode;
  */
 
 /**
- * A manager class for both controllers available to the {link @OpMode}.
+ * A manager class for both controllers available to the {@link OpMode}.
  */
 public class Controllers {
 
     /**
-     * Generates new Controllers object linked to an {link @OpMode}.
-     * @param omode {link @OpMode} to link to
+     * Generates new Controllers object linked to an {@link OpMode}.
+     *
+     * @param omode {@link OpMode} to link to
      * @return the generated Controllers object
      */
     public static Controllers getControllerObjects(OpMode omode) {
@@ -51,7 +52,8 @@ public class Controllers {
     private Controller gpb = null;
 
     /**
-     * Initializes the Controllers object with two {link @Gamepad}s.
+     * Initializes the Controllers object with two {@link Gamepad}s.
+     *
      * @param one gamepad 1
      * @param two gamepad 2
      */
@@ -64,6 +66,7 @@ public class Controllers {
 
     /**
      * Gets reference to Controller "A"
+     *
      * @return reference to Controller "A"
      */
     public Controller a(){
@@ -72,6 +75,7 @@ public class Controllers {
 
     /**
      * Gets reference to Controller "B"
+     *
      * @return reference to Controller "B"
      */
     public Controller b(){
@@ -80,6 +84,7 @@ public class Controllers {
 
     /**
      * Gets an array containing both controller.
+     *
      * @return Array with both controllers
      */
     public Controller[] getControllers() {
@@ -87,7 +92,7 @@ public class Controllers {
     }
 
     /**
-     * Calibrates both controllers with {link @CalibrationMode.SIMPLE}
+     * Calibrates both controllers with {@link CalibrationMode#SIMPLE}
      */
     @Deprecated
     public void calibrate() {
@@ -95,8 +100,8 @@ public class Controllers {
     }
 
     /**
-     * Calibrates both controllers with the same CalibrationType
-     * @param caltyp The CalibrationType to use
+     * Calibrates both controllers with the same {@link CalibrationMode}
+     * @param caltyp The {@link CalibrationMode} to use
      */
     @Deprecated
     public void calibrate(CalibrationMode caltyp) {

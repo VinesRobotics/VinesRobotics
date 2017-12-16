@@ -32,7 +32,7 @@ import org.vinesrobotics.bot.utils.Vec2D;
  */
 
 /**
- * A zeroed controller state. Used as the previous field for a {link @ControllerState} the first time
+ * A zeroed controller state. Used as the previous field for a {@link ControllerState} the first time
  * it is read.
  */
 public class NullControllerState extends ControllerState {

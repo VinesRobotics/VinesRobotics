@@ -57,14 +57,14 @@ public enum Button {
     public float value = 0;
 
     /**
-     * Gets the {link @ButtonSide} of the button, if applicable.
+     * Gets the {@link ButtonSide} of the button, if applicable.
      * @return ButtonSide
      */
     public ButtonSide side() {
         return s;
     }
     /**
-     * Gets the {link @ButtonType} of button
+     * Gets the {@link ButtonType} of button
      * @return type
      */
     public ButtonType type() {
@@ -78,7 +78,7 @@ public enum Button {
      * The constructor. Used to define the values for each enum value.
      * @param side The side that the button is on. NA for no relevant side.
      * @param type The type of button.
-     * @param field The {link @Field} to access to get the value of the button.
+     * @param field The {@link Field} to access to get the value of the button.
      */
     Button(ButtonSide side, ButtonType type, Field field) {
         s = side;

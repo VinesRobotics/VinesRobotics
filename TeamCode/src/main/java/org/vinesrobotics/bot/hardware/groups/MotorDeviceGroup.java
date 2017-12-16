@@ -22,6 +22,7 @@
 
 package org.vinesrobotics.bot.hardware.groups;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {link @DeviceGroup} used for grouping {lik @DcMotor}s.
+ * A {@link DeviceGroup} used for grouping {@link DcMotor}s.
  */
 public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
@@ -53,7 +54,8 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
     /**
      * Gets the motor configuration type for the ONE motor in the group
-     * @return the {link @MotorConfigurationType} for the ONE motor
+     *
+     * @return the {@link MotorConfigurationType} for the ONE motor
      */
     @Override
     public MotorConfigurationType getMotorType() {
@@ -65,6 +67,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
 
     /**
      * Actually does noting. Impl because of base class.
+     *
      * @param motorConfigurationType
      */
     @Override
@@ -373,7 +376,7 @@ public class MotorDeviceGroup extends DeviceGroup<DcMotor> implements DcMotor {
     }
 
     /**
-     * Resets the device's configuration to that which is expected at the beginning of an OpMode.
+     * Resets the device's configuration to that which is expected at the beginning of an {@link OpMode}.
      * For example, motors will reset the their direction to 'forward'.
      */
     @Override

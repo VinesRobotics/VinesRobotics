@@ -27,7 +27,7 @@ package org.vinesrobotics.bot.hardware.controllers.enums;
  */
 
 /**
- * The calibration mode for {link @Controller} objects
+ * The calibration mode for {@link org.vinesrobotics.bot.hardware.controllers.Controller} objects
  */
 public enum CalibrationMode {
     /**

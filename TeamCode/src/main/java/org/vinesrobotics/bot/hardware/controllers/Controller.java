@@ -32,7 +32,7 @@ import org.vinesrobotics.bot.utils.Reflection;
 import org.vinesrobotics.bot.utils.Vec2D;
 
 /**
- * A representation (using a more object-oriented API) of the content of the {link @Gamepad} class
+ * A representation (using a more object-oriented API) of the content of the {@link Gamepad} class
  */
 public class Controller {
     // the gamepad referenced
@@ -50,7 +50,7 @@ public class Controller {
     private float rzy = 0.0f;
 
     /**
-     * A null constructor. Used with the {link @NullControllerState}
+     * A null constructor. Used with the {@link NullControllerState}
      */
     protected Controller () {
         this(null, null);
@@ -58,7 +58,8 @@ public class Controller {
 
     /**
      * A constructor to create an object that references the gamepad with the specified name.
-     * @param gp the {link @Gamepad} object to pull data from
+     *
+     * @param gp the {@link Gamepad} object to pull data from
      * @param name the name of the controller
      */
     protected Controller (Gamepad gp, String name) {
@@ -80,6 +81,7 @@ public class Controller {
     /**
      * Calibrates controller using one of 2 modes
      * Should never be used.
+     *
      * @param type Mode
      */
     @Deprecated
@@ -137,6 +139,7 @@ public class Controller {
 
     /**
      * Gets value of specified joystick
+     *
      * @param stick Joystick to get the value of
      * @return value of the joystick in (X,Y)
      */
@@ -200,7 +203,8 @@ public class Controller {
 
     /**
      * Get the current state of the controller.
-     * @return a {link @ControllerState}. May or may not be the same object as the previous time it
+     *
+     * @return a {@link ControllerState}. May or may not be the same object as the previous time it
      * was called.
      */
     public ControllerState getControllerState() {

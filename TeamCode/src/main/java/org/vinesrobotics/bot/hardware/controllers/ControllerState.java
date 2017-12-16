@@ -46,12 +46,14 @@ public class ControllerState {
 
     /**
      * Gets the previous ControllerState
+     *
      * @return the last ControllerState
      */
     public ControllerState last() { return prev; }
 
     /**
      * Initializes the controller state to controller cntr
+     *
      * @param cntr Controller to init to
      */
     protected ControllerState(Controller cntr) {
@@ -61,6 +63,7 @@ public class ControllerState {
 
     /**
      * Clones the specified ControllerState
+     *
      * @param dup the state to clone
      */
     private ControllerState(ControllerState dup) {
@@ -74,7 +77,8 @@ public class ControllerState {
 
     /**
      * Checks if given button is pressed.
-     * @param btn Button to check
+     *
+     * @param btn {@link Button} to check
      * @return true if button is pressed
      */
     public boolean isPressed(Button btn) {
@@ -83,15 +87,17 @@ public class ControllerState {
 
     /**
      * Returns value of button btn
-     * @param btn Button to get the value ov
+     *
+     * @param btn {@link Button} to get the value ov
      * @return value of btn
      */
     public double btnVal(Button btn) { return buttons.get(btn.name()).value; }
 
     /**
      * Gets the value for particular joystick/axis pair
-     * @param joystick Joystick to check
-     * @param ax Axis to check
+     *
+     * @param joystick {@link Joystick} to check
+     * @param ax {@link Axis} to check
      * @return value of axis
      */
     public double joyVal(Joystick joystick, Axis ax) {
@@ -99,16 +105,17 @@ public class ControllerState {
     }
 
     /**
-     * Gets the axis values of joystick.
-     * @param j Joystick to check
-     * @return Value of joystick
+     * Gets the axis values of {@link Joystick}.
+     *
+     * @param j {@link Joystick} to check
+     * @return Value of {@link Joystick}
      */
     public Vec2D<Double> joy(Joystick j) {
         return new Vec2D<>( joyVal(j,Axis.X), joyVal(j,Axis.Y) );
     }
 
     /**
-     * Updates state values with those from the Controller.
+     * Updates state values with those from the {@link Controller}.
      */
     protected void update() {
         if (control == null) return;
@@ -125,6 +132,7 @@ public class ControllerState {
 
     /**
      * Clones this ControllerState, without preserving references.
+     *
      * @return The new ControllerState.
      */
     public ControllerState clone() {

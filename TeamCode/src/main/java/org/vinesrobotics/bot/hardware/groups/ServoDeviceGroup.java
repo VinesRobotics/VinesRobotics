@@ -41,7 +41,7 @@ import java.util.List;
  */
 
 /**
- * A {link @DeviceGroup} implementation for a {link @Servo}
+ * A {@link DeviceGroup} implementation for a {@link Servo}
  */
 public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
@@ -60,7 +60,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
     }
 
     /**
-     * Gets the port   number for the first servo.
+     * Gets the port number for the first servo.
      */
     @Override
     public int getPortNumber() {
@@ -74,6 +74,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Sets the direction of the servos
+     *
      * @param direction the new direction
      */
     @Override
@@ -86,6 +87,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the current direction for the servos
+     *
      * @return the current direction
      */
     @Override
@@ -98,6 +100,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Sets the target position after applying the given curve.
+     *
      * @param position
      */
     @Override
@@ -111,6 +114,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the current target position
+     *
      * @return the current target position
      */
     @Override
@@ -124,6 +128,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
     /**
      * This is the only function that is not a direct passthrough;
      * the value is scaled before being passed on
+     *
      * @param min the new minimum
      * @param max the new maximum
      */
@@ -134,6 +139,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Sets the position curve to use
+     *
      * @param curve the new curve (is clamped to 0-1)
      */
     public void setPositionCurve(Curve curve) {
@@ -142,6 +148,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the manufacturer of the first servo
+     *
      * @return the manufacturer
      */
     @Override
@@ -153,6 +160,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the name of the first device
+     *
      * @return the name
      */
     @Override
@@ -164,6 +172,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the connection info of the first device
+     *
      * @return the connection info
      */
     @Override
@@ -175,7 +184,8 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Gets the version of the first servo
-     * @return teh version
+     *
+     * @return the version
      */
     @Override
     public int getVersion() {
@@ -225,6 +235,7 @@ public class ServoDeviceGroup extends DeviceGroup<Servo> implements Servo {
 
     /**
      * Adds a device to the internal list.
+     *
      * @param device the device to add
      */
     @Override
