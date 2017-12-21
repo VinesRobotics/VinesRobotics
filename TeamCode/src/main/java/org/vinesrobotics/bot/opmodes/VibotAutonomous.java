@@ -45,8 +45,8 @@ public class VibotAutonomous extends VibotControlled {
 
     @Override
     public void init_spec() {
-       clawServos.setPosition(clawServoMin);
-       jewelArmServos.setPosition(0);
+       clawServos.setPosition(clawServoMax);
+       jewelArmServos.setPosition(1);
        switch (Position) {
            case BlueBack: {
                leftMotors.reverseDirection();
@@ -107,8 +107,8 @@ public class VibotAutonomous extends VibotControlled {
 
         switch (currentState) {
             case AUTO_START:
-                jewelArmServos.setPosition(1);
-                clawServos.setPosition(clawServoMax);
+                jewelArmServos.setPosition(0);
+                clawServos.setPosition(clawServoMin);
                 break;
             case ADJUST_SLIDE:
                 slidePosition = .3;
