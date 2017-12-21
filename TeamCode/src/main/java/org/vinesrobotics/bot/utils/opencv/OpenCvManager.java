@@ -22,10 +22,12 @@
 
 package org.vinesrobotics.bot.utils.opencv;
 
+import android.hardware.Camera;
 import android.util.Log;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
@@ -52,6 +54,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
+                    mOpenCvCameraView.enableView();
                 } break;
                 default:
                 {
@@ -68,8 +71,28 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
     private Size SPECTRUM_SIZE;
     private Scalar CONTOUR_COLOR;
     private boolean mIsColorSelected = true;
+    private JavaCameraView mOpenCvCameraView;
 
-    public void initCV() {
+    public static int getFrontFacingCameraId() {
+        int cameraCount = 0;
+        int camId = -1;
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        cameraCount = Camera.getNumberOfCameras();
+        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
+            Camera.getCameraInfo(camIdx, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                try {
+                    camId = camIdx;
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "Camera failed to open: " + e.getLocalizedMessage());
+                }
+            }
+        }
+
+        return camId;
+    }
+
+    public void initCV(int cam) {
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, Utils.getContext(), mLoaderCallback);
@@ -77,6 +100,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+        mOpenCvCameraView.setCameraIndex(cam);
     }
 
     @Override
@@ -88,6 +112,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
         mBlobColorHsv = new Scalar(255);
         SPECTRUM_SIZE = new Size(200, 64);
         CONTOUR_COLOR = new Scalar(255,0,0,255);
+        mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
     public void registerBlobDetector(ColorBlobDetector blob) {

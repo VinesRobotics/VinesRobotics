@@ -74,7 +74,7 @@ public class VibotAutonomous extends VibotControlled {
             break;
         }
 
-        cvmanager.initCV();
+        cvmanager.initCV(OpenCvManager.getFrontFacingCameraId());
         redBlobDet.setHsvColor(new Scalar(0,70,85));
         redBlobDet.setColorRadius(new Scalar(10,30, 40));
         blueBlobDet.setHsvColor(new Scalar(210, 95, 65));
