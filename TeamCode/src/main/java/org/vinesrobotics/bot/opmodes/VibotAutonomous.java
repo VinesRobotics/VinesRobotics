@@ -78,7 +78,7 @@ public class VibotAutonomous extends VibotControlled {
         redBlobDet.setHsvColor(new Scalar(0,70,85));
         redBlobDet.setColorRadius(new Scalar(10,30, 40));
         blueBlobDet.setHsvColor(new Scalar(210, 95, 65));
-        redBlobDet.setColorRadius(new Scalar(10,20, 40));
+        blueBlobDet.setColorRadius(new Scalar(10,20, 40));
         cvmanager.registerBlobDetector(redBlobDet);
         cvmanager.registerBlobDetector(blueBlobDet);
 
