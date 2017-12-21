@@ -24,6 +24,7 @@ package org.vinesrobotics.bot.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.vinesrobotics.bot.utils.Range;
 import org.vinesrobotics.bot.utils.vuforia.VuforiaManager;
 
 /**
@@ -44,8 +45,8 @@ public class VibotAutonomous extends VibotControlled {
 
     @Override
     public void init_spec() {
-       clawServos.setPosition(clawServoMax);
-
+       clawServos.setPosition(clawServoMin);
+       jewelArmServos.setPosition(0);
        switch (Position) {
            case BlueBack: {
                leftMotors.reverseDirection();
@@ -65,12 +66,28 @@ public class VibotAutonomous extends VibotControlled {
            }
            break;
        }
-
+        /*
        VuforiaManager.init();
 
        telemetry.addLine("Vu inited");
-       telemetry.update();
+       telemetry.update();*/
     }
+
+    private enum AutoState {
+        AUTO_START(0,.001),
+        ADJUST_SLIDE(.001, .2),
+        MOVE_JEWEL(.2,.5),
+        CRYPTO_SAFEZONE(.5,Double.POSITIVE_INFINITY),;
+
+        public Range timeRange;
+
+        AutoState(double minTime, double maxTime) {
+            timeRange = new Range(minTime, maxTime);
+        }
+    }
+
+    private AutoState currentState = AutoState.AUTO_START;
+    private double stateOffset = 0;
 
     private static double timingConstant = 1.;
     private static double turnDuration = 1;
@@ -79,58 +96,82 @@ public class VibotAutonomous extends VibotControlled {
 
     @Override
     public void loop_m(double delta) {
-        //jewelArmServos.setPosition(-1);
-        leftMotors.setPower(0);
-        rightMotors.setPower(0);
+        if (!currentState.timeRange.inRange(ctime))
+            // update state based on time
+            for (AutoState states : AutoState.values())
+                if (states.timeRange.inRange(ctime)) {
+                    currentState = states;
+                    stateOffset = 0;
+                }
+        stateOffset += delta;
 
-        switch (Position) {
-            case BlueBack: {
-                if (ctime < timingConstant) {
-                    leftMotors.setPower(1d);
-                    rightMotors.setPower(1d - smallOffset);
-                }
-            } break;
-            case BlueFront: {
-                if (ctime < timingConstant) {
-                    leftMotors.setPower(1d-smallOffset);
-                    rightMotors.setPower(1d);
-                }
-            } break;
+        switch (currentState) {
+            case AUTO_START:
+                jewelArmServos.setPosition(1);
+                clawServos.setPosition(clawServoMax);
+                break;
+            case ADJUST_SLIDE:
+                slidePosition = .3;
+                break;
+            case MOVE_JEWEL:
+                // figure out which way to turn and turn
+                break;
+            case CRYPTO_SAFEZONE:
+                jewelArmServos.setPosition(0);
 
-            case RedBack: {
-                if (ctime < timingConstant) {
-                    leftMotors.setPower(1d-smallOffset);
-                    rightMotors.setPower(1d);
-                }
-            } break;
-            case RedFront: {
-                if (ctime < timingConstant) {
-                    leftMotors.setPower(1d);
-                    rightMotors.setPower(1d-smallOffset);
-                }
-            } break;
-        }
+                leftMotors.setPower(0);
+                rightMotors.setPower(0);
 
-        switch (Position) {
-            case RedBack:
-            case RedFront:
-                if (ctime > timingConstant && ctime < timingConstant+turnDuration) {
+                switch (Position) {
+                    case BlueBack: {
+                        if (stateOffset < timingConstant) {
+                            leftMotors.setPower(1d);
+                            rightMotors.setPower(1d - smallOffset);
+                        }
+                    } break;
+                    case BlueFront: {
+                        if (stateOffset < timingConstant) {
+                            leftMotors.setPower(1d-smallOffset);
+                            rightMotors.setPower(1d);
+                        }
+                    } break;
+
+                    case RedBack: {
+                        if (stateOffset < timingConstant) {
+                            leftMotors.setPower(1d-smallOffset);
+                            rightMotors.setPower(1d);
+                        }
+                    } break;
+                    case RedFront: {
+                        if (stateOffset < timingConstant) {
+                            leftMotors.setPower(1d);
+                            rightMotors.setPower(1d-smallOffset);
+                        }
+                    } break;
+                }
+
+                switch (Position) {
+                    case RedBack:
+                    case RedFront:
+                        if (stateOffset > timingConstant && ctime < timingConstant+turnDuration) {
+                            rightMotors.setPower(1);
+                            leftMotors.setPower(-1);
+                        }
+                }
+
+                // temporayre code location
+                clawServos.setPosition(clawServoMax);
+
+                if (stateOffset > timingConstant+turnDuration && stateOffset < timingConstant+turnDuration+finalMoveTime) {
+                    leftMotors.setPower(1);
                     rightMotors.setPower(1);
-                    leftMotors.setPower(-1);
                 }
+
+                break;
         }
 
-        // temporayre code location
-        clawServos.setPosition(clawServoMax);
-
-        if (ctime > timingConstant+turnDuration && ctime < timingConstant+turnDuration+finalMoveTime) {
-            leftMotors.setPower(1);
-            rightMotors.setPower(1);
-        }
-
-        if (ctime < timingConstant) {
-            jewelArmServos.setPosition(0);
-        }
+        int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
+        if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
 
     }
 
