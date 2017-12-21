@@ -22,3 +22,4 @@
 
 include ':FtcRobotController'
 include ':TeamCode'
+include ':libOpenCV'
