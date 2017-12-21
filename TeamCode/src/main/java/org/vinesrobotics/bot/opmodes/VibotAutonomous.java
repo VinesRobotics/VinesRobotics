@@ -76,8 +76,8 @@ public class VibotAutonomous extends VibotControlled {
     private enum AutoState {
         AUTO_START(0,.001),
         ADJUST_SLIDE(.001, .2),
-        MOVE_JEWEL(.2,.5),
-        CRYPTO_SAFEZONE(.5,Double.POSITIVE_INFINITY),;
+        MOVE_JEWEL(.2,3),
+        CRYPTO_SAFEZONE(3,Double.POSITIVE_INFINITY),;
 
         public Range timeRange;
 

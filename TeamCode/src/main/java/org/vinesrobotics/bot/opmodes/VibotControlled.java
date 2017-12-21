@@ -71,7 +71,7 @@ public class VibotControlled extends OpMode {
     double linSlideUnitMultiplier;
 
     static double clawServoMin = 0;
-    static double clawServoMax = .5;
+    static double clawServoMax = .7;
     public ServoDeviceGroup clawServos;
     public ServoDeviceGroup jewelArmServos;
 
