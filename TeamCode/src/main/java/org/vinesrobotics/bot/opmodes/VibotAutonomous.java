@@ -24,7 +24,10 @@ package org.vinesrobotics.bot.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.opencv.core.Scalar;
 import org.vinesrobotics.bot.utils.Range;
+import org.vinesrobotics.bot.utils.opencv.ColorBlobDetector;
+import org.vinesrobotics.bot.utils.opencv.OpenCvManager;
 import org.vinesrobotics.bot.utils.vuforia.VuforiaManager;
 
 /**
@@ -37,6 +40,10 @@ public class VibotAutonomous extends VibotControlled {
         RedBack, BlueBack, RedFront, BlueFront, None
     }
 
+    private OpenCvManager cvmanager = new OpenCvManager();
+    private ColorBlobDetector redBlobDet = new ColorBlobDetector();
+    private ColorBlobDetector blueBlobDet = new ColorBlobDetector();
+
     private AutoPosition Position = AutoPosition.None;
 
     public VibotAutonomous(AutoPosition pos) {
@@ -45,27 +52,36 @@ public class VibotAutonomous extends VibotControlled {
 
     @Override
     public void init_spec() {
-       clawServos.setPosition(clawServoMax);
-       jewelArmServos.setPosition(1);
-       switch (Position) {
-           case BlueBack: {
-               leftMotors.reverseDirection();
-               rightMotors.reverseDirection();
-           }
-           break;
-           case RedBack: {
-           }
-           break;
+        clawServos.setPosition(clawServoMax);
+        jewelArmServos.setPosition(1);
+        switch (Position) {
+            case BlueBack: {
+                leftMotors.reverseDirection();
+                rightMotors.reverseDirection();
+            }
+            break;
+            case RedBack: {
+            }
+            break;
 
-           case BlueFront: {
-               leftMotors.reverseDirection();
-               rightMotors.reverseDirection();
-           }
-           break;
-           case RedFront: {
-           }
-           break;
-       }
+            case BlueFront: {
+                leftMotors.reverseDirection();
+                rightMotors.reverseDirection();
+            }
+            break;
+            case RedFront: {
+            }
+            break;
+        }
+
+        cvmanager.initCV();
+        redBlobDet.setHsvColor(new Scalar(0,70,85));
+        redBlobDet.setColorRadius(new Scalar(10,30, 40));
+        blueBlobDet.setHsvColor(new Scalar(210, 95, 65));
+        redBlobDet.setColorRadius(new Scalar(10,20, 40));
+        cvmanager.registerBlobDetector(redBlobDet);
+        cvmanager.registerBlobDetector(blueBlobDet);
+
         /*
        VuforiaManager.init();
 
