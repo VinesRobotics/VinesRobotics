@@ -22,6 +22,7 @@
 
 package org.vinesrobotics.bot.opmodes.final_16;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.vinesrobotics.bot.R;
@@ -37,7 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 
 
 @TeleOp(name="Vibot_Zippy_Corrected", group="Vines")
-//@Disabled
+@Disabled
 public class Vibot_Zippy_Corrected extends VibotHardwareBase {
 
     /* Declare OpMode members. */

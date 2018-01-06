@@ -24,12 +24,14 @@
 package org.vinesrobotics.bot.opmodes.final_16;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 
 @Autonomous(name="Vibot_Autonomous",group="Vines")
+@Disabled
 public class VibotAutonomous extends VibotHardwareBase {
 
     MotorDeviceGroup fwd;
