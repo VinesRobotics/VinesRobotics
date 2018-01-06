@@ -95,7 +95,7 @@ public class ColorBlobDetector {
         mMinContourArea = area;
     }
 
-    public List<Point> colorCenterPoints;
+    public List<Point> colorCenterPoints = new ArrayList<>();
 
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);

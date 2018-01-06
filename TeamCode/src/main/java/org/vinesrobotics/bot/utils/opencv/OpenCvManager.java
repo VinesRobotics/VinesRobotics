@@ -22,8 +22,13 @@
 
 package org.vinesrobotics.bot.utils.opencv;
 
+import android.app.Activity;
 import android.hardware.Camera;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.view.SurfaceView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -46,6 +51,22 @@ import java.util.List;
  */
 
 public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2 {
+    static {
+        System.loadLibrary("opencv_java3");
+    }
+
+    private static Handler createView = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            OpenCvManager cvm = (OpenCvManager)msg.obj;
+            cvm.mOpenCvCameraView = new JavaCameraView(Utils.getContext(), msg.arg1);
+
+            cvm.mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+            cvm.mOpenCvCameraView.setCvCameraViewListener(cvm);
+            Log.i(TAG, "CVCameraView created");
+        }
+    };
+
     private static String TAG = "ViBots::OpenCvManager";
     private BaseLoaderCallback  mLoaderCallback = new BaseLoaderCallback(Utils.getContext()) {
         @Override
@@ -59,17 +80,13 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
                 default:
                 {
                     super.onManagerConnected(status);
+                    Log.i(TAG, "Callback Failed");
                 } break;
             }
         }
     };
     private Mat mRgba;
-    private Mat mSpectrum;
     private List<ColorBlobDetector> mDetectors = new ArrayList<>();
-    private Scalar mBlobColorRgba;
-    private Scalar mBlobColorHsv;
-    private Size SPECTRUM_SIZE;
-    private Scalar CONTOUR_COLOR;
     private boolean mIsColorSelected = true;
     private JavaCameraView mOpenCvCameraView;
 
@@ -93,6 +110,10 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
     }
 
     public void initCV(int cam) {
+
+        Message msg = createView.obtainMessage(0, cam, 0, this);
+        msg.sendToTarget();
+
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, Utils.getContext(), mLoaderCallback);
@@ -100,19 +121,13 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-        mOpenCvCameraView.setCameraIndex(cam);
+        //mOpenCvCameraView.setCameraIndex(cam);
     }
 
     @Override
     public void onCameraViewStarted(int width, int height) {
         mRgba = new Mat(height, width, CvType.CV_8UC4);
-        //mDetector = new ColorBlobDetector();
-        mSpectrum = new Mat();
-        mBlobColorRgba = new Scalar(255);
-        mBlobColorHsv = new Scalar(255);
-        SPECTRUM_SIZE = new Size(200, 64);
-        CONTOUR_COLOR = new Scalar(255,0,0,255);
-        mOpenCvCameraView.setCvCameraViewListener(this);
+        Log.i(TAG, "View started");
     }
 
     public void registerBlobDetector(ColorBlobDetector blob) {
@@ -127,6 +142,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
+        Log.i(TAG, "Frame accepted");
 
         if (mIsColorSelected) {
             for (ColorBlobDetector det : mDetectors) {

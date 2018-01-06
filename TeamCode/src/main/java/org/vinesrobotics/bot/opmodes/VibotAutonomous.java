@@ -24,6 +24,7 @@ package org.vinesrobotics.bot.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.vinesrobotics.bot.utils.Range;
@@ -75,7 +76,7 @@ public class VibotAutonomous extends VibotControlled {
             break;
         }
 
-        cvmanager.initCV(OpenCvManager.getFrontFacingCameraId());
+        cvmanager.initCV(CameraBridgeViewBase.CAMERA_ID_FRONT);
         redBlobDet.setHsvColor(new Scalar(0,70,85));
         redBlobDet.setColorRadius(new Scalar(10,30, 40));
         blueBlobDet.setHsvColor(new Scalar(210, 95, 65));
