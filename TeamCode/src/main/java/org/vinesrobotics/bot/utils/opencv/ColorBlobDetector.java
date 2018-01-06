@@ -34,8 +34,10 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 public class ColorBlobDetector {
     // Lower and Upper bounds for range checking in HSV color space
@@ -93,6 +95,8 @@ public class ColorBlobDetector {
         mMinContourArea = area;
     }
 
+    public List<Point> colorCenterPoints;
+
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);
         Imgproc.pyrDown(mPyrDownMat, mPyrDownMat);
@@ -109,12 +113,16 @@ public class ColorBlobDetector {
         // Find max contour area
         double maxArea = 0;
         Iterator<MatOfPoint> each = contours.iterator();
+        ArrayList<Point> centers = new ArrayList<>();
         while (each.hasNext()) {
             MatOfPoint wrapper = each.next();
             double area = Imgproc.contourArea(wrapper);
             if (area > maxArea)
                 maxArea = area;
+            Moments moments = Imgproc.moments(wrapper);
+            centers.add(new Point(moments.m10/moments.m00, moments.m01/moments.m00));
         }
+        colorCenterPoints = centers;
 
         // Filter contours by area and resize to fit the original image size
         mContours.clear();

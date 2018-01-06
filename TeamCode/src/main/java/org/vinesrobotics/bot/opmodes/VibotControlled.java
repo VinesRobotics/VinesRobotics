@@ -43,6 +43,7 @@ import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.bot.hardware.groups.ServoDeviceGroup;
+import org.vinesrobotics.bot.utils.Axis;
 import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
@@ -70,6 +71,23 @@ public class VibotControlled extends OpMode {
     double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
+    public MotorDeviceGroup relicArm;
+    MotorConfigurationType relicArmCfg;
+    static double mainRelicArmMax = 2.2 ;
+    double relicArmMax = mainRelicArmMax;
+    static double mainRelicArmMin = 0;
+    double relicArmMin = mainRelicArmMin;
+    double relicArmSpeed = 3;
+    double relicArmUnitMultiplier;
+
+    static double relicWristMin = 0;
+    static double relicWristMax = 1;
+    public ServoDeviceGroup relicArmWrist;
+
+    static double relicClawMin = -1;
+    static double relicClawMax = 0;
+    public ServoDeviceGroup relicArmClaw;
+
     static double clawServoMin = 0;
     static double clawServoMax = .7;
     public ServoDeviceGroup clawServos;
@@ -86,6 +104,9 @@ public class VibotControlled extends OpMode {
             robot.registerHardwareKeyName("slide");
             robot.registerHardwareKeyName("claw");
             robot.registerHardwareKeyName("jewel");
+            robot.registerHardwareKeyName("relic");
+            robot.registerHardwareKeyName("wrist");
+            robot.registerHardwareKeyName("hand");
             robot.registerHardwareKeyName("arm");
         } catch (InvalidKeyException e) {}
         robot.initHardware(hardwareMap);
@@ -119,17 +140,35 @@ public class VibotControlled extends OpMode {
             linSlide.setContainsOne(); // required to properly get the motor type
             linSlideCfg = linSlide.getMotorType();
             linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
+        }catch (Exception e){}
 
-            /*
-            int cpos = linSlide.getCurrentPosition(); // new zero position
-            double newz = cpos/linSlideUnitMultiplier;
-            linSlideMin = mainLinSlideMin-newz;
-            linSlideMax = mainLinSlideMax-newz;
+        List<HardwareElement> relic = robot.getDevicesWithAllKeys("motor", "relic", "arm");
+        relicArm = new MotorDeviceGroup();
+        try {
+            relicArm.addDevice((DcMotor) relic.get(0).get());
+            relicArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            relicArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            relicArm.setContainsOne(); // required to properly get the motor type
+            relicArmCfg = relicArm.getMotorType();
+            relicArmUnitMultiplier = relicArmCfg.getTicksPerRev();
+        }catch (Exception e){}
 
-            slidePosition = linSlideMin;
+        List<HardwareElement> wrist = robot.getDevicesWithAllKeys("servo","relic", "wrist");
+        relicArmWrist = new ServoDeviceGroup();
+        try {
+            for (HardwareElement he : wrist) {
+                Servo serv = (Servo)he.get();
+                relicArmWrist.addDevice(serv);
+            }
+        }catch (Exception e){}
 
-            linSlide.setTargetPosition((int)Math.round(linSlideMin * linSlideUnitMultiplier));
-            */
+        List<HardwareElement> rclaw = robot.getDevicesWithAllKeys("servo","relic", "hand");
+        relicArmClaw = new ServoDeviceGroup();
+        try {
+            for (HardwareElement he : rclaw) {
+                Servo serv = (Servo)he.get();
+                relicArmClaw.addDevice(serv);
+            }
         }catch (Exception e){}
 
         List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
@@ -224,6 +263,9 @@ public class VibotControlled extends OpMode {
     // loop_m separation preserved to remove error checking dirtiness
     protected double clawPosition = 0;
     protected double slidePosition = linSlideMin;
+    protected double relicPosition = relicArmMin;
+    protected double relicWristPosition = 0;
+    protected double relicClawPosition = 0;
     private boolean lastToggleDebug = false;
     private boolean lastToggleConfig = false;
     public void loop_m(double deltaTime) {
@@ -255,6 +297,28 @@ public class VibotControlled extends OpMode {
         if (clawPosition < clawServoMin) clawPosition = clawServoMin;
 
         clawServos.setPosition(clawPosition);
+
+        double relicSpeed = 1;
+        if (relicArm.getPower()!=slidePower) relicArm.setPower(slidePower);
+        relicPosition += sub.joyVal(Joystick.RIGHT, Axis.Y) * relicSpeed * deltaTime;
+        if (relicPosition > relicArmMax) relicPosition = relicArmMax;
+        if (relicPosition < relicArmMin) relicPosition = relicArmMin;
+        calcPos = (int)Math.round(relicPosition * relicArmUnitMultiplier);
+        if (relicArm.getTargetPosition() != calcPos) relicArm.setTargetPosition(calcPos);
+
+        double wristSpeed = 1;
+        relicWristPosition += sub.joyVal(Joystick.LEFT, Axis.Y) * wristSpeed * deltaTime;
+        if (relicWristPosition > relicWristMax) relicWristPosition = relicWristMax;
+        if (relicWristPosition < relicWristMin) relicWristPosition = relicWristMin;
+        relicArmWrist.setPosition(relicWristPosition);
+
+        double clawSpeed = 1;
+        double fac = sub.btnVal(Button.LT) - sub.btnVal(Button.RT);
+        relicClawPosition += fac;
+        if (relicClawPosition > relicClawMax) relicClawPosition = relicClawMax;
+        if (relicClawPosition < relicClawMin) relicClawPosition = relicClawMin;
+        relicArmClaw.setPosition(relicClawPosition);
+
 
         telemetry.addLine("Values in range of -1 to +1" );
         telemetry.addData("Speed", (-lPower-rPower)/2 );

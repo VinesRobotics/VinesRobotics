@@ -24,6 +24,7 @@ package org.vinesrobotics.bot.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.vinesrobotics.bot.utils.Range;
 import org.vinesrobotics.bot.utils.opencv.ColorBlobDetector;
@@ -188,6 +189,12 @@ public class VibotAutonomous extends VibotControlled {
 
         int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
         if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
+
+        telemetry.addLine("Blob centers");
+        for (Point point : redBlobDet.colorCenterPoints)
+            telemetry.addData("Red blob center", point.toString());
+        for (Point point : blueBlobDet.colorCenterPoints)
+            telemetry.addData("Blue blob center", point.toString());
 
     }
 
