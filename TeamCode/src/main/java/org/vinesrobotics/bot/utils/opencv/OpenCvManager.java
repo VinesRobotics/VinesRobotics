@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -59,6 +60,9 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
         @Override
         public void handleMessage(Message msg) {
             OpenCvManager cvm = (OpenCvManager)msg.obj;
+
+            
+
             cvm.mOpenCvCameraView = new JavaCameraView(Utils.getContext(), msg.arg1);
 
             cvm.mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -159,7 +163,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             mSpectrum.copyTo(spectrumLabel);*/
         }
 
-        return mRgba;
+        return null;
     }
 
 
