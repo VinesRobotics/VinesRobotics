@@ -76,11 +76,11 @@ public class VibotAutonomous extends VibotControlled {
             break;
         }
 
-        cvmanager.initCV(CameraBridgeViewBase.CAMERA_ID_FRONT);
-        redBlobDet.setHsvColor(new Scalar(0,70,85));
-        redBlobDet.setColorRadius(new Scalar(10,30, 40));
-        blueBlobDet.setHsvColor(new Scalar(210, 95, 65));
-        blueBlobDet.setColorRadius(new Scalar(10,20, 40));
+        cvmanager.initCV();
+        redBlobDet.setHsvColor(new Scalar(251,255,255));
+        redBlobDet.setColorRadius(new Scalar(12,96, 127));
+        blueBlobDet.setHsvColor(new Scalar(175, 255, 255));
+        blueBlobDet.setColorRadius(new Scalar(30 ,255, 127));
         cvmanager.registerBlobDetector(redBlobDet);
         cvmanager.registerBlobDetector(blueBlobDet);
 
@@ -201,7 +201,7 @@ public class VibotAutonomous extends VibotControlled {
 
     @Override
     public void stop() {
-
+        cvmanager.stopCV();
     }
 
 }

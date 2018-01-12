@@ -47,6 +47,7 @@ public class ColorBlobDetector {
     private static double mMinContourArea = 0.1;
     // Color radius for range checking in HSV color space
     private Scalar mColorRadius = new Scalar(25,50,50,0);
+    private Scalar mBaseColor = new Scalar(0);
     private Mat mSpectrum = new Mat();
     private List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
 
@@ -79,6 +80,8 @@ public class ColorBlobDetector {
 
         Mat spectrumHsv = new Mat(1, (int)(maxH-minH), CvType.CV_8UC3);
 
+        mBaseColor = hsvColor;
+
         for (int j = 0; j < maxH-minH; j++) {
             byte[] tmp = {(byte)(minH+j), (byte)255, (byte)255};
             spectrumHsv.put(0, j, tmp);
@@ -110,21 +113,17 @@ public class ColorBlobDetector {
 
         Imgproc.findContours(mDilatedMask, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        // Find max contour area
+        // Filter contours by area and resize to fit the original image size
         double maxArea = 0;
         Iterator<MatOfPoint> each = contours.iterator();
-        ArrayList<Point> centers = new ArrayList<>();
+
         while (each.hasNext()) {
             MatOfPoint wrapper = each.next();
             double area = Imgproc.contourArea(wrapper);
             if (area > maxArea)
                 maxArea = area;
-            Moments moments = Imgproc.moments(wrapper);
-            centers.add(new Point(moments.m10/moments.m00, moments.m01/moments.m00));
         }
-        colorCenterPoints = centers;
 
-        // Filter contours by area and resize to fit the original image size
         mContours.clear();
         each = contours.iterator();
         while (each.hasNext()) {
@@ -134,6 +133,17 @@ public class ColorBlobDetector {
                 mContours.add(contour);
             }
         }
+
+        Imgproc.drawContours(rgbaImage, mContours, -1, mBaseColor);
+
+        each = mContours.iterator();
+        ArrayList<Point> centers = new ArrayList<>();
+        while (each.hasNext()) {
+            MatOfPoint wrapper = each.next();
+            Moments moments = Imgproc.moments(wrapper);
+            centers.add(new Point(moments.m10/moments.m00, moments.m01/moments.m00));
+        }
+        colorCenterPoints = centers;
     }
 
     public List<MatOfPoint> getContours() {

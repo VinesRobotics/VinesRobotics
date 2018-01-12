@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
@@ -61,12 +62,14 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
         public void handleMessage(Message msg) {
             OpenCvManager cvm = (OpenCvManager)msg.obj;
 
-            
+            Activity rcact = FtcRobotControllerActivity.ControllerActivity;
 
-            cvm.mOpenCvCameraView = new JavaCameraView(Utils.getContext(), msg.arg1);
+            cvm.mOpenCvCameraView =
+                    (JavaCameraView)rcact.findViewById(com.qualcomm.ftcrobotcontroller.R.id.color_blob_detection_activity_surface_view);
 
             cvm.mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
             cvm.mOpenCvCameraView.setCvCameraViewListener(cvm);
+            cvm.mOpenCvCameraView.setCameraIndex(JavaCameraView.CAMERA_ID_FRONT);
             Log.i(TAG, "CVCameraView created");
         }
     };
@@ -113,9 +116,9 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
         return camId;
     }
 
-    public void initCV(int cam) {
+    public void initCV() {
 
-        Message msg = createView.obtainMessage(0, cam, 0, this);
+        Message msg = createView.obtainMessage(0, this);
         msg.sendToTarget();
 
         if (!OpenCVLoader.initDebug()) {
@@ -126,6 +129,10 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         //mOpenCvCameraView.setCameraIndex(cam);
+    }
+
+    public void stopCV() {
+        mOpenCvCameraView.disableView();
     }
 
     @Override
@@ -146,7 +153,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
-        Log.i(TAG, "Frame accepted");
+        //Log.i(TAG, "Frame accepted");
 
         if (mIsColorSelected) {
             for (ColorBlobDetector det : mDetectors) {
@@ -163,7 +170,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             mSpectrum.copyTo(spectrumLabel);*/
         }
 
-        return null;
+        return mRgba;
     }
 
 

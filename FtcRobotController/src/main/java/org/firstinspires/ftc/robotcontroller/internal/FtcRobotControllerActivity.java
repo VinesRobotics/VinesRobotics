@@ -118,6 +118,8 @@ public class FtcRobotControllerActivity extends Activity
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
+  public static Activity ControllerActivity;
+
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final int NUM_GAMEPADS = 2;
 
@@ -216,6 +218,9 @@ public class FtcRobotControllerActivity extends Activity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    ControllerActivity = this;
+
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
     ThemedActivity.appAppThemeToActivity(getTag(), this); // do this way instead of inherit to help AppInventor
