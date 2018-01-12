@@ -78,6 +78,7 @@ public abstract class CurveBase implements Curve {
         public void run() {
             while (true) {
                 for (CurveBase curve : curves) {
+                    if (curve == null) continue;
                     if (curve.cache.size() <= curve.cacheSize) continue;
 
                     int minct = curve.cache.size() - curve.cacheSize;

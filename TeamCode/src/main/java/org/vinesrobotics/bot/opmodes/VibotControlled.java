@@ -314,7 +314,7 @@ public class VibotControlled extends OpMode {
 
         double clawSpeed = 1;
         double fac = sub.btnVal(Button.LT) - sub.btnVal(Button.RT);
-        relicClawPosition += fac;
+        relicClawPosition += fac * clawSpeed;
         if (relicClawPosition > relicClawMax) relicClawPosition = relicClawMax;
         if (relicClawPosition < relicClawMin) relicClawPosition = relicClawMin;
         relicArmClaw.setPosition(relicClawPosition);
