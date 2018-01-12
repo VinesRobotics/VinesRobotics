@@ -124,4 +124,12 @@ public class Range {
         return o instanceof Range && max() == ((Range)o).max() && min() == ((Range)o).min();
     }
 
+    /**
+     * Returns the size of the range. (max-min)
+     * @return the size
+     */
+    public double size() {
+        return max()-min();
+    }
+
 }
