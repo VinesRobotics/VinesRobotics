@@ -80,7 +80,7 @@ public class VibotAutonomous extends VibotControlled {
         redBlobDet.setHsvColor(new Scalar(251,255,255));
         redBlobDet.setColorRadius(new Scalar(12,96, 127));
         blueBlobDet.setHsvColor(new Scalar(175, 255, 255));
-        blueBlobDet.setColorRadius(new Scalar(30 ,255, 127));
+        blueBlobDet.setColorRadius(new Scalar(45 ,255, 200));
         cvmanager.registerBlobDetector(redBlobDet);
         cvmanager.registerBlobDetector(blueBlobDet);
 
@@ -132,7 +132,12 @@ public class VibotAutonomous extends VibotControlled {
                 slidePosition = .3;
                 break;
             case MOVE_JEWEL:
+                int turnDir = 0; // 1 == right, -1 == left
+
                 // figure out which way to turn and turn
+
+
+
                 break;
             case CRYPTO_SAFEZONE:
                 jewelArmServos.setPosition(0);
