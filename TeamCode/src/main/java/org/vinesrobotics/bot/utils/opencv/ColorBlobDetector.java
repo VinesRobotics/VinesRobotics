@@ -99,6 +99,7 @@ public class ColorBlobDetector {
     }
 
     public List<Point> colorCenterPoints = new ArrayList<>();
+    public Point centerOfAll = null;
 
     public void process(Mat rgbaImage) {
         Imgproc.pyrDown(rgbaImage, mPyrDownMat);
@@ -144,6 +145,11 @@ public class ColorBlobDetector {
             centers.add(new Point(moments.m10/moments.m00, moments.m01/moments.m00));
         }
         colorCenterPoints = centers;
+
+        Mat mean = new Mat();
+        Core.reduce(new MatOfPoint((Point[])centers.toArray()), mean, 01, Core.REDUCE_AVG);
+        centerOfAll = new Point(mean.get(0,0)[0],mean.get(0,1)[0]);
+
     }
 
     public List<MatOfPoint> getContours() {
