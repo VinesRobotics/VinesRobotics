@@ -79,8 +79,8 @@ public class VibotAutonomous extends VibotControlled {
         cvmanager.initCV();
         redBlobDet.setHsvColor(new Scalar(251,255,255));
         redBlobDet.setColorRadius(new Scalar(12,96, 127));
-        blueBlobDet.setHsvColor(new Scalar(175, 255, 255));
-        blueBlobDet.setColorRadius(new Scalar(45 ,255, 200));
+        blueBlobDet.setHsvColor(new Scalar(150, 255, 255));
+        blueBlobDet.setColorRadius(new Scalar(25 ,255, 200));
         cvmanager.registerBlobDetector(redBlobDet);
         cvmanager.registerBlobDetector(blueBlobDet);
 
@@ -112,6 +112,8 @@ public class VibotAutonomous extends VibotControlled {
     private static double finalMoveTime =.2;
     private static double smallOffset = .5;
 
+    private int realTurnDir = 0;
+
     @Override
     public void loop_m(double delta) {
         if (!currentState.timeRange.inRange(ctime))
@@ -132,11 +134,20 @@ public class VibotAutonomous extends VibotControlled {
                 slidePosition = .3;
                 break;
             case MOVE_JEWEL:
+                double directionPow = .5;
                 int turnDir = 0; // 1 == right, -1 == left
 
                 // figure out which way to turn and turn
 
+                double half_point = currentState.timeRange.size() / 2d;
 
+                if (stateOffset < half_point) {
+                    leftMotors.setPower(turnDir * directionPow);
+                    rightMotors.setPower(-turnDir * directionPow);
+                } else if (stateOffset > half_point) {
+                    leftMotors.setPower(-turnDir * directionPow);
+                    rightMotors.setPower(turnDir * directionPow);
+                }
 
                 break;
             case CRYPTO_SAFEZONE:
@@ -197,10 +208,12 @@ public class VibotAutonomous extends VibotControlled {
         if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
 
         telemetry.addLine("Blob centers");
+        telemetry.addData("  Center of all reds", redBlobDet.centerOfAll);
+        telemetry.addData("  Center of all blues", blueBlobDet.centerOfAll);
         for (Point point : redBlobDet.colorCenterPoints)
-            telemetry.addData("Red blob center", point.toString());
+            telemetry.addData("    Red blob center", point.toString());
         for (Point point : blueBlobDet.colorCenterPoints)
-            telemetry.addData("Blue blob center", point.toString());
+            telemetry.addData("    Blue blob center", point.toString());
 
     }
 
