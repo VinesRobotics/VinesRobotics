@@ -123,14 +123,14 @@ public class VibotAutonomous extends VibotControlled {
 
         switch (currentState) {
             case AUTO_START:
-                jewelArmServos.setPosition(-.2);
+                jewelArmServos.setPosition(-.4);
                 clawServos.setPosition(clawServoMin);
                 break;
             case ADJUST_SLIDE:
                 slidePosition = .3;
                 break;
             case MOVE_JEWEL:
-                double directionPow = .25;
+                double directionPow = .5;
                 int turnDir = 0; // 1 == right, -1 == left
 
                 if (realTurnDir == 0) {
