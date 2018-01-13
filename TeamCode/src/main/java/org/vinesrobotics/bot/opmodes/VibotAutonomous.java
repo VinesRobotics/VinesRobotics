@@ -208,8 +208,8 @@ public class VibotAutonomous extends VibotControlled {
                     case BlueBack:
                     {
                         if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d - smallOffset);
-                            rightMotors.setPower(1d);
+                            leftMotors.setPower(1d);
+                            rightMotors.setPower(1d - smallOffset);
                         }
                     } break;
                     case BlueFront:
@@ -222,19 +222,19 @@ public class VibotAutonomous extends VibotControlled {
                     case RedFront:
                     {
                         if (stateOffset < timingConstant) {
-                            leftMotors.setPower(-1d);
-                            rightMotors.setPower(-1d - smallOffset);
+                            leftMotors.setPower(1d - smallOffset);
+                            rightMotors.setPower(1d);
                         }
                     } break;
                     case RedBack: {
                         if (stateOffset < timingConstant) {
-                            leftMotors.setPower(-1d - smallOffset);
-                            rightMotors.setPower(-1d);
+                            leftMotors.setPower(1d - smallOffset);
+                            rightMotors.setPower(1d);
                         }
                     } break;
                 }
 
-                double turnDuration = 1;
+                double turnDuration = 3;
                 switch (Position) {
                     case RedBack:
                     case RedFront:
@@ -247,7 +247,7 @@ public class VibotAutonomous extends VibotControlled {
                 // temporayre code location
                 clawServos.setPosition(clawServoMax);
 
-                double finalMoveTime = .2;
+                double finalMoveTime = .7;
                 if (stateOffset > timingConstant + turnDuration && stateOffset < timingConstant + turnDuration + finalMoveTime) {
                     leftMotors.setPower(1);
                     rightMotors.setPower(1);
