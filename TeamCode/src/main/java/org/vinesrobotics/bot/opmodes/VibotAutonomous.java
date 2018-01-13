@@ -22,15 +22,12 @@
 
 package org.vinesrobotics.bot.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.vinesrobotics.bot.utils.Range;
 import org.vinesrobotics.bot.utils.opencv.ColorBlobDetector;
 import org.vinesrobotics.bot.utils.opencv.OpenCvManager;
-import org.vinesrobotics.bot.utils.vuforia.VuforiaManager;
 
 /**
  * Created by ViBots on 11/30/2017.
@@ -93,8 +90,8 @@ public class VibotAutonomous extends VibotControlled {
 
     private enum AutoState {
         AUTO_START(0,.001),
-        ADJUST_SLIDE(.001, .2),
-        MOVE_JEWEL(.2,3),
+        ADJUST_SLIDE(.001, .4),
+        MOVE_JEWEL(.4,3),
         RESET_JEWEL(3,3.1),
         CRYPTO_SAFEZONE(3.1,Double.POSITIVE_INFINITY),;
 
@@ -186,32 +183,21 @@ public class VibotAutonomous extends VibotControlled {
                 rightMotors.setPower(0);
 
                 double timingConstant = 1.;
-                double smallOffset = .5;
+                double smallOffset = .55;
                 switch (Position) {
                     case BlueBack:
+                    case RedFront:
                     {
                         if (stateOffset < timingConstant) {
                             leftMotors.setPower(1d);
                             rightMotors.setPower(1d - smallOffset);
                         }
                     } break;
-                    case BlueFront: {
-                        if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d- smallOffset);
-                            rightMotors.setPower(1d);
-                        }
-                    } break;
-
+                    case BlueFront:
                     case RedBack: {
                         if (stateOffset < timingConstant) {
                             leftMotors.setPower(1d- smallOffset);
                             rightMotors.setPower(1d);
-                        }
-                    } break;
-                    case RedFront: {
-                        if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d);
-                            rightMotors.setPower(1d- smallOffset);
                         }
                     } break;
                 }
