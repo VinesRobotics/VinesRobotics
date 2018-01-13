@@ -7,6 +7,7 @@ import org.opencv.R;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,8 +16,11 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaRecorder;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -379,6 +383,17 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         }
     }
 
+    protected MediaRecorder mRecorder;
+    protected Surface mSurface = null;
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setRecorder(MediaRecorder rec) {
+        mRecorder = rec;
+        if (mRecorder != null) {
+            mSurface = mRecorder.getSurface();
+        }
+    }
+
     /**
      * This method shall be called by the subclasses when they have valid
      * object and want it to be delivered to external client (via callback) and
@@ -425,6 +440,33 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                          (canvas.getHeight() - mCacheBitmap.getHeight()) / 2,
                          (canvas.getWidth() - mCacheBitmap.getWidth()) / 2 + mCacheBitmap.getWidth(),
                          (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight()), null);
+                }
+
+                if (mFpsMeter != null) {
+                    mFpsMeter.measure();
+                    mFpsMeter.draw(canvas, 20, 30);
+                }
+                getHolder().unlockCanvasAndPost(canvas);
+            }
+            if (mRecorder != null) {
+                canvas = mSurface.lockCanvas(null);
+
+                canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "mStretch value: " + mScale);
+
+                if (mScale != 0) {
+                    canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
+                            new Rect((int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2),
+                                    (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2),
+                                    (int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2 + mScale*mCacheBitmap.getWidth()),
+                                    (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2 + mScale*mCacheBitmap.getHeight())), null);
+                } else {
+                    canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
+                            new Rect((canvas.getWidth() - mCacheBitmap.getWidth()) / 2,
+                                    (canvas.getHeight() - mCacheBitmap.getHeight()) / 2,
+                                    (canvas.getWidth() - mCacheBitmap.getWidth()) / 2 + mCacheBitmap.getWidth(),
+                                    (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight()), null);
                 }
 
                 if (mFpsMeter != null) {
