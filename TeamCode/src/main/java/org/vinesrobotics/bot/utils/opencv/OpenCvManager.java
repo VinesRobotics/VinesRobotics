@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -75,6 +76,8 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             cvm.mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
             cvm.mOpenCvCameraView.setCvCameraViewListener(cvm);
             cvm.mOpenCvCameraView.setCameraIndex(JavaCameraView.CAMERA_ID_FRONT);
+
+
             Log.i(TAG, "CVCameraView created");
         }
     };
@@ -88,7 +91,16 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     mOpenCvCameraView.enableView();
+
+                    recorder.setVideoSize(mOpenCvCameraView.getWidth(), mOpenCvCameraView.getHeight());
+                    try {
+                        recorder.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     recorder.start();
+
+                    mOpenCvCameraView.setRecorder(recorder);
                 } break;
                 default:
                 {
@@ -125,19 +137,12 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
 
     public void initCV() {
 
-        recorder = new VideoRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        if (recorder == null)
+            recorder = new VideoRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH_SPEED_HIGH));
-        recorder.setOutputFile(new Date().toString() + "_auton.mp4");
-        recorder.setVideoSize(mOpenCvCameraView.getWidth(), mOpenCvCameraView.getHeight());
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mOpenCvCameraView.setRecorder(recorder);
+        recorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+        recorder.setOutputFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + new Date().getTime() + "_auton.mp4");
 
         Message msg = createView.obtainMessage(0, this);
         msg.sendToTarget();
@@ -153,8 +158,9 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
     }
 
     public void stopCV() {
-        recorder.stop();
         mOpenCvCameraView.disableView();
+        recorder.stop();
+        recorder.reset();
     }
 
     @Override
