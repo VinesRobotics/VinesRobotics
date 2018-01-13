@@ -146,9 +146,11 @@ public class ColorBlobDetector {
         }
         colorCenterPoints = centers;
 
-        Mat mean = new Mat();
-        Core.reduce(new MatOfPoint((Point[])centers.toArray()), mean, 01, Core.REDUCE_AVG);
-        centerOfAll = new Point(mean.get(0,0)[0],mean.get(0,1)[0]);
+        Point avg = new Point(0,0);
+        for (Point p : centers)
+            avg.set(new double[]{avg.x+p.x,avg.y+p.y});
+        avg.set(new double[]{avg.x/centers.size(),avg.y/centers.size()});
+        centerOfAll = avg;
 
     }
 
