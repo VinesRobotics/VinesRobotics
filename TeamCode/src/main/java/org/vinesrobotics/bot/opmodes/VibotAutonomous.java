@@ -208,7 +208,7 @@ public class VibotAutonomous extends VibotControlled {
                 leftMotors.setPower(0);
                 rightMotors.setPower(0);
 
-                double timingConstant = 1.;
+                double timingConstant = .666;
                 double smallOffset = .55;
                 switch (Position) {
                     case BlueBack:
