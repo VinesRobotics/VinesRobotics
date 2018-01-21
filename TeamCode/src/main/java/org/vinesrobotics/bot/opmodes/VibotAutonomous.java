@@ -94,8 +94,8 @@ public class VibotAutonomous extends VibotControlled {
 
     private enum AutoState {
         AUTO_START(0,.001),
-        ADJUST_SLIDE(.001, .75),
-        MOVE_JEWEL(.75,3.5),
+        ADJUST_SLIDE(.001, 1),
+        MOVE_JEWEL(1,3.5),
         RESET_JEWEL(3.5,4),
         CRYPTO_SAFEZONE(4,Double.POSITIVE_INFINITY),;
 
@@ -131,7 +131,7 @@ public class VibotAutonomous extends VibotControlled {
                 slidePosition = .3;
                 break;
             case MOVE_JEWEL:
-                double directionPow = .25;
+                double directionPow = .2;
                 int turnDir = 0; // 1 == left, -1 == right
 
                 if (realTurnDir == 0) {
@@ -212,19 +212,6 @@ public class VibotAutonomous extends VibotControlled {
                 double smallOffset = .55;
                 switch (Position) {
                     case BlueBack:
-                    {
-                        if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d);
-                            rightMotors.setPower(1d - smallOffset);
-                        }
-                    } break;
-                    case BlueFront:
-                    {
-                        if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d);
-                            rightMotors.setPower(1d - smallOffset);
-                        }
-                    } break;
                     case RedFront:
                     {
                         if (stateOffset < timingConstant) {
@@ -232,10 +219,11 @@ public class VibotAutonomous extends VibotControlled {
                             rightMotors.setPower(1d);
                         }
                     } break;
+                    case BlueFront:
                     case RedBack: {
                         if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d - smallOffset);
-                            rightMotors.setPower(1d);
+                            leftMotors.setPower(1d);
+                            rightMotors.setPower(1d - smallOffset);
                         }
                     } break;
                 }
