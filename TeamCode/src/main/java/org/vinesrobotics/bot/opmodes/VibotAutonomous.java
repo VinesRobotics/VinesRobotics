@@ -132,7 +132,7 @@ public class VibotAutonomous extends VibotControlled {
                 break;
             case MOVE_JEWEL:
                 double directionPow = .25;
-                int turnDir = 0; // 1 == right, -1 == left
+                int turnDir = 0; // 1 == left, -1 == right
 
                 if (realTurnDir == 0) {
 
@@ -158,22 +158,28 @@ public class VibotAutonomous extends VibotControlled {
                             break;
                     }
 
-                    int split = 400;
+                    int split = 300;
 
-                    if ((wrongcol < split || wrongcol == Double.NaN)
-                            && (rightcol > split || rightcol == Double.NaN))
-                        turnDir = -1;
-                    if ((wrongcol > split || wrongcol == Double.NaN)
-                            && (rightcol < split || rightcol == Double.NaN))
-                        turnDir = 1;
-
+                    if (wrongcol == Double.NaN && rightcol == Double.NaN) {
+                        turnDir = 0; // Ensure nothing is done
+                    }
+                    else
+                    {
+                        if ((wrongcol < split || wrongcol == Double.NaN)
+                                && (rightcol > split || rightcol == Double.NaN))
+                            turnDir = 1;
+                        if ((wrongcol > split || wrongcol == Double.NaN)
+                                && (rightcol < split || rightcol == Double.NaN))
+                            turnDir = -1;
+                    }
 
                     /*
                     if (wrongcol > rightcol)
-                        turnDir = 1;
-                    if (wrongcol < rightcol)
                         turnDir = -1;
+                    if (wrongcol < rightcol)
+                        turnDir = 1;
                      */
+
 
                     realTurnDir = turnDir;
                 }
