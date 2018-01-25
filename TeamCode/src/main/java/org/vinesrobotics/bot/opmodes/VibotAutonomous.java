@@ -251,6 +251,7 @@ public class VibotAutonomous extends VibotControlled {
         }
 
         int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
+        if (linSlide.getPower() != 1) linSlide.setPower(1);
         if (linSlide.getTargetPosition() != calcPos) linSlide.setTargetPosition(calcPos);
 
         telemetry.addLine("Blob centers");
