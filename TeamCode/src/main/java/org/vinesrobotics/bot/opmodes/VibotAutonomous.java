@@ -94,7 +94,7 @@ public class VibotAutonomous extends VibotControlled {
 
     private enum AutoState {
         AUTO_START(0,.001),
-        ADJUST_SLIDE(.001, 1),
+        ADJUST_SLIDE(.001 , 1),
         MOVE_JEWEL(1,3.5),
         RESET_JEWEL(3.5,4),
         CRYPTO_SAFEZONE(4,Double.POSITIVE_INFINITY),;
@@ -148,8 +148,8 @@ public class VibotAutonomous extends VibotControlled {
                     switch (Position) {
                         case RedBack:
                         case RedFront:
-                            wrongcol = blux;
-                            rightcol = redx;
+                            wrongcol = redx;
+                            rightcol = blux;
                             break;
                         case BlueBack:
                         case BlueFront:
