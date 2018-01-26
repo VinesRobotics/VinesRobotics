@@ -138,6 +138,7 @@ public class VibotControlled extends OpMode {
             linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             linSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linSlide.setContainsOne(); // required to properly get the motor type
+            linSlide.reverseDirection();
             linSlideCfg = linSlide.getMotorType();
             linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
         }catch (Exception e){}
