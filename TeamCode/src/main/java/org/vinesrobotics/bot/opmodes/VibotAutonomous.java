@@ -93,8 +93,8 @@ public class VibotAutonomous extends VibotControlled {
     }
 
     private enum AutoState {
-        AUTO_START(0,.001),
-        ADJUST_SLIDE(.001 , 1),
+        AUTO_START(0,.5),
+        ADJUST_SLIDE(.5 , 1),
         MOVE_JEWEL(1,4),
         RESET_JEWEL(4,4.5),
         CRYPTO_SAFEZONE(4.5,Double.POSITIVE_INFINITY),;
@@ -128,7 +128,7 @@ public class VibotAutonomous extends VibotControlled {
                 clawServos.setPosition(clawServoMin);
                 break;
             case ADJUST_SLIDE:
-                slidePosition = 1;
+                slidePosition = 2;
                 break;
             case MOVE_JEWEL:
                 double directionPow = .2;
@@ -208,8 +208,8 @@ public class VibotAutonomous extends VibotControlled {
                 leftMotors.setPower(0);
                 rightMotors.setPower(0);
 
-                double timingConstant = .666;
-                double smallOffset = .55;
+                double timingConstant = .5;
+                double smallOffset = .65;
                 switch (Position) {
                     case BlueBack:
                     case RedFront:
@@ -239,12 +239,12 @@ public class VibotAutonomous extends VibotControlled {
                 }
 
                 // temporayre code location
-                clawServos.setPosition(clawServoMax);
+                //clawServos.setPosition(clawServoMax);
 
-                double finalMoveTime = .4;
+                double finalMoveTime = .2;
                 switch (Position) {
-                    case RedFront:
-                    case RedBack:
+                    //case RedFront:
+                    case BlueBack:
                     {
 
                     } break;

@@ -54,7 +54,7 @@ public enum Button {
     // Represents the type of the button (button, stick, bumper, trigger d-pad)
     private ButtonType t;
     // A float version of the value between 0 and 1 (0 or 1 for boolean values)
-    public float value = 0;
+    //public float value = 0;
 
     /**
      * Gets the {@link ButtonSide} of the button, if applicable.
@@ -92,7 +92,7 @@ public enum Button {
      * @return String form of this enum instance.
      */
     public String toString(){
-        return super.toString() + "(" + value + ")";
+        return super.toString();
     }
 
 }

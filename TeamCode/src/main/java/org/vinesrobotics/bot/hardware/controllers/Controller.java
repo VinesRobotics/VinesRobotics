@@ -40,7 +40,7 @@ public class Controller {
     // the internal name of the controller
     private String name = "";
 
-    // Calibration mode. This really should be nothing other than {link @CalibrationMode::SIMPLE}.
+    // Calibration mode. This really should be nothing other than {@link CalibrationMode::SIMPLE}.
     private CalibrationMode ctype = CalibrationMode.SIMPLE;
 
     // COMPLEX mode ignore values
@@ -183,19 +183,22 @@ public class Controller {
     /**
      * Gets x button value; if x boolean, true is 1, false is 0; if float, then the float.
      *
-     * @param b Button to check, value property modified
+     * @param b Button to check
      * @return Same object as passed in, but with value property modified
      */
-    public Button getButton(Button b) {
+    public ButtonState getButton(Button b) {
+
+        ButtonState ret = new ButtonState();
+        ret.button = b;
 
         // Check if button is analog, look at ButtonType for what is and isn't
         if (!b.type().isAnalog()) {
-            b.value = Reflection.getFieldValue(b.f.value,gamepad) ? 1 : 0 ;
+            ret.value = Reflection.<Boolean>getFieldValue(b.f.value,gamepad) ? 1f : 0f ;
         } else {
-            b.value = Reflection.getFieldValue(b.f.value, gamepad);
+            ret.value = Reflection.<Float>getFieldValue(b.f.value, gamepad);
         }
 
-        return b;
+        return ret;
     }
 
     // Reference to previous controller state
@@ -208,7 +211,7 @@ public class Controller {
      * was called.
      */
     public ControllerState getControllerState() {
-
+        /*
         // If this is the first call, prev is a {@link NullControllerState}
         // else clone the previous
         ControllerState prev = (controlState == null)? new NullControllerState() : controlState.clone();
@@ -218,6 +221,10 @@ public class Controller {
         else controlState.update();
 
         // assign the prev field to the calculated value
+        controlState.prev = prev;
+        */
+        ControllerState prev = (controlState == null)? new NullControllerState() : controlState;
+        controlState = new ControllerState(this);
         controlState.prev = prev;
 
         return controlState;

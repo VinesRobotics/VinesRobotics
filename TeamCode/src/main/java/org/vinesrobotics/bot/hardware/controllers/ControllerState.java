@@ -37,8 +37,8 @@ public class ControllerState {
     // the joystick map
     private HashMap<String, Float> joys = new HashMap<>();
     // the button map
-    private HashMap<String,Button> buttons = new HashMap<>();
-    // a reference to the {link @Controller} to get the information from
+    private HashMap<String,ButtonState> buttons = new HashMap<>();
+    // a reference to the {@link Controller} to get the information from
     private Controller control = null;
 
     // the previous state (last cycle). Used for edge detection on inputs.
@@ -70,7 +70,7 @@ public class ControllerState {
         for (Map.Entry<String,Float> e : dup.joys.entrySet()) {
             joys.put(e.getKey(),e.getValue());
         }
-        for (Map.Entry<String,Button> e : dup.buttons.entrySet()) {
+        for (Map.Entry<String,ButtonState> e : dup.buttons.entrySet()) {
             buttons.put(e.getKey(),e.getValue());
         }
     }

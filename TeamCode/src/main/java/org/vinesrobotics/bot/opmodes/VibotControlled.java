@@ -25,15 +25,9 @@ package org.vinesrobotics.bot.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
-import com.vuforia.Vuforia;
-import com.vuforia.VuforiaBase;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.vinesrobotics.bot.R;
 import org.vinesrobotics.bot.hardware.Hardware;
 import org.vinesrobotics.bot.hardware.HardwareElement;
 import org.vinesrobotics.bot.hardware.controllers.Controller;
@@ -43,14 +37,12 @@ import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup;
 import org.vinesrobotics.bot.hardware.groups.ServoDeviceGroup;
-import org.vinesrobotics.bot.utils.Axis;
 import org.vinesrobotics.bot.utils.Logging;
 import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.security.InvalidKeyException;
 import java.util.List;
 
@@ -64,13 +56,14 @@ public class VibotControlled extends OpMode {
 
     public MotorDeviceGroup linSlide;
     MotorConfigurationType linSlideCfg;
-    static double mainLinSlideMax = 2.2 ;
+    static double mainLinSlideMax = 3.7 ;
     double linSlideMax = mainLinSlideMax;
     static double mainLinSlideMin = 0;
     double linSlideMin = mainLinSlideMin;
     double linSlideSpeed = 3;
     double linSlideUnitMultiplier;
 
+    /*
     public MotorDeviceGroup relicArm;
     MotorConfigurationType relicArmCfg;
     static double mainRelicArmMax = 2.2 ;
@@ -79,6 +72,7 @@ public class VibotControlled extends OpMode {
     double relicArmMin = mainRelicArmMin;
     double relicArmSpeed = 3;
     double relicArmUnitMultiplier;
+    */
 
     static double relicWristMin = 0;
     static double relicWristMax = 1;
@@ -143,6 +137,7 @@ public class VibotControlled extends OpMode {
             linSlideUnitMultiplier = linSlideCfg.getTicksPerRev();
         }catch (Exception e){}
 
+        /*
         List<HardwareElement> relic = robot.getDevicesWithAllKeys("motor", "relic", "arm");
         relicArm = new MotorDeviceGroup();
         try {
@@ -171,6 +166,7 @@ public class VibotControlled extends OpMode {
                 relicArmClaw.addDevice(serv);
             }
         }catch (Exception e){}
+        */
 
         List<HardwareElement> claw = robot.getDevicesWithAllKeys("claw","servo");
         clawServos = new ServoDeviceGroup();
@@ -262,19 +258,19 @@ public class VibotControlled extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     // loop_m separation preserved to remove error checking dirtiness
-    protected double clawPosition = 0;
+    protected double clawPosition = clawServoMin;
     protected double slidePosition = linSlideMin;
-    protected double relicPosition = relicArmMin;
+    /*protected double relicPosition = relicArmMin;
     protected double relicWristPosition = 0;
-    protected double relicClawPosition = 0;
+    protected double relicClawPosition = 0;*/
     private boolean lastToggleDebug = false;
     private boolean lastToggleConfig = false;
     public void loop_m(double deltaTime) {
-        ControllerState main = this.main_ct.getControllerState();
-        ControllerState sub = this.sub_ct.getControllerState();
+        ControllerState mains = this.main_ct.getControllerState();
+        ControllerState subs = this.sub_ct.getControllerState();
 
-        Vec2D<Double> left = main.joy(Joystick.LEFT);
-        Vec2D<Double> right = main.joy(Joystick.RIGHT);
+        Vec2D<Double> left = mains.joy(Joystick.LEFT);
+        Vec2D<Double> right = mains.joy(Joystick.RIGHT);
 
         double lPower = left.y(),rPower = right.y();
 
@@ -283,8 +279,8 @@ public class VibotControlled extends OpMode {
 
         double slidePower = 1; // power
         if (linSlide.getPower()!=slidePower) linSlide.setPower(slidePower);
-        if (sub.isPressed(Button.UP)) slidePosition += linSlideSpeed * deltaTime;
-        if (sub.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed * deltaTime;
+        if (subs.isPressed(Button.UP)) slidePosition += linSlideSpeed * deltaTime;
+        if (subs.isPressed(Button.DOWN)) slidePosition -= linSlideSpeed * deltaTime;
         if (slidePosition > linSlideMax) slidePosition = linSlideMax;
         if (slidePosition < linSlideMin) slidePosition = linSlideMin;
         int calcPos = (int)Math.round(slidePosition * linSlideUnitMultiplier);
@@ -292,13 +288,14 @@ public class VibotControlled extends OpMode {
 
         // literal copy of Shields' code; there's a better way to do this
         double servo_speed = .8;
-        if (sub.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
-        if (sub.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
+        if (subs.isPressed(Button.A)) clawPosition += servo_speed*deltaTime;
+        if (subs.isPressed(Button.X)) clawPosition -= servo_speed*deltaTime;
         if (clawPosition > clawServoMax) clawPosition = clawServoMax;
         if (clawPosition < clawServoMin) clawPosition = clawServoMin;
 
         clawServos.setPosition(clawPosition);
 
+        /*
         double relicSpeed = 1;
         if (relicArm.getPower()!=slidePower) relicArm.setPower(slidePower);
         relicPosition += sub.joyVal(Joystick.RIGHT, Axis.Y) * relicSpeed * deltaTime;
@@ -319,6 +316,7 @@ public class VibotControlled extends OpMode {
         if (relicClawPosition > relicClawMax) relicClawPosition = relicClawMax;
         if (relicClawPosition < relicClawMin) relicClawPosition = relicClawMin;
         relicArmClaw.setPosition(relicClawPosition);
+        */
 
 
         telemetry.addLine("Values in range of -1 to +1" );
@@ -326,7 +324,7 @@ public class VibotControlled extends OpMode {
         telemetry.addData("Turning Speed", (-lPower+rPower)/2 );
 
         //boolean lastToggle = main.last().isPressed(Button.LB) && main.last().isPressed(Button.RB);
-        boolean toggleDebug = main.isPressed(Button.LB) && main.isPressed(Button.RB);
+        boolean toggleDebug = mains.isPressed(Button.LB) && mains.isPressed(Button.RB);
 
         if (toggleDebug && !lastToggleDebug) debugMode =! debugMode;
         lastToggleDebug = toggleDebug;
@@ -340,7 +338,7 @@ public class VibotControlled extends OpMode {
             telemetry.addData("slideMin", linSlideMin);
             telemetry.addData("slideMax", linSlideMax);
 
-            boolean toggleConfigure = main.isPressed(Button.X);
+            boolean toggleConfigure = mains.isPressed(Button.X);
             if (toggleConfigure && !lastToggleConfig) configureMode =! configureMode;
             lastToggleConfig = toggleConfigure;
             if (configureMode) {
@@ -353,26 +351,28 @@ public class VibotControlled extends OpMode {
                 telemetry.addData("realSlideMin", mainLinSlideMin);
                 telemetry.addData("realSlideMax", mainLinSlideMax);
 
-                boolean up = main.isPressed(Button.UP);
-                boolean dn = main.isPressed(Button.DOWN);
-                boolean l = main.isPressed(Button.LEFT);
-                boolean r = main.isPressed(Button.RIGHT);
+                boolean up = mains.isPressed(Button.UP);
+                boolean dn = mains.isPressed(Button.DOWN);
+                boolean l = mains.isPressed(Button.LEFT);
+                boolean r = mains.isPressed(Button.RIGHT);
+
+                double increment = .05;
 
                 if (up && ! lastPressedUp) {
-                    mainLinSlideMin += .5;
-                    linSlideMin += .5;
+                    mainLinSlideMin += increment;
+                    linSlideMin += increment;
                 }
                 if (dn && ! lastPressedDn) {
-                    mainLinSlideMin -= .5;
-                    linSlideMin -= .5;
-                }
-                if (l && ! lastPressedL) {
-                    mainLinSlideMax += .5;
-                    linSlideMax += .5;
+                    mainLinSlideMin -= increment;
+                    linSlideMin -= increment;
                 }
                 if (r && ! lastPressedR) {
-                    mainLinSlideMax -= .5;
-                    linSlideMax -= .5;
+                    mainLinSlideMax += increment;
+                    linSlideMax += increment;
+                }
+                if (l && ! lastPressedL) {
+                    mainLinSlideMax -= increment;
+                    linSlideMax -= increment;
                 }
 
                 lastPressedUp = up;

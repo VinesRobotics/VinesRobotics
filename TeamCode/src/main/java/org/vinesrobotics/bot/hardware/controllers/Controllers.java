@@ -46,9 +46,9 @@ public class Controllers {
         return new Controllers(omode.gamepad1, omode.gamepad2);
     }
 
-    // The {link @Controller} referencing gamepad 1
+    // The {@link Controller} referencing gamepad 1
     private Controller gpa = null;
-    // The {link @Controller} referencing gamepad 2
+    // The {@link Controller} referencing gamepad 2
     private Controller gpb = null;
 
     /**
