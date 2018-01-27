@@ -54,7 +54,7 @@ public class VibotAutonomous extends VibotControlled {
     public void init_spec() {
         clawServos.setPosition(clawServoMax);
         jewelArmServos.setPosition(1);
-        switch (Position) {
+        /*switch (Position) {
             case BlueBack: {
                 leftMotors.reverseDirection();
                 rightMotors.reverseDirection();
@@ -72,7 +72,7 @@ public class VibotAutonomous extends VibotControlled {
             case RedFront: {
             }
             break;
-        }
+        }*/
 
         cvmanager.initCV();
         redBlobDet.setColorRadius(new Scalar(25,96, 127));
@@ -93,11 +93,10 @@ public class VibotAutonomous extends VibotControlled {
     }
 
     private enum AutoState {
-        AUTO_START(0,.5),
+        IDENTIFY_JEWEL(0,.5),
         ADJUST_SLIDE(.5 , 1),
         MOVE_JEWEL(1,4),
-        RESET_JEWEL(4,4.5),
-        CRYPTO_SAFEZONE(4.5,Double.POSITIVE_INFINITY),;
+        CRYPTO_SAFEZONE(4,Double.POSITIVE_INFINITY),;
 
         public Range timeRange;
 
@@ -106,10 +105,12 @@ public class VibotAutonomous extends VibotControlled {
         }
     }
 
-    private AutoState currentState = AutoState.AUTO_START;
+    private AutoState currentState = AutoState.IDENTIFY_JEWEL;
     private double stateOffset = 0;
 
     private int realTurnDir = 0;
+
+    private boolean hasReversed = false;
 
     @Override
     public void loop_m(double delta) {
@@ -123,22 +124,22 @@ public class VibotAutonomous extends VibotControlled {
         stateOffset += delta;
 
         switch (currentState) {
-            case AUTO_START:
+            case IDENTIFY_JEWEL:
                 jewelArmServos.setPosition(-1);
                 clawServos.setPosition(clawServoMin);
-                break;
-            case ADJUST_SLIDE:
-                slidePosition = 2;
-                break;
-            case MOVE_JEWEL:
-                double directionPow = .2;
                 int turnDir = 0; // 1 == left, -1 == right
 
                 if (realTurnDir == 0) {
 
-                    double redx = redBlobDet.centerOfAll.x;
-                    double redx2 = redDarkBlobDet.centerOfAll.x;
-                    double blux = blueBlobDet.centerOfAll.x;
+                    double redx = Double.NaN;
+                    if (redBlobDet.centerOfAll != null)
+                        redx = redBlobDet.centerOfAll.x;
+                    double redx2 = Double.NaN;
+                    if (redDarkBlobDet.centerOfAll != null)
+                        redx2 = redDarkBlobDet.centerOfAll.x;
+                    double blux = Double.NaN;
+                    if (blueBlobDet.centerOfAll != null)
+                        redx2 = blueBlobDet.centerOfAll.x;
 
                     if (redx == Double.NaN) redx = redx2;
 
@@ -153,8 +154,8 @@ public class VibotAutonomous extends VibotControlled {
                             break;
                         case BlueBack:
                         case BlueFront:
-                            wrongcol = redx;
-                            rightcol = blux;
+                            wrongcol = blux;
+                            rightcol = redx;
                             break;
                     }
 
@@ -165,11 +166,11 @@ public class VibotAutonomous extends VibotControlled {
                     }
                     else
                     {
-                        if ((wrongcol < split || wrongcol == Double.NaN)
-                                && (rightcol > split || rightcol == Double.NaN))
+                        if (/*(wrongcol < split || wrongcol == Double.NaN)
+                                && */(rightcol > split/* || rightcol == Double.NaN*/))
                             turnDir = 1;
-                        if ((wrongcol > split || wrongcol == Double.NaN)
-                                && (rightcol < split || rightcol == Double.NaN))
+                        if (/*(wrongcol > split || wrongcol == Double.NaN)
+                                && */(rightcol < split/* || rightcol == Double.NaN*/))
                             turnDir = -1;
                     }
 
@@ -184,46 +185,65 @@ public class VibotAutonomous extends VibotControlled {
                     realTurnDir = turnDir;
                 }
 
-                // figure out which way to turn and turn
+                break;
+            case ADJUST_SLIDE:
+                slidePosition = 2;
+                break;
+            case MOVE_JEWEL:
+                double directionPow = .2;
 
                 telemetry.addData("realTurnDir", realTurnDir);
 
-                double third_point = currentState.timeRange.size() / 3d;
+                double change_point = 0;
+                if (realTurnDir == 1)
+                    change_point = currentState.timeRange.size() / 2d;
+                else if (realTurnDir == -1)
+                    change_point = 2*(currentState.timeRange.size() / 5d);
 
-                if (stateOffset < third_point) {
+                if (stateOffset < change_point) {
                     leftMotors.setPower(realTurnDir * directionPow);
                     rightMotors.setPower(realTurnDir * directionPow);
-                } else if (stateOffset >= third_point) {
+                } else if (stateOffset >= change_point) {
                     jewelArmServos.setPosition(1);
-                    directionPow *= 2.5;
+                    directionPow *= 2;
                     leftMotors.setPower(-realTurnDir * directionPow);
                     rightMotors.setPower(-realTurnDir * directionPow);
                 }
 
                 break;
-            case RESET_JEWEL:
-                jewelArmServos.setPosition(1);
-                break;
             case CRYPTO_SAFEZONE:
                 leftMotors.setPower(0);
                 rightMotors.setPower(0);
 
-                double timingConstant = .5;
-                double smallOffset = .65;
+                if (!hasReversed) {
+                    hasReversed = true;
+
+                    switch (Position) {
+                        case BlueBack:
+                        case BlueFront: {
+                            leftMotors.reverseDirection();
+                            rightMotors.reverseDirection();
+                        }
+                        break;
+                    }
+                }
+
+                double timingConstant = .75;
+                double smallOffset = .75;
                 switch (Position) {
-                    case BlueBack:
+                    case BlueFront:
                     case RedFront:
                     {
                         if (stateOffset < timingConstant) {
-                            leftMotors.setPower(1d - smallOffset);
-                            rightMotors.setPower(1d);
-                        }
-                    } break;
-                    case BlueFront:
-                    case RedBack: {
-                        if (stateOffset < timingConstant) {
                             leftMotors.setPower(1d);
                             rightMotors.setPower(1d - smallOffset);
+                        }
+                    } break;
+                    case BlueBack:
+                    case RedBack: {
+                        if (stateOffset < timingConstant) {
+                            leftMotors.setPower(1d - smallOffset);
+                            rightMotors.setPower(1d);
                         }
                     } break;
                 }
@@ -264,8 +284,10 @@ public class VibotAutonomous extends VibotControlled {
         telemetry.addLine("Blob centers");
         Point redP = redBlobDet.centerOfAll.x == Double.NaN ?
                 redDarkBlobDet.centerOfAll : redBlobDet.centerOfAll;
-        telemetry.addData("  Center of all reds", redP);
-        telemetry.addData("  Center of all blues", blueBlobDet.centerOfAll);
+        if (redP != null)
+            telemetry.addData("  Center of all reds", redP);
+        if (blueBlobDet.centerOfAll != null)
+            telemetry.addData("  Center of all blues", blueBlobDet.centerOfAll);
 
     }
 
