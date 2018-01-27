@@ -95,9 +95,9 @@ public class VibotAutonomous extends VibotControlled {
     private enum AutoState {
         AUTO_START(0,.001),
         ADJUST_SLIDE(.001 , 1),
-        MOVE_JEWEL(1,3.5),
-        RESET_JEWEL(3.5,4),
-        CRYPTO_SAFEZONE(4,Double.POSITIVE_INFINITY),;
+        MOVE_JEWEL(1,4),
+        RESET_JEWEL(4,4.5),
+        CRYPTO_SAFEZONE(4.5,Double.POSITIVE_INFINITY),;
 
         public Range timeRange;
 
@@ -128,7 +128,7 @@ public class VibotAutonomous extends VibotControlled {
                 clawServos.setPosition(clawServoMin);
                 break;
             case ADJUST_SLIDE:
-                slidePosition = .3;
+                slidePosition = 1;
                 break;
             case MOVE_JEWEL:
                 double directionPow = .2;
@@ -188,14 +188,14 @@ public class VibotAutonomous extends VibotControlled {
 
                 telemetry.addData("realTurnDir", realTurnDir);
 
-                double half_point = currentState.timeRange.size() / 2d;
+                double third_point = currentState.timeRange.size() / 3d;
 
-                if (stateOffset < half_point) {
+                if (stateOffset < third_point) {
                     leftMotors.setPower(realTurnDir * directionPow);
                     rightMotors.setPower(realTurnDir * directionPow);
-                } else if (stateOffset >= half_point) {
+                } else if (stateOffset >= third_point) {
                     jewelArmServos.setPosition(1);
-                    directionPow *= 2;
+                    directionPow *= 2.5;
                     leftMotors.setPower(-realTurnDir * directionPow);
                     rightMotors.setPower(-realTurnDir * directionPow);
                 }
@@ -241,7 +241,14 @@ public class VibotAutonomous extends VibotControlled {
                 // temporayre code location
                 clawServos.setPosition(clawServoMax);
 
-                double finalMoveTime = .7;
+                double finalMoveTime = .4;
+                switch (Position) {
+                    case RedFront:
+                    case RedBack:
+                    {
+
+                    } break;
+                }
                 if (stateOffset > timingConstant + turnDuration && stateOffset < timingConstant + turnDuration + finalMoveTime) {
                     leftMotors.setPower(1);
                     rightMotors.setPower(1);
