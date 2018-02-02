@@ -39,7 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 
 @TeleOp(name="ViBoT Hackbot", group="Vines")
 //@Disabled
-public class VibotControlled extends VibotHardwareBase {
+public class   VibotControlled extends VibotHardwareBase {
 
     /* Declare OpMode members. */
     //Hardware robot       = new Hardware();
