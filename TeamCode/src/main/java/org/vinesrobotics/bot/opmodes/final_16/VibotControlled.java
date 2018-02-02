@@ -37,8 +37,8 @@ import org.vinesrobotics.bot.utils.Vec2D;
 import java.lang.reflect.InvocationTargetException;
 
 
-@TeleOp(name="Controlled (16)", group="Vines")
-@Disabled
+@TeleOp(name="ViBoT Hackbot", group="Vines")
+//@Disabled
 public class VibotControlled extends VibotHardwareBase {
 
     /* Declare OpMode members. */
@@ -111,8 +111,11 @@ public class VibotControlled extends VibotHardwareBase {
         Vec2D<Double> left;
         Vec2D<Double> right;
 
-        left = main.joy(Joystick.LEFT);
-        right = main.joy(Joystick.RIGHT);
+        //left = main.joy(Joystick.LEFT);
+        //right = main.joy(Joystick.RIGHT);
+
+        left = main.joy(Joystick.RIGHT);
+        right = main.joy(Joystick.LEFT);
 
         leftMotors.setPower(left.y());
         rightMotors.setPower(right.y());
