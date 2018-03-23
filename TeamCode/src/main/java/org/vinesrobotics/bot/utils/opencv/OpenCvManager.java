@@ -68,7 +68,7 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
         public void handleMessage(Message msg) {
             OpenCvManager cvm = (OpenCvManager)msg.obj;
 
-            Activity rcact = FtcRobotControllerActivity.ControllerActivity;
+            Activity rcact = FtcRobotControllerActivity.ActivityInstance;
 
             cvm.mOpenCvCameraView =
                     (JavaCameraView)rcact.findViewById(com.qualcomm.ftcrobotcontroller.R.id.color_blob_detection_activity_surface_view);
@@ -76,7 +76,6 @@ public class OpenCvManager implements CameraBridgeViewBase.CvCameraViewListener2
             cvm.mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
             cvm.mOpenCvCameraView.setCvCameraViewListener(cvm);
             cvm.mOpenCvCameraView.setCameraIndex(JavaCameraView.CAMERA_ID_FRONT);
-
 
             Log.i(TAG, "CVCameraView created");
         }

@@ -22,19 +22,21 @@
 
 package org.vinesrobotics.bot.opmodes.final_16;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+//import org.vinesrobotics.bot.R;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.vinesrobotics.bot.R;
 import org.vinesrobotics.bot.hardware.controllers.Controller;
 import org.vinesrobotics.bot.hardware.controllers.ControllerState;
 import org.vinesrobotics.bot.hardware.controllers.Controllers;
 import org.vinesrobotics.bot.hardware.controllers.enums.Button;
 import org.vinesrobotics.bot.hardware.controllers.enums.Joystick;
-import org.vinesrobotics.bot.utils.Utils;
+//import org.vinesrobotics.bot.utils.Utils;
 import org.vinesrobotics.bot.utils.Vec2D;
 
-import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.InvocationTargetException;
 
 
 @TeleOp(name="ViBoT Hackbot", group="Vines")

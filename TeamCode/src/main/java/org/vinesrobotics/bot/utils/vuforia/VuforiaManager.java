@@ -22,18 +22,16 @@
 
 package org.vinesrobotics.bot.utils.vuforia;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.vuforia.CameraDevice;
 import com.vuforia.ObjectTracker;
 import com.vuforia.Tracker;
 import com.vuforia.TrackerManager;
-import com.vuforia.VuMarkTarget;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.vinesrobotics.bot.R;
+import org.firstinspires.ftc.teamcode.R;
 import org.vinesrobotics.bot.utils.Utils;
 
 /**

@@ -1,7 +1,7 @@
 //
 // build.gradle in TeamCode
 //
-// Most of the definitions for building your module reside in x common, shared
+// Most of the definitions for building your module reside in a common, shared
 // file 'build.common.gradle'. Being factored in this way makes it easier to
 // integrate updates to the FTC into your code. If you really need to customize
 // the build definitions, you can place those customizations in this file, but
@@ -10,9 +10,7 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-android {
-    buildToolsVersion '26.0.2'
-}
 dependencies {
-    implementation project(':libOpenCV')
+    compile project(':libOpenCV')
+    compile project(':FtcRobotController')
 }
