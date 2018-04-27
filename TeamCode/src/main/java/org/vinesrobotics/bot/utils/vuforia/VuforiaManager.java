@@ -31,7 +31,7 @@ import com.vuforia.TrackerManager;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.R;
+import org.vinesrobotics.R;
 import org.vinesrobotics.bot.utils.Utils;
 
 /**
