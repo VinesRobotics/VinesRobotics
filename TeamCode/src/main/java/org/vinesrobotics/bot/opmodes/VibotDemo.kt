@@ -92,8 +92,7 @@ class VibotDemo : OpMode() {
         var flagOpts = robot.getDevicesWithAllKeys<Servo>("servo","flag")
         try {
             for (opt in flagOpts) flagServo.addDevice(opt.get() as Servo)
-            rightDrive.direction = DcMotorSimple.Direction.REVERSE
-            rightDrive.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+            flagServo.direction = Servo.Direction.FORWARD
         } catch (e: Exception) {}
 
         controllers = Controllers.getControllerObjects(this)
