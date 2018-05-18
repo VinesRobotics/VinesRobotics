@@ -23,30 +23,49 @@
 package org.vinesrobotics.bot.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.HardwareDevice
 import com.qualcomm.robotcore.hardware.Servo
 import org.vinesrobotics.bot.hardware.Hardware
-import org.vinesrobotics.bot.hardware.HardwareElement
+import org.vinesrobotics.bot.hardware.controllers.Controller
+import org.vinesrobotics.bot.hardware.controllers.Controllers
+import org.vinesrobotics.bot.hardware.controllers.enums.Joystick
 import org.vinesrobotics.bot.hardware.groups.MotorDeviceGroup
 import org.vinesrobotics.bot.hardware.groups.ServoDeviceGroup
+import org.vinesrobotics.bot.utils.Axis
 import org.vinesrobotics.bot.utils.Logging
 import java.security.InvalidKeyException
 
 /**
  * Created by ViBots on 4/27/2018.
  */
+@TeleOp(name = "Demo Op (Kotlin)", group = "demo")
 class VibotDemo : OpMode() {
 
+    private lateinit var controllers: Controllers
+    private lateinit var main: Controller
+    private lateinit var sub: Controller
+
     private var robot: Hardware = Hardware()
-    private var reverseServo: Boolean = false
     private var leftDrive: MotorDeviceGroup = MotorDeviceGroup()
     private var rightDrive: MotorDeviceGroup = MotorDeviceGroup()
     private var flagServo: ServoDeviceGroup = ServoDeviceGroup()
 
-    override fun loop() {
+    private val highVal = 1.0
+    private val lowVal = 0.0
+    private var tgtPos = lowVal
 
+    override fun loop() {
+        if (flagServo.position == tgtPos) {
+            tgtPos = if (tgtPos == lowVal) highVal else lowVal
+            flagServo.position = tgtPos
+        }
+
+        var mainState = main.controllerState
+
+        leftDrive.power = mainState.joyVal(Joystick.LEFT, Axis.Y)
+        rightDrive.power = mainState.joyVal(Joystick.RIGHT, Axis.Y)
     }
 
     override fun init() {
@@ -69,5 +88,16 @@ class VibotDemo : OpMode() {
             rightDrive.direction = DcMotorSimple.Direction.REVERSE
             rightDrive.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         } catch (e: Exception) {}
+
+        var flagOpts = robot.getDevicesWithAllKeys<Servo>("servo","flag")
+        try {
+            for (opt in flagOpts) flagServo.addDevice(opt.get() as Servo)
+            rightDrive.direction = DcMotorSimple.Direction.REVERSE
+            rightDrive.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        } catch (e: Exception) {}
+
+        controllers = Controllers.getControllerObjects(this)
+        main = controllers.a()
+        sub = controllers.b()
     }
 }
